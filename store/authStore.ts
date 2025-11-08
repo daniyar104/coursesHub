@@ -1,4 +1,4 @@
-import {LoginRequest, UserProfile} from "../service/types";
+import type {LoginRequest, UserProfile} from "../service/types";
 import { create } from 'zustand';
 import {getProfile, login, logout} from "../service/authService";
 
@@ -14,7 +14,7 @@ interface AuthState {
 }
 
 
-export const userAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     loading: false,
     error: null,
@@ -24,7 +24,7 @@ export const userAuthStore = create<AuthState>((set) => ({
         try {
             const user = await getProfile();
             set({ user, loading: false });
-        } catch (error) {
+        } catch (error: any) {
             set({
                 user: null,
                 loading: false,

@@ -1,24 +1,29 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
-import {ApiError} from "./types";
+import axios, { AxiosError, type AxiosResponse } from 'axios';
+import type { ApiError } from './types';
+import { useAuthStore } from '../store/authStore';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
+if (!API_URL) {
+    throw new Error('VITE_API_URL is not defined');
+}
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    baseURL: API_URL,
+    headers: { 'Content-Type': 'application/json' },
     withCredentials: true,
-})
+});
 
-// Перехватчик ошибок
 api.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error: AxiosError<ApiError>) => {
         if (error.response?.status === 401) {
+            const { logoutUser } = useAuthStore.getState();
+            logoutUser();
             window.location.href = '/login';
         }
         return Promise.reject(error);
     }
 );
+
 export default api;
