@@ -1,0 +1,32 @@
+// src/routes/AppRoutes.tsx
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { PublicRoute } from './PublicRoute';
+import LoginPage from "../src/pages/auth/LoginPage";
+import WelcomePage from "../src/pages/welcomePage/WelcomePage";
+
+export const AppRoutes: React.FC = () => {
+    return (
+        <Routes>
+            {/* Публичные роуты */}
+            <Route
+                path="/login"
+                element={
+                    <PublicRoute>
+                        <LoginPage />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="/"
+                element={
+                    <PublicRoute>
+                        <WelcomePage />
+                    </PublicRoute>
+                }
+            />
+            {/* Редирект по умолчанию */}
+            <Route path="*" element={<Navigate to="/welcome" replace />} />
+        </Routes>
+    );
+};
