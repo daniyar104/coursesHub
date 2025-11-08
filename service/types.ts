@@ -15,8 +15,8 @@ export interface LoginResponse {
 export interface UserProfile {
     id: string;
     email: string;
-    name: string;
-    createdAt: string;
+    name?: string;
+    createdAt?: string;
 }
 
 export interface ApiError {
