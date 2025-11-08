@@ -3,7 +3,7 @@ import React from 'react';
 import uni from '../../../assets/images/University.png';
 import logo from "../../../assets/images/UniversityIcon.png"
 import Input from "../../components/ui/Input";
-import Index from "../../components/ui/PasswordInput";
+import PasswordInput from "../../components/ui/PasswordInput";
 import Button from "../../components/ui/Button";
 
 const LoginPage: React.FC = () => {
@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
             <div className="w-[40%] p-4">
                 <div className="flex items-center justify-between w-full">
                     <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]"/>
-                    <p className="flex">Courses <p className="text-[#3F3F8F]">HUB</p></p>
+                    <p className="flex">Courses <b className="text-[#3F3F8F]">HUB</b></p>
                 </div>
 
                 <div className="w-[350px] mx-auto my-[12%]">
@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
 
                     <div>
                         <Input label="Почта"/>
-                        <Index label="Пароль" forgotPasswordLink="sad"/>
+                        <PasswordInput label="Пароль" forgotPasswordLink="sad"/>
                         <Button className="w-full">Войти</Button>
                     </div>
                     <div className="my-4 flex items-center">

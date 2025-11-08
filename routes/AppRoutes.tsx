@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { PublicRoute } from './PublicRoute';
 import LoginPage from "../src/pages/auth/LoginPage";
 import WelcomePage from "../src/pages/welcomePage/WelcomePage";
+import RegisterPage from "../src/pages/auth/RegisterPage.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -14,6 +15,14 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PublicRoute>
                         <LoginPage />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="/register"
+                element={
+                    <PublicRoute>
+                        <RegisterPage />
                     </PublicRoute>
                 }
             />

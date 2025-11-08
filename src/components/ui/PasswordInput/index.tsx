@@ -18,7 +18,7 @@ interface PasswordInputProps {
     forgotPasswordLink?: string;
 }
 
-export default function Index({
+export default function PasswordInput({
                                           label,
                                           placeholder,
                                           value,
