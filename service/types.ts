@@ -4,21 +4,24 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    message: string;
-    user:{
-        id: string;
+    user: {
+        user_id: number; // если бэк возвращает числовой user_id
+        full_name: string;
         email: string;
-        password: string;
-    }
+        role: string;
+        created_at: string;
+    };
+    token: string;
 }
+
 
 export interface UserProfile {
-    id: string;
+    user_id: number;
+    full_name: string;
     email: string;
-    name?: string;
-    createdAt?: string;
+    role: string;
+    created_at: string;
 }
-
 export interface ApiError {
     message: string;
     statusCode?: number;

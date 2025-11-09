@@ -2,17 +2,17 @@
 import React, {type JSX} from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import {getToken} from "../src/utils/auth.ts";
 
 interface PrivateRouteProps {
     children: JSX.Element;
 }
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-    const { user } = useAuthStore();
-    const location = useLocation();
+    const token = getToken();
 
-    if (!user) {
-        return <Navigate to="/login" replace state={{ from: location }} />;
+    if (!token) {
+        return <Navigate to="/login" replace />;
     }
 
     return children;

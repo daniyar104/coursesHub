@@ -1,5 +1,5 @@
 import api from "./api";
-import {LoginRequest, LoginResponse, UserProfile} from "./types";
+import type {LoginRequest, LoginResponse, UserProfile} from "./types";
 
 
 export async function login(payload: LoginRequest): Promise<LoginResponse> {
