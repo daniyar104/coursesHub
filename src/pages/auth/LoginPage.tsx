@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-
 import uni from '../../../assets/images/University.png';
 import logo from "../../../assets/images/UniversityIcon.png"
 import Input from "../../components/ui/Input";
@@ -38,7 +37,7 @@ const LoginPage: React.FC = () => {
                 <img src={uni} alt="Background" className="object-cover w-[684px] h-[486px]"/>
             </div>
 
-            <div className="w-[40%] p-4">
+            <div className="w-[40%] p-8">
                 <div className="flex items-center justify-between w-full">
                     <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]"/>
                     <p className="flex">Courses <b className="text-[#3F3F8F]">HUB</b></p>
@@ -56,7 +55,6 @@ const LoginPage: React.FC = () => {
                             name="email"
                             value={form.email}
                             onChange={(val) => handleChange("email", val)}
-                            required
                         />
                         <PasswordInput
                             label="Пароль"

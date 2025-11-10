@@ -8,12 +8,12 @@ export default function RegisterPage(){
     return (
         <div className="flex min-h-screen">
             {/* Левая часть с изображением */}
-            <div className="hidden md:flex bg-gray-100 items-center justify-center w-[50%]">
+            <div className="hidden md:flex bg-gray-100 items-center justify-center w-[60%]">
                 <img src={uni} alt="University" className="object-cover w-[684px] h-[486px]" />
             </div>
 
             {/* Правая часть с формой */}
-            <div className="w-full md:w-[50%] p-8 flex flex-col">
+            <div className="w-full md:w-[40%] p-8 flex flex-col">
                 <div className="flex items-center justify-between mb-12">
                     <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]" />
                     <p className="flex text-sm">Courses <b className="text-[#3F3F8F]">HUB</b></p>
