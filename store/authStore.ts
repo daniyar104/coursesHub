@@ -1,6 +1,7 @@
 import type {LoginRequest, UserProfile} from "../service/types";
 import { create } from 'zustand';
 import {getProfile, login, logout} from "../service/authService";
+import {setToken} from "../src/utils/auth.ts";
 
 
 interface AuthState {
@@ -33,11 +34,19 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
     },
     loginUser: async (payload) => {
-        set({loading: true, error: null})
-        try{
-            const res = await login(payload);
-            set({ user: res.user, loading: false });
-        }catch (error){
+        set({ loading: true, error: null });
+        try {
+            const res = await login(payload); // login отправляет POST /auth/login
+            const safeUser = {
+                user_id: res.user.user_id,
+                full_name: res.user.full_name,
+                email: res.user.email,
+                role: res.user.role,
+                created_at: res.user.created_at,
+            };
+            set({ user: safeUser, loading: false });
+            setToken(res.token)
+        } catch (error: any) {
             set({
                 loading: false,
                 error: error?.response?.data?.message || 'Ошибка входа',
