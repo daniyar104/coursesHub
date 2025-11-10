@@ -3,8 +3,47 @@ import Input from "../../components/ui/Input";
 import PasswordInput from "../../components/ui/PasswordInput";
 import uni from '../../../assets/images/University.png';
 import logo from "../../../assets/images/UniversityIcon.png"
+import {useAuthStore} from "../../../store/authStore.ts";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function RegisterPage(){
+    const navigate = useNavigate();
+    const registerUser = useAuthStore((state) => state.registerUser);
+    const loading = useAuthStore((state) => state.loading);
+    const error = useAuthStore((state) => state.error);
+
+    const [firstName, setFirstName] = useState("");
+    const [surName, setSurName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [agree, setAgree] = useState(false);
+
+    const handleRegister = async () => {
+        if (!agree) {
+            alert("Пожалуйста, примите условия использования");
+            return;
+        }
+        if (password !== confirmPassword) {
+            alert("Пароли не совпадают");
+            return;
+        }
+
+        try {
+            await registerUser({
+                firstName,
+                surname: surName,
+                email,
+                password,
+            });
+            if (!loading) {
+                navigate('/login');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
     return (
         <div className="flex min-h-screen">
             {/* Левая часть с изображением */}
@@ -27,28 +66,43 @@ export default function RegisterPage(){
                             label="Имя"
                             name="firstName"
                             className="w-full"
+                            value={firstName}
+                            onChange={setFirstName}
+                            required
                         />
                         <Input
                             label="Фамилия"
-                            name="lastName"
+                            name="surname"
+                            value={surName}
+                            onChange={setSurName}
                             className="w-full"
+                            required
                         />
                     </div>
                     <Input
                         label="Почта"
                         name="email"
-
+                        type="email"
+                        value={email}
+                        onChange={setEmail}
+                        required
                     />
                     <div className="flex gap-2">
                         <PasswordInput
                             label="Пароль"
                             name="password"
+                            value={password}
+                            onChange={setPassword}
                             className="w-full"
+                            required
                         />
                         <PasswordInput
                             label="Подтвердите пароль"
                             name="confirmPassword"
+                            value={confirmPassword}
+                            onChange={setConfirmPassword}
                             className="w-full"
+                            required
                         />
                     </div>
 
@@ -56,12 +110,22 @@ export default function RegisterPage(){
                         <input
                             type="checkbox"
                             name="agree"
+                            checked={agree}
+                            onChange={(e) => setAgree(e.target.checked)}
                             className="w-4 h-4"
                         />
                         <div className="text-[11px] text-gray-500">Я принимаю <span className="underline color-[#3F3F8F]">Условия использования</span> и <span className="underline color-[#3F3F8F]">Политику конфиденциальности</span></div>
                     </div>
-
-                    <Button type="submit" className="w-full mt-6">Создать аккаунт</Button>
+                    {error && (
+                        <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+                    )}
+                    <Button
+                        onClick={handleRegister}
+                            className="w-full mt-6"
+                            disabled={loading}
+                    >
+                        {loading ? "Создание..." : "Создать аккаунт"}
+                    </Button>
 
                     <p className="mt-4 text-center text-sm text-gray-500">
                         Есть аккаунт? <a href="/login" className="text-indigo-600">Войти</a>
