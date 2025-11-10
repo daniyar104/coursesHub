@@ -1,8 +1,9 @@
+import CardCourses from "../../components/ui/Card/CardCourse.tsx";
 
 
 function HomePage() {
     return (
-        <>Home page</>
+        <CardCourses/>
     );
 }
 

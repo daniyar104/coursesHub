@@ -9,7 +9,7 @@ export default function Header() {
     const navigator = useNavigate();
 
     return (
-        <nav className="bg-white shadow-sm fixed w-full">
+        <nav className="bg-white shadow-sm fixed w-full z-100">
             <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
                 <div className="flex items-center gap-6">
                     <img src={Logo} alt="logo" className="h-10 w-auto" />
@@ -18,7 +18,7 @@ export default function Header() {
                 {/* Десктоп меню */}
                 <div className="hidden md:flex gap-6 text-gray-600 text-sm md:text-base">
                     <a className="hover:text-gray-800">Возможности</a>
-                    <a href="#benefits" className="hover:text-gray-800">
+                    <a href="#" className="hover:text-gray-800">
                         Преимущества
                     </a>
                     <a href="#contacts" className="hover:text-gray-800">
@@ -72,10 +72,10 @@ export default function Header() {
                         Контакты
                     </a>
                     <div className="flex flex-col gap-2 mt-2">
-                        <button className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100">
+                        <button className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100" onClick={() => navigator("/login")}>
                             Войти
                         </button>
-                        <button className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700">
+                        <button className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700" onClick={() => navigator("/register")}>
                             Зарегистрироваться
                         </button>
                     </div>
