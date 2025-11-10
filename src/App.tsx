@@ -1,13 +1,10 @@
-import WelcomePage from "./pages/welcomePage/WelcomePage.tsx";
+import {AppRoutes} from "../routes/AppRoutes.tsx";
+
 
 function App() {
-
-
-  return (
-    <>
-        <WelcomePage />
-    </>
-  )
+    return (
+        <AppRoutes />
+    );
 }
 
-export default App
+export default App;
