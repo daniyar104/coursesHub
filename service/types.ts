@@ -38,6 +38,7 @@ export interface ApiError {
 export interface Category {
     id: number;
     name: string;
+    description?: string;
     slug: string; // например: "frontend", "backend", "design"
     icon?: React.ReactNode;
 }
