@@ -44,7 +44,7 @@ export const mockCourses: Course[] = [
         rating: 4.8,
         students: 1234,
         category: "frontend",
-        price: 19900,
+        price: 0,
     },
     {
         id: 2,
@@ -58,7 +58,7 @@ export const mockCourses: Course[] = [
         rating: 4.9,
         students: 2450,
         category: "data-science",
-        price: 24900,
+        price: 0,
     },
     {
         id: 3,
@@ -72,7 +72,7 @@ export const mockCourses: Course[] = [
         rating: 4.7,
         students: 980,
         category: "frontend",
-        price: 21900,
+        price: 0,
     },
     {
         id: 4,
@@ -86,7 +86,7 @@ export const mockCourses: Course[] = [
         rating: 4.6,
         students: 760,
         category: "design",
-        price: 17900,
+        price: 0,
     },
     {
         id: 5,
@@ -100,6 +100,6 @@ export const mockCourses: Course[] = [
         rating: 4.8,
         students: 1100,
         category: "backend",
-        price: 22900,
+        price: 0,
     },
 ];

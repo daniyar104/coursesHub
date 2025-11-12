@@ -1,9 +1,8 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 interface BreadcrumbItem {
     name: string;
-    path?: string; // если path есть — элемент кликабельный
+    path?: string;
 }
 
 interface BreadcrumbProps {
@@ -28,7 +27,6 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
                         ) : (
                             <span className="text-gray-800 font-medium">{item.name}</span>
                         )}
-
                         {!isLast && <span className="mx-2">/</span>}
                     </div>
                 );
