@@ -5,13 +5,22 @@ import CourseIcon from "../../../../assets/icon/CardCourse.png";
 import Arrow from "../../../../assets/icon/Arrow.svg";
 import CardBackground from "../../../../assets/icon/CardBackground.png";
 import type {Course} from "../../../../service/types.ts";
+import {useNavigate} from "react-router-dom";
 
 interface CardCoursesProps {
     course: Course;
 }
 export default function CardCourses({ course }: CardCoursesProps) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/course/${course.id}`);
+    };
     return (
-        <div className="max-w-[420px] w-full max-h-[585px] h-full rounded-[10px] bg-[#F4F5F8] border border-dashed border-[#704fe6] p-5 pb-7 flex flex-col">
+        <div
+            className="max-w-[420px] w-full max-h-[585px] h-full rounded-[10px] bg-[#F4F5F8] border border-dashed border-[#704fe6] p-5 pb-7 flex flex-col cursor-pointer"
+            onClick={handleClick}
+        >
             {/* Картинка курса */}
             <div className="w-full max-h-[250px] h-full rounded-md relative overflow-hidden mb-8">
                 <img
@@ -19,9 +28,9 @@ export default function CardCourses({ course }: CardCoursesProps) {
                     alt={course.title}
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-xs bg-[#17254e] text-white">
-                    {course.category}
-                </div>
+                {/*<div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-xs bg-[#17254e] text-white">*/}
+                {/*    {course.category.toUpperCase()}*/}
+                {/*</div>*/}
             </div>
 
             {/* Основной блок с фоном */}
@@ -38,7 +47,7 @@ export default function CardCourses({ course }: CardCoursesProps) {
             </span>
                     </div>
                     <span className="text-[#704FE6] text-sm font-medium">
-            ${course.price.toLocaleString()}
+            {course.price === 0 ? "Free" : course.price.toLocaleString()}
           </span>
                 </div>
 
@@ -52,7 +61,7 @@ export default function CardCourses({ course }: CardCoursesProps) {
                     <div className="flex gap-2 items-center">
                         <img src={CourseIcon} alt="Course Icon" className="w-auto h-full" />
                         <span className="text-sm text-[#17254E]">
-              Lessons {course.lessons}
+              Уроков {course.lessons}
             </span>
                     </div>
                     <div className="flex gap-2 items-center">
@@ -62,7 +71,7 @@ export default function CardCourses({ course }: CardCoursesProps) {
                     <div className="flex gap-2 items-center">
                         <img src={StudentIcon} alt="Student Icon" className="w-auto h-full" />
                         <span className="text-sm text-[#17254E]">
-              Students {course.students}+
+              Студентов {course.students}+
             </span>
                     </div>
                 </div>
