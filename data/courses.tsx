@@ -1,0 +1,105 @@
+import type {Category, Course} from "../service/types.ts";
+import {ChartLine, CodeIcon, PenIcon, ServerIcon} from "lucide-react";
+
+export const categories: Category[] = [
+    {
+        id: 1,
+        name: "Frontend",
+        slug: "frontend",
+        icon: <CodeIcon size={15} />,
+        description: "Frontend-разработка включает создание интерактивных и красивых пользовательских интерфейсов веб-приложений. В этом направлении изучаются HTML, CSS, JavaScript, а также современные фреймворки, такие как React, Vue или Angular. Студенты учатся проектировать адаптивные сайты, улучшать пользовательский опыт и создавать высокоэффективные интерфейсы, которые работают на разных устройствах и браузерах."
+    },
+    {
+        id: 2,
+        name: "Backend",
+        slug: "backend",
+        icon: <ServerIcon size={15} />,
+        description: "Backend-разработка фокусируется на серверной части приложений, базах данных и API. Студенты изучают языки программирования, такие как Python, Node.js или Java, а также взаимодействие с базами данных, построение RESTful и GraphQL API. Основная цель — обеспечить надежную, безопасную и масштабируемую работу приложения, обрабатывать запросы пользователей и управлять данными."
+    },
+    {
+        id: 3,
+        name: "Data Science",
+        slug: "data-science",
+        icon: <ChartLine size={15} />,
+        description: "Data Science занимается анализом больших массивов данных, статистикой и машинным обучением. Студенты учатся извлекать полезную информацию из данных, создавать прогнозные модели, работать с библиотеками Python, такими как Pandas, NumPy и Scikit-learn. Также изучается визуализация данных и методы интерпретации результатов для принятия бизнес-решений на основе данных."
+    },
+    {
+        id: 4,
+        name: "Design",
+        slug: "design",
+        icon: <PenIcon size={15} />,
+        description: "Design включает UX/UI дизайн, проектирование интерфейсов и визуальное оформление продуктов. Студенты изучают основы композиции, цветовые схемы, типографику и работу с инструментами, такими как Figma и Adobe XD. Цель — создавать удобные, интуитивно понятные и эстетически привлекательные интерфейсы, которые улучшают опыт пользователя и делают продукт востребованным."
+    },
+];
+export const mockCourses: Course[] = [
+    {
+        id: 1,
+        title: "Frontend-разработка с нуля",
+        description: "Научись создавать современные сайты с помощью HTML, CSS, JS и React.",
+        author: "Иван Петров",
+        authorImage: "https://randomuser.me/api/portraits/men/32.jpg",
+        image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60",
+        duration: "12 недель",
+        lessons: 48,
+        rating: 4.8,
+        students: 1234,
+        category: "frontend",
+        price: 19900,
+    },
+    {
+        id: 2,
+        title: "Основы Python и анализ данных",
+        description: "Изучи Python, обработку данных и библиотеки NumPy, Pandas, Matplotlib.",
+        author: "Анна Смирнова",
+        authorImage: "https://randomuser.me/api/portraits/women/41.jpg",
+        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=60",
+        duration: "10 недель",
+        lessons: 40,
+        rating: 4.9,
+        students: 2450,
+        category: "data-science",
+        price: 24900,
+    },
+    {
+        id: 3,
+        title: "React + TypeScript: Полный курс",
+        description: "Создавай веб-приложения с помощью React и TypeScript.",
+        author: "Дмитрий Иванов",
+        authorImage: "https://randomuser.me/api/portraits/men/53.jpg",
+        image: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=60",
+        duration: "8 недель",
+        lessons: 36,
+        rating: 4.7,
+        students: 980,
+        category: "frontend",
+        price: 21900,
+    },
+    {
+        id: 4,
+        title: "UX/UI дизайн для начинающих",
+        description: "Погрузись в мир UX/UI, прототипирование и Figma.",
+        author: "Екатерина Соколова",
+        authorImage: "https://randomuser.me/api/portraits/women/26.jpg",
+        image: "https://cdn.prod.website-files.com/6365d860c7b7a7191055eb8a/637c4b261aee6b1e22028d67_best-figma-courses-cover.webp",
+        duration: "6 недель",
+        lessons: 24,
+        rating: 4.6,
+        students: 760,
+        category: "design",
+        price: 17900,
+    },
+    {
+        id: 5,
+        title: "Backend на Node.js и Express",
+        description: "Создавай REST API, работай с базами данных и деплой серверы.",
+        author: "Сергей Коваленко",
+        authorImage: "https://randomuser.me/api/portraits/men/45.jpg",
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=60",
+        duration: "9 недель",
+        lessons: 30,
+        rating: 4.8,
+        students: 1100,
+        category: "backend",
+        price: 22900,
+    },
+];

@@ -1,9 +1,10 @@
-import CardCourses from "../../components/ui/Card/CardCourse.tsx";
-
+import CoursesList from "./coursesList/CoursesList.tsx";
 
 function HomePage() {
     return (
-        <CardCourses/>
+        <>
+            <CoursesList/>
+        </>
     );
 }
 
