@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DropdownItem {
-    text: string;
+    text: ReactNode;
     link: string;
 }
 
@@ -15,7 +15,7 @@ interface DropdownMenuProps {
 export default function DropdownMenu({
     elements,
     items,
-    position = "left",
+    position,
 }: DropdownMenuProps) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -46,7 +46,9 @@ export default function DropdownMenu({
             </div>
 
             <div
-                className={`absolute ${position}-0 mt-2 w-44 bg-white shadow-lg rounded-md overflow-hidden z-10 border border-gray-300 transition-all duration-300 ease-in-out ${
+                className={`absolute ${
+                    position === "left" ? "left-0" : "right-0"
+                } mt-2 w-44 bg-white shadow-lg rounded-md overflow-hidden z-10 border border-gray-300 transition-all duration-300 ease-in-out ${
                     open
                         ? "max-h-60 opacity-100 visible"
                         : "max-h-0 opacity-0 invisible"
@@ -58,6 +60,7 @@ export default function DropdownMenu({
                             <div
                                 onClick={() => {
                                     navigator(item.link);
+                                    setOpen(false);
                                 }}
                                 className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                             >
