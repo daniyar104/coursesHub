@@ -16,7 +16,7 @@ export default function Header() {
     return (
         <header className="w-full bg-white/90 backdrop-blur-[10px] shadow-[0_1px_3px_0_rgba(18,20,32,0.14)] h-[95px] flex items-center ">
             <div className="max--w-[1320px] w-[90%] mx-auto flex items-center justify-between h-15 ">
-                <div className="flex justify-between max-w-[830px] w-[90%] items-center">
+                <div className="flex justify-between max-w-[930px] w-[90%] items-center">
                     {/* Логотип */}
                     <img
                         src={Logo}
@@ -28,7 +28,7 @@ export default function Header() {
                     />
 
                     {/* Поисковик */}
-                    <div className="hidden md:block ">
+                    <div className="hidden md:block w-[370px]">
                         <SearchBar />
                     </div>
 
@@ -49,6 +49,7 @@ export default function Header() {
                                     { text: "Выход", link: "/logout" },
                                 ]}
                                 position="left"
+                                arrow={true}
                             />
                         </ul>
                     </nav>
@@ -78,6 +79,7 @@ export default function Header() {
                             link: "#",
                         }))}
                         position="right"
+                        arrow={false}
                     />
 
                     <DropdownMenu
@@ -96,6 +98,7 @@ export default function Header() {
                             { text: "Выход", link: "/logout" },
                         ]}
                         position="right"
+                        arrow={false}
                     />
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,12 +11,14 @@ interface DropdownMenuProps {
     elements: ReactNode;
     items: DropdownItem[];
     position?: "left" | "right";
+    arrow: boolean;
 }
 
 export default function DropdownMenu({
     elements,
     items,
     position,
+    arrow,
 }: DropdownMenuProps) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -40,9 +43,20 @@ export default function DropdownMenu({
         <div className="relative inline-block text-left" ref={menuRef}>
             <div
                 onClick={() => setOpen((prev) => !prev)}
-                className="cursor-pointer"
+                className="cursor-pointer flex items-center gap-1"
             >
                 {elements}
+
+                {arrow ? (
+                    <ChevronDown
+                        size={20}
+                        className={`translate-y-0.5 transition-transform duration-300 ${
+                            open ? "-rotate-180" : ""
+                        }`}
+                    />
+                ) : (
+                    <></>
+                )}
             </div>
 
             <div
