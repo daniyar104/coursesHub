@@ -36,24 +36,21 @@ export interface ApiError {
 }
 
 export interface Category {
-    id: number;
-    name: string;
-    description?: string;
-    slug: string; // например: "frontend", "backend", "design"
-    icon?: React.ReactNode;
+    created_at: string
+    description: string
+    id: string
+    name: string
 }
-
 export interface Course {
-    id: number;
-    title: string;
-    description: string;
-    author: string;
-    authorImage?: string;
-    image: string;
-    duration: string;
-    lessons: number;
-    rating: number;
-    students: number;
-    category: string;
-    price: number;
+    avg_rating: string
+    categories: Category[]
+    category_id: string
+    created_at: string
+    difficulty_level: string
+    full_description: string
+    id: string
+    review_count: number
+    short_description: string
+    title: string
+    updated_at: string
 }
