@@ -57,3 +57,13 @@ export interface Course {
     category: string;
     price: number;
 }
+
+
+export interface PresentList {
+    id: number;
+    img: string;
+    title: string;
+    lessons: string;
+    type: string;
+    time: string;
+}
