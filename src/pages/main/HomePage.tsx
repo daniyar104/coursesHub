@@ -1,10 +1,7 @@
-import CardCourses from "../../components/ui/Card/CardCourse.tsx";
-
+import Header from "../../components/Header/HomeHeader.tsx";
 
 function HomePage() {
-    return (
-        <CardCourses/>
-    );
+    return <Header />;
 }
 
 export default HomePage;
