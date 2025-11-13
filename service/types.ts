@@ -34,3 +34,26 @@ export interface ApiError {
     message: string;
     statusCode?: number;
 }
+
+export interface Category {
+    id: number;
+    name: string;
+    description?: string;
+    slug: string; // например: "frontend", "backend", "design"
+    icon?: React.ReactNode;
+}
+
+export interface Course {
+    id: number;
+    title: string;
+    description: string;
+    author: string;
+    authorImage?: string;
+    image: string;
+    duration: string;
+    lessons: number;
+    rating: number;
+    students: number;
+    category: string;
+    price: number;
+}
