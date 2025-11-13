@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import Logo from "../../assets/icon/Logo.png";
+import Logo from "../../../assets/icon/Logo.png";
 import { useNavigate } from "react-router-dom";
-import {Menu, X} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -72,10 +72,16 @@ export default function Header() {
                         Контакты
                     </a>
                     <div className="flex flex-col gap-2 mt-2">
-                        <button className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100" onClick={() => navigator("/login")}>
+                        <button
+                            className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100"
+                            onClick={() => navigator("/login")}
+                        >
                             Войти
                         </button>
-                        <button className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700" onClick={() => navigator("/register")}>
+                        <button
+                            className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={() => navigator("/register")}
+                        >
                             Зарегистрироваться
                         </button>
                     </div>
