@@ -6,7 +6,7 @@ function HomePage() {
     return (
         <>
             <Header />
-            <div className=" max-w-[1300px] w-9/10 mx-auto">
+            <div className=" max-w-[1320px] w-9/10 mx-auto">
                 <Slider />
             </div>
             <CourseCarousel />

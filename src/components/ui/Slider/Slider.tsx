@@ -2,7 +2,12 @@ import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Slider() {
-    const slides = ["red-500", "blue-400", "purple-400", "green-500"];
+    const slides = [
+        "bg-red-500",
+        "bg-blue-400",
+        "bg-purple-400",
+        "bg-green-500",
+    ];
     const [current, setCurrent] = useState(0);
 
     const prevSlide = () => {
@@ -30,7 +35,7 @@ export default function Slider() {
                 {slides.map((color, idx) => (
                     <div
                         key={idx}
-                        className={`min-w-full min-h-[300px] bg-${color}`}
+                        className={`min-w-full min-h-[300px] ${color}`}
                     ></div>
                 ))}
             </div>
