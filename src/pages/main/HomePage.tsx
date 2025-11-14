@@ -5,8 +5,8 @@ import PresentPage from "./present/PresentPage.tsx";
 function HomePage() {
     return (
         <>
-            <Header />
-            <PresentPage />
+            {/*<Header />*/}
+            {/*<PresentPage />*/}
             {/*<CoursesList/>*/}
         </>
     );
