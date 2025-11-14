@@ -1,4 +1,4 @@
-import type {Category, Course} from "../service/types.ts";
+import type {Category, Course, PresentList} from "../service/types.ts";
 import {ChartLine, CodeIcon, PenIcon, ServerIcon} from "lucide-react";
 
 export const categories: Category[] = [
@@ -103,3 +103,23 @@ export const mockCourses: Course[] = [
         price: 0,
     },
 ];
+
+
+export const PresentCourses: PresentList[] = [
+    {
+        id: 1,
+        title: "Backend на Node.js и Express",
+        img: "asd",
+        lessons: "3. Настройка окружения и обработка файлов",
+        type: "Лекция",
+        time: "7 мин",
+    },
+    {
+        id: 2,
+        title: "UX/UI дизайн для начинающих",
+        img: "asd",
+        lessons: "Что такое Figma? Как создаются новые дизайн страницы",
+        type: "Лекция",
+        time: "19 мин",
+    }
+]
