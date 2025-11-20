@@ -3,11 +3,11 @@ import Input from "../../components/ui/Input";
 import PasswordInput from "../../components/ui/PasswordInput";
 import uni from '../../../assets/images/University.png';
 import logo from "../../../assets/images/UniversityIcon.png"
-import {useAuthStore} from "../../../store/authStore.ts";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useAuthStore } from "../../store/authStore.ts";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function RegisterPage(){
+export default function RegisterPage() {
     const navigate = useNavigate();
     const registerUser = useAuthStore((state) => state.registerUser);
     const loading = useAuthStore((state) => state.loading);
@@ -121,8 +121,8 @@ export default function RegisterPage(){
                     )}
                     <Button
                         onClick={handleRegister}
-                            className="w-full mt-6"
-                            disabled={loading}
+                        className="w-full mt-6"
+                        disabled={loading}
                     >
                         {loading ? "Создание..." : "Создать аккаунт"}
                     </Button>

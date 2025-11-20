@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Star, Users, Clock, BookOpen, Play } from "lucide-react";
-import { useCoursesStore } from "../../../store/coursesStore";
+import { useCoursesStore } from "../../store/coursesStore";
 
 const CoursePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -71,9 +71,8 @@ const CoursePage: React.FC = () => {
                                     {mod.lessons.map((lesson) => (
                                         <li
                                             key={lesson.id}
-                                            className={`flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 transition ${
-                                                activeLesson === lesson.id ? "bg-gray-100 font-semibold" : ""
-                                            }`}
+                                            className={`flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 transition ${activeLesson === lesson.id ? "bg-gray-100 font-semibold" : ""
+                                                }`}
                                             onClick={() => handleLessonClick(lesson.id)}
                                         >
                                             <Play size={16} className="text-indigo-600" />

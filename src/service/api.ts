@@ -18,9 +18,10 @@ api.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error: AxiosError<ApiError>) => {
         if (error.response?.status === 401) {
-            const { logoutUser } = useAuthStore.getState();
-            logoutUser();
-            window.location.href = '/login';
+            console.warn("Unauthorized request, user should login");
+            // const { logoutUser } = useAuthStore.getState();
+            // logoutUser();
+            // window.location.href = '/login';
         }
         return Promise.reject(error);
     }

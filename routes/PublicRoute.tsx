@@ -1,8 +1,8 @@
 // src/routes/PublicRoute.tsx
-import React, {type JSX} from 'react';
+import React, { type JSX } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
-import {getToken} from "../src/utils/auth.ts";
+import { useAuthStore } from '../src/store/authStore';
+import { getToken } from "../src/utils/auth.ts";
 
 interface PublicRouteProps {
     children: JSX.Element;
