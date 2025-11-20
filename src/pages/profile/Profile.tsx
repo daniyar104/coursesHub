@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useUserStore } from "../../store/useUserStore";
-// import type { Course } from "../../../service/types";
+import type { Course } from "../../components/ui/Card/CardCourseProfile";
 import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
 
 const coursesData: Course[] = [

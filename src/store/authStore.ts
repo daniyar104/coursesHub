@@ -1,8 +1,11 @@
-import type { LoginRequest, RegisterRequest, UserProfile } from "../service/types";
-import { create } from 'zustand';
+import type {
+    LoginRequest,
+    RegisterRequest,
+    UserProfile,
+} from "../service/types";
+import { create } from "zustand";
 import { getProfile, login, logout, register } from "../service/authService";
 import { setToken } from "../utils/auth.ts";
-
 
 interface AuthState {
     user: UserProfile | null;
@@ -14,7 +17,6 @@ interface AuthState {
     registerUser: (payload: RegisterRequest) => Promise<void>;
     logoutUser: () => Promise<void>;
 }
-
 
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
@@ -30,7 +32,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             set({
                 user: null,
                 loading: false,
-                error: error?.message || 'Не удалось получить профиль',
+                error: error?.message || "Не удалось получить профиль",
             });
         }
     },
@@ -47,11 +49,15 @@ export const useAuthStore = create<AuthState>((set) => ({
                 created_at: res.user.created_at,
             };
             set({ user: safeUser, loading: false });
-            setToken(res.token)
+            if (res.token) {
+                setToken(res.token);
+            } else {
+                console.error("Received invalid token:", res.token);
+            }
         } catch (error: any) {
             set({
                 loading: false,
-                error: error?.response?.data?.message || 'Ошибка входа',
+                error: error?.response?.data?.message || "Ошибка входа",
             });
         }
     },
@@ -69,12 +75,19 @@ export const useAuthStore = create<AuthState>((set) => ({
                 created_at: res.user.created_at,
             };
             set({ user: safeUser, loading: false });
-            setToken(res.token)
+            if (res.token) {
+                setToken(res.token);
+            } else {
+                console.error("Received invalid token:", res.token);
+            }
         } catch (error: any) {
-            console.error('Register error', error.response?.data || error.message);
+            console.error(
+                "Register error",
+                error.response?.data || error.message
+            );
             set({
                 loading: false,
-                error: error?.response?.data?.message || 'Ошибка',
+                error: error?.response?.data?.message || "Ошибка",
             });
         }
     },
@@ -83,7 +96,6 @@ export const useAuthStore = create<AuthState>((set) => ({
             await logout();
         } finally {
             set({ user: null });
-
         }
     },
-}))
+}));
