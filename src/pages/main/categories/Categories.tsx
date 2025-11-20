@@ -9,7 +9,7 @@ export default function Categories() {
         navigate(`/home/category/${slug}`);
     };
     return(
-        <div className="ml-8">
+        <div className="my-10">
             <div className="text-4xl font-bold mb-4">Разведуй категории</div>
             <div className="flex flex-row mb-2">
                 {categories.map(category => (

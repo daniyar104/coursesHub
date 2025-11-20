@@ -1,7 +1,9 @@
 import Header from "../../../components/Header/HomeHeader.tsx";
-import CallToActionSection from "../../../components/ui/Slider/forSlider/CallToAction.tsx";
 import Slider from "../../../components/ui/Slider/Slider.tsx";
-import SkillsSection from "./section/SkillsSection.tsx";
+import CallToActionSection from "../../../components/ui/Slider/forSlider/CallToAction.tsx";
+import PresentPage from "../present/PresentPage.tsx";
+import CoursesList from "../coursesList/CoursesList.tsx";
+
 
 function HomePage() {
     return (
@@ -11,11 +13,15 @@ function HomePage() {
                 <Slider
                     elements={[
                         <CallToActionSection />,
-                        <CallToActionSection />,
+                        <CallToActionSection />
                     ]}
                 />
             </div>
-            <SkillsSection />
+            {/*<CourseCarousel />*/}
+            <div className=" max-w-[1320px] w-9/10 mx-auto ">
+                <PresentPage />
+                <CoursesList />
+            </div>
         </>
     );
 }

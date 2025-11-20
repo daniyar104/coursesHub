@@ -35,30 +35,6 @@ export interface ApiError {
     statusCode?: number;
 }
 
-export interface Category {
-    id: number;
-    name: string;
-    description?: string;
-    slug: string; // например: "frontend", "backend", "design"
-    icon?: React.ReactNode;
-}
-
-export interface Course {
-    id: number;
-    title: string;
-    description: string;
-    author: string;
-    authorImage?: string;
-    image: string;
-    duration: string;
-    lessons: number;
-    rating: number;
-    students: number;
-    category: string;
-    price: number;
-}
-
-
 export interface PresentList {
     id: number;
     img: string;
@@ -66,4 +42,67 @@ export interface PresentList {
     lessons: string;
     type: string;
     time: string;
+}
+
+
+export interface Course{
+    id: string,
+    title: string,
+    short_description: string,
+    full_description?: string,
+    review_count: number,
+    avg_rating: number,
+    difficulty_level: string,
+    category_id: string,
+    created_at: string,
+    updated_at: string,
+    _count?: {
+        modules: number,
+        lessons: number
+    }
+}
+
+
+export interface Category {
+    id: string,
+    name: string,
+    description: string,
+    created_at: string,
+}
+
+export interface LessonTest {
+    questions: {
+        q: string;
+        a: string[];
+    }[];
+}
+
+export interface Lesson {
+    id: string;
+    module_id: string;
+    title: string;
+    content?: string;
+    video_url?: string;
+    image_url?: string;
+    test?: LessonTest;
+    position: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Module {
+    id: string;
+    course_id: string;
+    title: string;
+    description?: string;
+    position: number;
+    created_at: string;
+    updated_at: string;
+    lessons: Lesson[];
+}
+
+export interface CourseWithModules extends Course {
+    modules: Module[];
+    categories?: Category;
+    reviews?: [];
 }

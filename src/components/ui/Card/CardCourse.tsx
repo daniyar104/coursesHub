@@ -23,11 +23,11 @@ export default function CardCourses({ course }: CardCoursesProps) {
         >
             {/* Картинка курса */}
             <div className="w-full max-h-[250px] h-full rounded-md relative overflow-hidden mb-8">
-                <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-full object-cover"
-                />
+                {/*<img*/}
+                {/*    src={course.image}*/}
+                {/*    alt={course.title}*/}
+                {/*    className="w-full h-full object-cover"*/}
+                {/*/>*/}
                 {/*<div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-xs bg-[#17254e] text-white">*/}
                 {/*    {course.category.toUpperCase()}*/}
                 {/*</div>*/}
@@ -43,11 +43,11 @@ export default function CardCourses({ course }: CardCoursesProps) {
                     <div className="flex gap-1 items-center">
                         <img src={Star} alt="star icon" className="h-[14px] w-auto" />
                         <span className="text-[#4D5756] text-sm font-medium">
-              {course.rating}
+              {/*{course.rating}*/}
             </span>
                     </div>
                     <span className="text-[#704FE6] text-sm font-medium">
-            {course.price === 0 ? "Free" : course.price.toLocaleString()}
+            {/*{course.price === 0 ? "Free" : course.price.toLocaleString()}*/}
           </span>
                 </div>
 
@@ -61,17 +61,17 @@ export default function CardCourses({ course }: CardCoursesProps) {
                     <div className="flex gap-2 items-center">
                         <img src={CourseIcon} alt="Course Icon" className="w-auto h-full" />
                         <span className="text-sm text-[#17254E]">
-              Уроков {course.lessons}
+              Уроков {course._count?.lessons}
             </span>
                     </div>
                     <div className="flex gap-2 items-center">
                         <img src={TimeIcon} alt="Time Icon" className="w-auto h-full" />
-                        <span className="text-sm text-[#17254E]">{course.duration}</span>
+                        {/*<span className="text-sm text-[#17254E]">{course.duration}</span>*/}
                     </div>
                     <div className="flex gap-2 items-center">
                         <img src={StudentIcon} alt="Student Icon" className="w-auto h-full" />
                         <span className="text-sm text-[#17254E]">
-              Студентов {course.students}+
+              {/*Студентов {course.students}+*/}
             </span>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ export default function CardCourses({ course }: CardCoursesProps) {
                             className="w-11 h-11 rounded-full border-2 border-[#704fe6]"
                         />
                         <span className="text-[#17254E] text-sm font-medium">
-              {course.author}
+              {/*{course.author}*/}
             </span>
                     </div>
 
