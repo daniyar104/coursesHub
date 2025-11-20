@@ -1,7 +1,7 @@
-import type {LoginRequest, RegisterRequest, UserProfile} from "../service/types";
+import type { LoginRequest, RegisterRequest, UserProfile } from "../service/types";
 import { create } from 'zustand';
-import {getProfile, login, logout, register} from "../service/authService";
-import {setToken} from "../src/utils/auth.ts";
+import { getProfile, login, logout, register } from "../service/authService";
+import { setToken } from "../utils/auth.ts";
 
 
 interface AuthState {
@@ -83,6 +83,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             await logout();
         } finally {
             set({ user: null });
+
         }
     },
 }))

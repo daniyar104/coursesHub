@@ -1,17 +1,7 @@
 import React, { useEffect } from "react";
-import Avatar from "../../../assets/images/Avatar.png";
-import CardCourseProfile, {
-    type Course,
-} from "../../components/ui/Card/CardCourseProfile";
-import { useUserStore } from "../../../store/userStore";
-
-// Пример данных пользователя и курсов
-const userData = {
-    name: "Асель Абаева",
-    email: "asel.abaeva@study.kz",
-    registrationDate: "15.08.2023",
-    avatarUrl: Avatar,
-};
+import { useUserStore } from "../../store/useUserStore";
+// import type { Course } from "../../../service/types";
+import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
 
 const coursesData: Course[] = [
     {
@@ -37,13 +27,17 @@ const coursesData: Course[] = [
     },
 ];
 
-// Основной компонент страницы профиля
-export default function Profile() {
-    const user = useUserStore((state) => state.user);
-    const fetchGetUser = useUserStore((state) => state.fetchGetUser);
+export const Profile: React.FC = () => {
+    const { user, loading, error, fetchUser } = useUserStore();
+
     useEffect(() => {
-        fetchGetUser();
-    }, [fetchGetUser]);
+        fetchUser();
+    }, [fetchUser]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    if (!user) return <p>No user data</p>;
+
     console.log(user);
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-8 lg:p-12">
@@ -77,17 +71,20 @@ export default function Profile() {
                         {/* Аватар */}
                         <img
                             className="h-24 w-24 rounded-full object-cover ring-4 ring-indigo-500 ring-offset-2"
-                            src={userData.avatarUrl}
-                            alt={userData.name}
+                            // src={user.avatarUrl}
+                            alt={user.firstName}
                         />
 
                         {/* Информация */}
                         <div className="flex-grow text-center md:text-left">
                             <p className="text-3xl font-extrabold text-gray-900">
-                                {userData.name}
+                                {user.firstName}
+                            </p>
+                            <p className="text-3xl font-extrabold text-gray-900">
+                                {user.surname}
                             </p>
                             <p className="text-lg text-gray-600 mt-1">
-                                {userData.email}
+                                {user.email}
                             </p>
 
                             <div className="mt-4 pt-4 border-t border-gray-100">
@@ -95,7 +92,7 @@ export default function Profile() {
                                     <span className="font-semibold text-gray-700">
                                         Дата регистрации:
                                     </span>{" "}
-                                    {userData.registrationDate}
+                                    {user.created_at}
                                 </p>
                             </div>
                         </div>
@@ -147,4 +144,4 @@ export default function Profile() {
             </div>
         </div>
     );
-}
+};

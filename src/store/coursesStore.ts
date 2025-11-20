@@ -1,6 +1,6 @@
-import {Course, type CourseWithModules} from "../service/types";
-import {create} from "zustand";
-import {getAllCourses, getCourseById} from "../service/coursesService";
+import { type Course, type CourseWithModules } from "../service/types";
+import { create } from "zustand";
+import { getAllCourses, getCourseById } from "../service/coursesService";
 
 
 interface CourseState {
@@ -21,14 +21,14 @@ export const useCoursesStore = create<CourseState>((set) => ({
     error: false,
 
     fetchAllCourses: async () => {
-        set({loading: true, error: false})
-        try{
+        set({ loading: true, error: false })
+        try {
             const courses = await getAllCourses();
             set({
                 courses,
                 loading: false
             });
-        }catch (error){
+        } catch (error) {
             set({
                 courses: null,
                 loading: false,
