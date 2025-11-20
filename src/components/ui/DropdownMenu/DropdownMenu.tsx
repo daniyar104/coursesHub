@@ -48,7 +48,7 @@ export default function DropdownMenu({
             <div
                 className={`absolute ${
                     position === "left" ? "left-0" : "right-0"
-                } mt-2 w-44 bg-white shadow-lg rounded-md overflow-hidden z-10 border border-gray-300 transition-all duration-300 ease-in-out ${
+                } mt-2 w-44 bg-white shadow-lg rounded-md overflow-hidden z-[1000] border border-gray-300 transition-all duration-300 ease-in-out ${
                     open
                         ? "max-h-60 opacity-100 visible"
                         : "max-h-0 opacity-0 invisible"

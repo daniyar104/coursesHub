@@ -2,23 +2,23 @@ const cards = [
     {
         title: "Генеративный ИИ",
         users: "1,7 млн+",
-        img: "https://images.unsplash.com/photo-1633113215932-48eaf0faef7d?auto=format&fit=crop&w=800&q=80",
+        img: "https://t3.ftcdn.net/jpg/09/81/65/06/360_F_981650618_Rs30eAZHDukqNiFhSZzPpNpYTF1I3yYp.jpg",
     },
     {
         title: "ИТ-сертификация",
         users: "14 млн+",
-        img: "https://images.unsplash.com/photo-1581090700227-95f7b2f611d6?auto=format&fit=crop&w=800&q=80",
+        img: "https://pic.rutubelist.ru/playlist/cccef531-e5e5-11ef-9b90-02420a00066c.jpg",
     },
     {
         title: "Обработка и анализ данных",
         users: "8,1 млн+",
-        img: "https://images.unsplash.com/photo-1612832021122-6aa0fef9c2a5?auto=format&fit=crop&w=800&q=80",
+        img: "https://avatars.mds.yandex.net/i?id=c3792f0beecd6d143ce49addeb2da5c7d3d0d3a0-4885784-images-thumbs&n=13",
     },
 ];
 
-export default function CourseCarousel() {
+export default function SkillsSection() {
     return (
-        <div className="w-[90%] max-w-[1300px] mx-auto my-10">
+        <div className="w-[90%] max-w-[1320px] mx-auto my-10">
             <div className="flex flex-col md:flex-row gap-6">
                 <div className="md:w-1/3 flex flex-col justify-start gap-5">
                     <h2 className="text-2xl font-bold mb-2">
