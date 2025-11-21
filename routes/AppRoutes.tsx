@@ -10,7 +10,7 @@ import HomePage from "../src/pages/main/HomePage/HomePage.tsx";
 import CategoryPage from "../src/pages/main/categories/CategoryPage.tsx";
 import CoursePage from "../src/pages/main/CoursePage.tsx";
 import { Profile } from "../src/pages/profile/Profile.tsx";
-
+import Enrollments from "../src/pages/enrollments/Enrollments.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -66,7 +66,14 @@ export const AppRoutes: React.FC = () => {
                     </PrivateRoute>
                 }
             />
-
+            <Route
+                path="/course/:id/enroll"
+                element={
+                    <PrivateRoute>
+                        <Enrollments />
+                    </PrivateRoute>
+                }
+            />
             <Route
                 path="/profile"
                 element={

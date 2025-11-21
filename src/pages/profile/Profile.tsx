@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useUserStore } from "../../store/useUserStore";
 import type { Course } from "../../components/ui/Card/CardCourseProfile";
 import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
+import Avatar from "../../../assets/images/default_avatar.jpg";
 
 const coursesData: Course[] = [
     {
@@ -34,9 +35,20 @@ export const Profile: React.FC = () => {
         fetchUser();
     }, [fetchUser]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
-    if (!user) return <p>No user data</p>;
+    if (loading)
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="w-16 h-16 border-4 border-indigo-600 border-dashed rounded-full animate-spin"></div>
+            </div>
+        );
+    if (error)
+        return (
+            <p className="text-center mt-20 text-lg text-red-600">{error}</p>
+        );
+    if (!user)
+        return (
+            <p className="text-center mt-20 text-lg">Пользователь не найден</p>
+        );
 
     console.log(user);
     return (
@@ -71,17 +83,17 @@ export const Profile: React.FC = () => {
                         {/* Аватар */}
                         <img
                             className="h-24 w-24 rounded-full object-cover ring-4 ring-indigo-500 ring-offset-2"
-                            // src={user.avatarUrl}
-                            alt={user.firstName}
+                            src={Avatar}
+                            alt={user.first_name}
                         />
 
                         {/* Информация */}
                         <div className="flex-grow text-center md:text-left">
                             <p className="text-3xl font-extrabold text-gray-900">
-                                {user.firstName}
+                                {user.first_name}
                             </p>
                             <p className="text-3xl font-extrabold text-gray-900">
-                                {user.surname}
+                                {user.sur_name}
                             </p>
                             <p className="text-lg text-gray-600 mt-1">
                                 {user.email}
