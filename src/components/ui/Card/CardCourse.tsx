@@ -23,14 +23,14 @@ export default function CardCourses({ course }: CardCoursesProps) {
         >
             {/* Картинка курса */}
             <div className="w-full max-h-[250px] h-full rounded-md relative overflow-hidden mb-8">
-                {/*<img*/}
-                {/*    src={course.image}*/}
-                {/*    alt={course.title}*/}
-                {/*    className="w-full h-full object-cover"*/}
-                {/*/>*/}
-                {/*<div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-xs bg-[#17254e] text-white">*/}
-                {/*    {course.category.toUpperCase()}*/}
-                {/*</div>*/}
+                <img
+                    src={course.image || "https://picsum.photos/400/200"}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-md bg-[#17254e] text-white text-bold">
+                    {course.categories.name}
+                </div>
             </div>
 
             {/* Основной блок с фоном */}
@@ -41,7 +41,11 @@ export default function CardCourses({ course }: CardCoursesProps) {
                 {/* Рейтинг и цена */}
                 <div className="flex justify-between items-center mb-5">
                     <div className="flex gap-1 items-center">
-                        <img src={Star} alt="star icon" className="h-[14px] w-auto" />
+                        <img
+                            src={Star}
+                            alt="star icon"
+                            className="h-[14px] w-auto"
+                        />
                         <span className="text-[#4D5756] text-sm font-medium">
                             {/*{course.rating}*/}
                         </span>
@@ -59,17 +63,29 @@ export default function CardCourses({ course }: CardCoursesProps) {
                 {/* Информация: уроки / время / студенты */}
                 <div className="p-5 flex w-full justify-between items-center rounded-sm bg-white mb-8">
                     <div className="flex gap-2 items-center">
-                        <img src={CourseIcon} alt="Course Icon" className="w-auto h-full" />
+                        <img
+                            src={CourseIcon}
+                            alt="Course Icon"
+                            className="w-auto h-full"
+                        />
                         <span className="text-sm text-[#17254E]">
                             Уроков {course._count?.lessons}
                         </span>
                     </div>
                     <div className="flex gap-2 items-center">
-                        <img src={TimeIcon} alt="Time Icon" className="w-auto h-full" />
+                        <img
+                            src={TimeIcon}
+                            alt="Time Icon"
+                            className="w-auto h-full"
+                        />
                         {/*<span className="text-sm text-[#17254E]">{course.duration}</span>*/}
                     </div>
                     <div className="flex gap-2 items-center">
-                        <img src={StudentIcon} alt="Student Icon" className="w-auto h-full" />
+                        <img
+                            src={StudentIcon}
+                            alt="Student Icon"
+                            className="w-auto h-full"
+                        />
                         <span className="text-sm text-[#17254E]">
                             {/*Студентов {course.students}+*/}
                         </span>
@@ -80,7 +96,10 @@ export default function CardCourses({ course }: CardCoursesProps) {
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <img
-                            src={course.authorImage || "https://cdn.hackaday.io/images/3553251501638077867.png"}
+                            src={
+                                course.authorImage ||
+                                "https://cdn.hackaday.io/images/3553251501638077867.png"
+                            }
                             alt="Author Avatar"
                             className="w-11 h-11 rounded-full border-2 border-[#704fe6]"
                         />

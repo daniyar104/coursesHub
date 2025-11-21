@@ -84,16 +84,16 @@ export const Profile: React.FC = () => {
                         <img
                             className="h-24 w-24 rounded-full object-cover ring-4 ring-indigo-500 ring-offset-2"
                             src={Avatar}
-                            alt={user.first_name}
+                            alt={user.firstName}
                         />
 
                         {/* Информация */}
-                        <div className="flex-grow text-center md:text-left">
+                        <div className="grow text-center md:text-left">
                             <p className="text-3xl font-extrabold text-gray-900">
-                                {user.first_name}
+                                {user.firstName}
                             </p>
                             <p className="text-3xl font-extrabold text-gray-900">
-                                {user.sur_name}
+                                {user.surname}
                             </p>
                             <p className="text-lg text-gray-600 mt-1">
                                 {user.email}

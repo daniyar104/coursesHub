@@ -21,7 +21,6 @@ export interface LoginResponse {
     token: string;
 }
 
-
 export interface UserProfile {
     user_id: number;
     firstName: string;
@@ -44,30 +43,28 @@ export interface PresentList {
     time: string;
 }
 
-
-export interface Course{
-    id: string,
-    title: string,
-    short_description: string,
-    full_description?: string,
-    review_count: number,
-    avg_rating: number,
-    difficulty_level: string,
-    category_id: string,
-    created_at: string,
-    updated_at: string,
+export interface Course {
+    id: string;
+    title: string;
+    short_description: string;
+    full_description?: string;
+    review_count: number;
+    avg_rating: number;
+    difficulty_level: string;
+    category_id: string;
+    created_at: string;
+    updated_at: string;
     _count?: {
-        modules: number,
-        lessons: number
-    }
+        modules: number;
+        lessons: number;
+    };
 }
 
-
 export interface Category {
-    id: string,
-    name: string,
-    description: string,
-    created_at: string,
+    id: string;
+    name: string;
+    description: string;
+    created_at: string;
 }
 
 export interface LessonTest {
