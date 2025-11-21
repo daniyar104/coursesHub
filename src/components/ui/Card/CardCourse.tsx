@@ -47,7 +47,7 @@ export default function CardCourses({ course }: CardCoursesProps) {
                             className="h-[14px] w-auto"
                         />
                         <span className="text-[#4D5756] text-sm font-medium">
-                            {/*{course.rating}*/}
+                            {/* {course.rating} */}
                         </span>
                     </div>
                     <span className="text-[#704FE6] text-sm font-medium">

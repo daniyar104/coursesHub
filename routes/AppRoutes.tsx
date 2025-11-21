@@ -11,6 +11,7 @@ import CategoryPage from "../src/pages/main/categories/CategoryPage.tsx";
 import CoursePage from "../src/pages/main/CoursePage.tsx";
 import { Profile } from "../src/pages/profile/Profile.tsx";
 import Enrollments from "../src/pages/enrollments/Enrollments.tsx";
+import LessonArticle from "../src/pages/lesson article/LessonArticle.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -40,7 +41,6 @@ export const AppRoutes: React.FC = () => {
                     </PublicRoute>
                 }
             />
-
             {/* Приватные роуты */}
             <Route
                 path="/home"
@@ -79,6 +79,15 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <Profile />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/lesson"
+                element={
+                    <PrivateRoute>
+                        <LessonArticle />
                     </PrivateRoute>
                 }
             />
