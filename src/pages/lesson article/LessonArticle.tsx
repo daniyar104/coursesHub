@@ -1,18 +1,71 @@
 import Header from "../../components/Header/HomeHeader";
 import Arrow from "../../../assets/icon/Arrow.svg";
-import Player from "../../../assets/images/empty_player.jpg";
 import { Clock, User } from "lucide-react";
 import Divider from "../../components/ui/Divider/Divider";
 import Button from "../../components/ui/Button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Description from "./tab/Description";
 import { useNavigate } from "react-router-dom";
 import Practice from "./tab/Practice";
+import TeacherProfile from "./tab/TeacherProfile";
+import Footer from "../../components/Footer/FooterLesson";
+import ModulePanel from "./components/ModulePanel";
+import VideoPlayer, {
+    type VideoPlayerHandle,
+} from "../../components/ui/VideoPlayer/VideoPlayer";
+import TimecodeList from "../../components/ui/VideoPlayer/TimeCodeList";
 
 export default function LessonArticle() {
-    const [active, setActive] = useState("description");
+    const [activeTab, setActiveTab] = useState("description");
     const handleClick = (el: string) => {
-        setActive(el);
+        setActiveTab(el);
+    };
+
+    const playerRef = useRef<VideoPlayerHandle>(null);
+
+    const lessonTimecodes = [
+        { label: "Вступление", time: 0 },
+        { label: "Глава 1: Основы", time: 15 },
+        { label: "Глава 2: Практика", time: 120 },
+    ];
+
+    const handleTimecodeSelect = (time: number) => {
+        // Обращаемся к методу seekTo внутри VideoPlayer
+        playerRef.current?.seekTo(time);
+    };
+
+    const courseData = {
+        modules: [
+            {
+                id: "MOD1763819794148",
+                title: "Введение",
+                lessons: [
+                    {
+                        id: "LSN1763820309006",
+                        title: "Что такое HTML",
+                        material_url:
+                            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
+                    },
+                    {
+                        id: "LSN1763826786460",
+                        title: "VSCode Что это такое и с чем его едят?",
+                        material_url:
+                            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763826800588_j5pyi.pdf",
+                    },
+                ],
+            },
+            {
+                id: "MOD1763826657730",
+                title: "Что такое HTML?",
+                lessons: [
+                    {
+                        id: "LSN1763826681526",
+                        title: "Создаем новый файл и открываем его в браузере",
+                        material_url: null,
+                    },
+                ],
+            },
+        ],
     };
 
     const navigate = useNavigate();
@@ -52,37 +105,16 @@ export default function LessonArticle() {
                     {/* Проыйгрыватель */}
 
                     <div className="relative w-full md:h-[50vh] lg:h-[60vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
-                        <div className="absolute inset-0 bg-[#0E2A46]/30"></div>
-                        <img
-                            src={Player}
-                            alt="Player"
-                            className="w-full h-full object-cover"
+                        <VideoPlayer
+                            ref={playerRef}
+                            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+                            poster="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg"
+                            title="Урок 1. Введение в курс"
                         />
                     </div>
 
                     {/* Боковая панель с уроками */}
-                    <aside className="w-130  md:h-[50vh] lg:h-[60vh] max-h-[700px] absolute md:left-[calc(100%-40px)] left-[calc(100%-20px)] hover:left-[calc(100%-520px)] transition-all duration-300">
-                        <div className="w-full h-full flex bg-[#3F3F8F] rounded-l-[40px]">
-                            <div className="w-[35px] h-full flex items-center justify-center">
-                                <svg
-                                    width="15"
-                                    height="20"
-                                    viewBox="0 0 7 14"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M5.75 12.75L0.75 6.75L5.75 0.75003"
-                                        stroke="white"
-                                        stroke-width="1.5"
-                                        stroke-miterlimit="10"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                    </aside>
+                    <ModulePanel modules={courseData.modules} />
 
                     <h3 className="text-5xl text-[#0E2A46] leading-[120%] font-bold capitalize">
                         Знакомство с основами HTML
@@ -105,6 +137,10 @@ export default function LessonArticle() {
                         </div>
                     </div>
 
+                    <TimecodeList
+                        items={lessonTimecodes}
+                        onTimecodeClick={handleTimecodeSelect}
+                    />
                     <Divider className="w-full" thickness="2px" />
 
                     <div className="flex gap-5">
@@ -112,7 +148,7 @@ export default function LessonArticle() {
                             children={"Описание"}
                             variant="none"
                             className={`cursor-pointer text-xl ${
-                                active === "description"
+                                activeTab === "description"
                                     ? "bg-[#5344B6] text-white hover:bg-[#312679]"
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
@@ -124,7 +160,7 @@ export default function LessonArticle() {
                             children={"Практика"}
                             variant="none"
                             className={`cursor-pointer text-xl ${
-                                active === "practice"
+                                activeTab === "practice"
                                     ? "bg-[#5344B6] text-white hover:bg-[#312679]"
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
@@ -136,31 +172,36 @@ export default function LessonArticle() {
                             children={"Преподователь"}
                             variant="none"
                             className={`cursor-pointer text-xl ${
-                                active === "teachers"
+                                activeTab === "teacher"
                                     ? "bg-[#5344B6] text-white hover:bg-[#312679]"
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
                             onClick={() => {
-                                handleClick("teachers");
-                            }}
-                        />
-                        <Button
-                            children={"Отзывы"}
-                            variant="none"
-                            className={`cursor-pointer text-xl ${
-                                active === "review"
-                                    ? "bg-[#5344B6] text-white hover:bg-[#312679]"
-                                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                            }`}
-                            onClick={() => {
-                                handleClick("review");
+                                handleClick("teacher");
                             }}
                         />
                     </div>
 
-                    {active == "description" ? <Description /> : null}
-                    {active == "practice" ? <Practice /> : null}
+                    {activeTab == "description" ? <Description /> : null}
+                    {activeTab == "practice" ? <Practice /> : null}
                 </div>
+                {activeTab == "teacher" ? (
+                    <TeacherProfile
+                        name="Каюпов Еркебулан"
+                        role="Преподаватель"
+                        description="Tempor orci dapibus ultrices in iaculis nunc sed augue. Feugiat in ante metus dictum at tempor commodo."
+                        education={[
+                            "Bachelor of Computer Science, MIT",
+                            "Master in Educational Technology, Harvard",
+                        ]}
+                        avatarUrl="https://randomuser.me/api/portraits/men/32.jpg"
+                        phone="(568) 367-987-237"
+                        location="Hudson, Wisconsin(WI), 54016"
+                        email="govillage@gmail.com"
+                    />
+                ) : null}
+
+                <Footer />
             </div>
         </>
     );

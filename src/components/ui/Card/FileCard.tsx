@@ -55,7 +55,7 @@ export default function FileCard({ name, url }: FileCardProps) {
             >
                 {format.toUpperCase()}
             </div>
-            <p>{name}</p>
+            <p className="text-[#333931]">{name}</p>
         </div>
     );
 }

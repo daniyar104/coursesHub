@@ -1,8 +1,7 @@
-import React, {useState} from "react";
-import Logo from "../../assets/icon/Logo.png";
+import React, { useState } from "react";
+import Logo from "../../../assets/icon/Logo.png";
 
-export default function Footer(){
-
+export default function Footer() {
     const [email, setEmail] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
 
@@ -13,7 +12,7 @@ export default function Footer(){
             setEmail("");
         }
     };
-    return(
+    return (
         <footer
             id="contacts"
             className="bg-white border-t border-gray-300 py-10"
@@ -54,5 +53,5 @@ export default function Footer(){
                 )}
             </div>
         </footer>
-    )
+    );
 }

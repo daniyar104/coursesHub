@@ -2,7 +2,7 @@ import CasesSection from "../../components/section/CasesSection";
 import TestimonialsSection from "../../components/section/TestimonialsSection";
 import MainSection from "../../components/section/MainSection";
 import Header from "../../components/Header/WelcomeHeader.tsx";
-import Footer from "../../components/Footer.tsx";
+import Footer from "../../components/Footer/FooterWelcome.tsx";
 
 const articles = [
     {

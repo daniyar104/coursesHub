@@ -23,22 +23,6 @@ export default function Description() {
                 in reprehenderit in voluptate velit esse cillum..
             </p>
 
-            <h2 className="text-xl font-bold mb-4 ">ТАЙМ-КОДЫ</h2>
-            <ul className="space-y-2">
-                <li className="text-xl w-full rounded-xl hover:bg-gray-200 px-3 py-1.5 cursor-pointer flex gap-3 items-center">
-                    <span className="text-blue-600 underline decoration-1">
-                        01:00
-                    </span>
-                    Введение
-                </li>
-                <li className="text-xl w-full rounded-xl hover:bg-gray-200 px-3 py-1.5 cursor-pointer flex gap-3 items-center">
-                    <span className="text-blue-600 underline decoration-1">
-                        02:37
-                    </span>
-                    Основы HTML
-                </li>
-            </ul>
-
             <Divider />
             <div className="mt-auto">
                 <label className="block text-[#0E2A46] text-xl mb-4">
