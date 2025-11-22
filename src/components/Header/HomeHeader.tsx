@@ -15,7 +15,7 @@ export default function Header() {
     ];
     return (
         <header className="w-full bg-white/90 shadow-[0_1px_3px_0_rgba(18,20,32,0.14)] h-[95px] flex items-center ">
-            <div className="max--w-[1320px] w-[90%] mx-auto flex items-center justify-between h-15 ">
+            <div className="max-w-[1350px] w-[90%] mx-auto flex items-center justify-between h-15 ">
                 <div className="flex justify-between max-w-[830px] w-[90%] items-center">
                     {/* Логотип */}
                     <img

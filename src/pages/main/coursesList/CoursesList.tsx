@@ -1,7 +1,6 @@
-
 import Divider from "../../../components/ui/Divider/Divider.tsx";
-import {useCoursesStore} from "../../../../store/coursesStore.ts";
-import {useEffect} from "react";
+import { useCoursesStore } from "../../../store/coursesStore.ts";
+import { useEffect } from "react";
 import CardCourses from "../../../components/ui/Card/CardCourse.tsx";
 
 export default function CoursesList() {
@@ -20,8 +19,10 @@ export default function CoursesList() {
 
     useEffect(() => {
         fetchAllCourses();
+
     }, []);
     console.log(courses);
+
     return (
         <>
             {/*<Categories />*/}
@@ -78,3 +79,5 @@ export default function CoursesList() {
         </>
     );
 }
+
+//

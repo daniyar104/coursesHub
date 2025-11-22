@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import uni from '../../../assets/images/University.png';
 import logo from "../../../assets/images/UniversityIcon.png"
 import Input from "../../components/ui/Input";
 import PasswordInput from "../../components/ui/PasswordInput";
 import Button from "../../components/ui/Button";
-import {useNavigate} from "react-router-dom";
-import {useAuthStore} from "../../../store/authStore.ts";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore.ts";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -34,12 +34,12 @@ const LoginPage: React.FC = () => {
             {/* Левая часть */}
             <div className="hidden md:flex bg-gray-100 items-center justify-center w-[60%]">
                 {/* Можно вставить изображение */}
-                <img src={uni} alt="Background" className="object-cover w-[684px] h-[486px]"/>
+                <img src={uni} alt="Background" className="object-cover w-[684px] h-[486px]" />
             </div>
 
             <div className="w-[40%] p-8">
                 <div className="flex items-center justify-between w-full">
-                    <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]"/>
+                    <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]" />
                     <p className="flex">Courses <b className="text-[#3F3F8F]">HUB</b></p>
                 </div>
 
@@ -64,8 +64,9 @@ const LoginPage: React.FC = () => {
                             onChange={(val) => handleChange("password", val)}
                         />
                         <Button className="w-full" onClick={handleSubmit}
-                                variant="primary"
-                                size="medium">Войти</Button>
+                            variant="primary"
+                            loading={loading}
+                            size="medium">Войти</Button>
                     </div>
                     <div className="my-4 flex items-center">
                         <hr className="flex-1 border-gray-300" />
