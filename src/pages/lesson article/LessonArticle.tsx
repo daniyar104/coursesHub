@@ -7,6 +7,7 @@ import Button from "../../components/ui/Button";
 import { useState } from "react";
 import Description from "./tab/Description";
 import { useNavigate } from "react-router-dom";
+import Practice from "./tab/Practice";
 
 export default function LessonArticle() {
     const [active, setActive] = useState("description");
@@ -158,6 +159,7 @@ export default function LessonArticle() {
                     </div>
 
                     {active == "description" ? <Description /> : null}
+                    {active == "practice" ? <Practice /> : null}
                 </div>
             </div>
         </>
