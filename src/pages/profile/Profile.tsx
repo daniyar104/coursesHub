@@ -3,6 +3,7 @@ import { useUserStore } from "../../store/useUserStore";
 import type { Course } from "../../components/ui/Card/CardCourseProfile";
 import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
 import Avatar from "../../../assets/images/default_avatar.jpg";
+import {useCoursesStore} from "../../store/coursesStore.ts";
 
 const coursesData: Course[] = [
     {
@@ -30,9 +31,10 @@ const coursesData: Course[] = [
 
 export const Profile: React.FC = () => {
     const { user, loading, error, fetchUser } = useUserStore();
-
+    const { enrolledCourses, fetchEnrolledCourses } = useCoursesStore();
     useEffect(() => {
         fetchUser();
+        fetchEnrolledCourses();
     }, [fetchUser]);
 
     if (loading)
@@ -50,7 +52,8 @@ export const Profile: React.FC = () => {
             <p className="text-center mt-20 text-lg">Пользователь не найден</p>
         );
 
-    console.log(user);
+    // console.log(user);
+    console.log(enrolledCourses);
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-8 lg:p-12">
             <div className="max-w-7xl mx-auto">
@@ -138,13 +141,11 @@ export const Profile: React.FC = () => {
 
                     {/* Сетка курсов */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {coursesData.map((course) => (
-                            <CardCourseProfile
-                                key={course.id}
-                                course={course}
-                            />
+                        {enrolledCourses?.map((course) => (
+                            <CardCourseProfile key={course.id} course={course} />
                         ))}
                     </div>
+
 
                     {/* Кнопка "Посмотреть все" */}
                     <div className="mt-10 text-center">

@@ -4,16 +4,19 @@ import {
     getAllCourses,
     getCourseById,
     registerCourseById,
+    getEnrolledCourses, // ← добавил
 } from "../service/coursesService";
 
 interface CourseState {
     courses: Course[] | null;
+    enrolledCourses: Course[] | null; // ← добавил
     courseDetail: CourseWithModules | null;
     courseReg: Object;
     loading: boolean;
     error: boolean | null;
 
     fetchAllCourses: () => Promise<void>;
+    fetchEnrolledCourses: () => Promise<void>; // ← добавил
     fetchCourseById: (id: string) => Promise<void>;
     fetchRegisterCourse: (
         id: string
@@ -22,11 +25,15 @@ interface CourseState {
 
 export const useCoursesStore = create<CourseState>((set) => ({
     courses: null,
+    enrolledCourses: null, // ← добавил
     courseDetail: null,
     courseReg: {},
     loading: false,
     error: false,
 
+    // =============================
+    //   🔹 Получить ВСЕ курсы
+    // =============================
     fetchAllCourses: async () => {
         set({ loading: true, error: false });
         try {
@@ -35,7 +42,7 @@ export const useCoursesStore = create<CourseState>((set) => ({
                 courses,
                 loading: false,
             });
-        } catch (error) {
+        } catch (error: any) {
             set({
                 courses: null,
                 loading: false,
@@ -44,6 +51,29 @@ export const useCoursesStore = create<CourseState>((set) => ({
         }
     },
 
+    // =============================
+    //   🔹 Получить ЗАПИСАННЫЕ курсы
+    // =============================
+    fetchEnrolledCourses: async () => {
+        set({ loading: true, error: false });
+        try {
+            const courses = await getEnrolledCourses();
+            set({
+                enrolledCourses: courses,
+                loading: false,
+            });
+        } catch (error: any) {
+            set({
+                enrolledCourses: null,
+                loading: false,
+                error: error?.message || "Не удалось загрузить записанные курсы!",
+            });
+        }
+    },
+
+    // =============================
+    //   🔹 Получить курс по ID
+    // =============================
     fetchCourseById: async (id: string) => {
         set({ loading: true, error: null });
         try {
@@ -58,6 +88,9 @@ export const useCoursesStore = create<CourseState>((set) => ({
         }
     },
 
+    // =============================
+    //   🔹 Регистрация / покупка курса
+    // =============================
     fetchRegisterCourse: async (id: string) => {
         set({ loading: true, error: null });
 
@@ -65,7 +98,7 @@ export const useCoursesStore = create<CourseState>((set) => ({
             const res = await registerCourseById(id);
             set({ courseReg: res, loading: false });
             return res;
-        } catch (err) {
+        } catch (err: any) {
             set({
                 courseReg: {},
                 loading: false,

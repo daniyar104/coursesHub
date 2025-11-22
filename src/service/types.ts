@@ -49,9 +49,11 @@ export interface Course {
     short_description: string;
     full_description?: string;
     review_count: number;
-    avg_rating: number;
+    avg_rating: string | number;
     difficulty_level: string;
     category_id: string;
+    price?: number;
+    image?: string;
     created_at: string;
     updated_at: string;
     _count?: {
@@ -59,6 +61,26 @@ export interface Course {
         lessons: number;
     };
 }
+export interface EnrolledCourse {
+    id: string;
+    title: string;
+    categories: {
+        id: string;
+        name: string;
+        description: string;
+    };
+    _count: {
+        modules: number;
+        lessons: number;
+    };
+    enrollment: {
+        id: string;
+        status: string;      // "active", "completed", etc.
+        progress: string;    // как строка, поэтому преобразуем
+        enrolled_at: string;
+    };
+}
+
 
 export interface Category {
     id: string;
