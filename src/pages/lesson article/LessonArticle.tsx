@@ -6,21 +6,29 @@ import Divider from "../../components/ui/Divider/Divider";
 import Button from "../../components/ui/Button";
 import { useState } from "react";
 import Description from "./tab/Description";
+import { useNavigate } from "react-router-dom";
 
 export default function LessonArticle() {
     const [active, setActive] = useState("description");
     const handleClick = (el: string) => {
         setActive(el);
     };
+
+    const navigate = useNavigate();
     return (
         <>
-            <Header />
+            {/* <Header /> */}
 
             {/* контейнер */}
-            <div className="relative max-w-[1350px] w-[90%] mx-auto min-h-screen shadow-xl pt-25 overflow-x-hidden">
+            <div className="relative max-w-[1550px] w-[90%] mx-auto min-h-screen shadow-xl overflow-x-hidden">
                 {/* Внутрений Хэдэр на всю ширину */}
                 <div className="w-full min-h-16 bg-[#3F3F8F]/10 px-7 py-3 flex items-center justify-between">
-                    <button className="relative max-w-60 w-full min-w-30 min-h-15 rounded-[200px] cursor-pointer bg-[#3F3F8F] text-white text-base group">
+                    <button
+                        onClick={() => {
+                            navigate("/home");
+                        }}
+                        className="relative max-w-60 w-full min-w-30 min-h-15 rounded-[200px] cursor-pointer bg-[#3F3F8F] text-white text-base group"
+                    >
                         <div className="absolute w-15 h-15 rounded-full bg-[#5F52F8] top-0 left-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-x-2">
                             <img
                                 src={Arrow}
@@ -39,10 +47,10 @@ export default function LessonArticle() {
                 </div>
 
                 {/* Контент */}
-                <div className="w-[90%] max-w-[1230px] mx-auto mt-25 flex flex-col items-start gap-6">
+                <div className="w-[90%] max-w-[1230px] mx-auto mt-5 flex flex-col items-start gap-6">
                     {/* Проыйгрыватель */}
 
-                    <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
+                    <div className="relative w-full md:h-[50vh] lg:h-[60vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
                         <div className="absolute inset-0 bg-[#0E2A46]/30"></div>
                         <img
                             src={Player}
@@ -52,7 +60,7 @@ export default function LessonArticle() {
                     </div>
 
                     {/* Боковая панель с уроками */}
-                    <aside className="w-130 h-[50vh] md:h-[60vh] lg:h-[70vh] max-h-[700px] absolute md:left-[calc(100%-40px)] left-[calc(100%-20px)] hover:left-[calc(100%-520px)] transition-all duration-300">
+                    <aside className="w-130  md:h-[50vh] lg:h-[60vh] max-h-[700px] absolute md:left-[calc(100%-40px)] left-[calc(100%-20px)] hover:left-[calc(100%-520px)] transition-all duration-300">
                         <div className="w-full h-full flex bg-[#3F3F8F] rounded-l-[40px]">
                             <div className="w-[35px] h-full flex items-center justify-center">
                                 <svg
