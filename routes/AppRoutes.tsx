@@ -7,6 +7,7 @@ import WelcomePage from "../src/pages/welcomePage/WelcomePage";
 import RegisterPage from "../src/pages/auth/RegisterPage.tsx";
 import { PrivateRoute } from "./PrivateRoutes.tsx";
 import HomePage from "../src/pages/main/HomePage/HomePage.tsx";
+import CategoriesListPage from "../src/pages/main/categories/CategoriesListPage.tsx";
 import CategoryPage from "../src/pages/main/categories/CategoryPage.tsx";
 import CoursePage from "../src/pages/main/CoursePage.tsx";
 import { Profile } from "../src/pages/profile/Profile.tsx";
@@ -47,6 +48,14 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <HomePage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/categories"
+                element={
+                    <PrivateRoute>
+                        <CategoriesListPage />
                     </PrivateRoute>
                 }
             />

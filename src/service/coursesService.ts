@@ -39,3 +39,15 @@ export async function registerCourseById(
         };
     }
 }
+
+export const getEnrolledCourses = async () => {
+    const token = getToken();
+
+    const response = await api.get("/courses/enrolled", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data.data; // массив Course[]
+};

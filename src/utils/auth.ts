@@ -1,16 +1,32 @@
-export const setToken = (token: string, days = 7) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // срок жизни cookie
-    document.cookie = `token=${token};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+export const setToken = (
+    token: string,
+    days = 7,
+    options: {
+        sameSite?: 'Lax' | 'Strict' | 'None',
+        secure?: boolean
+    } = {}
+) => {
+    const { sameSite = 'Lax', secure = window.location.protocol === 'https:' } = options;
+
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+
+    let cookie = `token=${token}; expires=${expires}; path=/; SameSite=${sameSite}`;
+    if (secure) cookie += '; Secure';
+
+    document.cookie = cookie;
 };
+
 
 export const getToken = () => {
-    return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'token') return value;
+    }
+    return null;
 };
 
+
 export const deleteToken = () => {
-    document.cookie = 'token=; Max-Age=0; path=/';
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 };
