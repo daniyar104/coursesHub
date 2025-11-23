@@ -1,11 +1,9 @@
 import Header from "../../components/Header/HomeHeader";
-import Arrow from "../../../assets/icon/Arrow.svg";
 import { Clock, User } from "lucide-react";
 import Divider from "../../components/ui/Divider/Divider";
 import Button from "../../components/ui/Button";
 import { useRef, useState } from "react";
 import Description from "./tab/Description";
-import { useNavigate } from "react-router-dom";
 import Practice from "./tab/Practice";
 import TeacherProfile from "./tab/TeacherProfile";
 import Footer from "../../components/Footer/FooterLesson";
@@ -14,9 +12,12 @@ import VideoPlayer, {
     type VideoPlayerHandle,
 } from "../../components/ui/VideoPlayer/VideoPlayer";
 import TimecodeList from "../../components/ui/VideoPlayer/TimeCodeList";
+import ButtonLesson from "../../components/ui/Button/ButtonLesson";
+import MaterialRenderer from "./components/MaterialRenderer";
 
 export default function LessonArticle() {
     const [activeTab, setActiveTab] = useState("description");
+
     const handleClick = (el: string) => {
         setActiveTab(el);
     };
@@ -25,8 +26,9 @@ export default function LessonArticle() {
 
     const lessonTimecodes = [
         { label: "Вступление", time: 0 },
-        { label: "Глава 1: Основы", time: 15 },
-        { label: "Глава 2: Практика", time: 120 },
+        { label: "Глава 1: Основы монтажа", time: 125 }, // 2:05
+        { label: "Глава 2: Цветокоррекция", time: 340 }, // 5:40
+        { label: "Глава 3: Экспорт", time: 510 }, // 8:30
     ];
 
     const handleTimecodeSelect = (time: number) => {
@@ -68,7 +70,20 @@ export default function LessonArticle() {
         ],
     };
 
-    const navigate = useNavigate();
+    const lesson = {
+        type: "presentation" as const,
+        title: "Что такое HTML",
+        material_url:
+            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
+        slides: null,
+        video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        timecodes: [
+            { label: "Вступление", time: 0 },
+            { label: "Глава 1: Основы HTML", time: 45 },
+            { label: "Глава 2: Теги", time: 120 },
+        ],
+    };
+
     return (
         <>
             {/* <Header /> */}
@@ -77,21 +92,7 @@ export default function LessonArticle() {
             <div className="relative max-w-[1550px] w-[90%] mx-auto min-h-screen shadow-xl overflow-x-hidden">
                 {/* Внутрений Хэдэр на всю ширину */}
                 <div className="w-full min-h-16 bg-[#3F3F8F]/10 px-7 py-3 flex items-center justify-between">
-                    <button
-                        onClick={() => {
-                            navigate("/home");
-                        }}
-                        className="relative max-w-60 w-full min-w-30 min-h-15 rounded-[200px] cursor-pointer bg-[#3F3F8F] text-white text-base group"
-                    >
-                        <div className="absolute w-15 h-15 rounded-full bg-[#5F52F8] top-0 left-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-x-2">
-                            <img
-                                src={Arrow}
-                                alt="Arrow icon"
-                                className="w-full h-full max-w-7 rotate-180"
-                            />
-                        </div>
-                        Вернуться
-                    </button>
+                    <ButtonLesson text="Вернуться" link="/home" />
 
                     <h3 className="text-2xl text-center uppercase flex-1 max-w-[700px]  text-[#4D5756]">
                         Web-разработка
@@ -102,14 +103,13 @@ export default function LessonArticle() {
 
                 {/* Контент */}
                 <div className="w-[90%] max-w-[1230px] mx-auto mt-5 flex flex-col items-start gap-6">
-                    {/* Проыйгрыватель */}
-
-                    <div className="relative w-full md:h-[50vh] lg:h-[60vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
-                        <VideoPlayer
-                            ref={playerRef}
-                            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-                            poster="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg"
-                            title="Урок 1. Введение в курс"
+                    <div className="w-full h-full">
+                        <MaterialRenderer
+                            type={lesson.type}
+                            title={lesson.title}
+                            material_url={lesson.material_url}
+                            video={lesson.video_url}
+                            timecodes={lesson.timecodes}
                         />
                     </div>
 
@@ -119,7 +119,6 @@ export default function LessonArticle() {
                     <h3 className="text-5xl text-[#0E2A46] leading-[120%] font-bold capitalize">
                         Знакомство с основами HTML
                     </h3>
-
                     <div className="flex max-w-full gap-5">
                         <div className="flex items-center gap-1">
                             <Clock size={20} color="#3F3F8F" />
@@ -136,11 +135,10 @@ export default function LessonArticle() {
                             </p>
                         </div>
                     </div>
-
-                    <TimecodeList
+                    {/* <TimecodeList
                         items={lessonTimecodes}
                         onTimecodeClick={handleTimecodeSelect}
-                    />
+                    /> */}
                     <Divider className="w-full" thickness="2px" />
 
                     <div className="flex gap-5">
@@ -194,7 +192,7 @@ export default function LessonArticle() {
                             "Bachelor of Computer Science, MIT",
                             "Master in Educational Technology, Harvard",
                         ]}
-                        avatarUrl="https://randomuser.me/api/portraits/men/32.jpg"
+                        avatarUrl="https://randomuser.me/api/portraits/women/32.jpg"
                         phone="(568) 367-987-237"
                         location="Hudson, Wisconsin(WI), 54016"
                         email="govillage@gmail.com"

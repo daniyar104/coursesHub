@@ -7,7 +7,12 @@ import React, {
 } from "react";
 import { Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react";
 
-// Тип для управления плеером извне
+// Определяем структуру таймкода, чтобы плеер знал, что принимать
+export interface TimecodeMarker {
+    time: number;
+    label?: string; // label тут не обязателен для отрисовки, но пусть будет для совместимости
+}
+
 export interface VideoPlayerHandle {
     seekTo: (time: number) => void;
 }
@@ -16,10 +21,12 @@ interface VideoPlayerProps {
     src: string;
     poster?: string;
     title?: string;
+    // НОВЫЙ ПРОП: массив таймкодов для отображения на баре
+    timecodes?: TimecodeMarker[];
 }
 
 const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
-    ({ src, poster, title }, ref) => {
+    ({ src, poster, title, timecodes = [] }, ref) => {
         const videoRef = useRef<HTMLVideoElement>(null);
         const [isPlaying, setIsPlaying] = useState(false);
         const [currentTime, setCurrentTime] = useState(0);
@@ -27,10 +34,8 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
         const [isMuted, setIsMuted] = useState(false);
         const [showControls, setShowControls] = useState(true);
 
-        // Используем number, так как в браузере setTimeout возвращает ID (число)
         const controlsTimeoutRef = useRef<number | undefined>(undefined);
 
-        // Экспортируем методы наружу
         useImperativeHandle(ref, () => ({
             seekTo: (time: number) => {
                 if (videoRef.current) {
@@ -43,26 +48,23 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
             },
         }));
 
+        // --- Логика управления (без изменений) ---
         const handleMouseMove = () => {
             setShowControls(true);
-            if (controlsTimeoutRef.current) {
+            if (controlsTimeoutRef.current)
                 clearTimeout(controlsTimeoutRef.current);
-            }
-            // Прячем контролы через 3 секунды, если видео играет
             if (isPlaying) {
-                controlsTimeoutRef.current = window.setTimeout(() => {
-                    setShowControls(false);
-                }, 3000);
+                controlsTimeoutRef.current = window.setTimeout(
+                    () => setShowControls(false),
+                    3000
+                );
             }
         };
 
         const handleMouseLeave = () => {
-            if (isPlaying) {
-                setShowControls(false);
-            }
+            if (isPlaying) setShowControls(false);
         };
 
-        // Очистка таймера при размонтировании
         useEffect(() => {
             return () => {
                 if (controlsTimeoutRef.current)
@@ -72,11 +74,9 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
 
         const togglePlay = () => {
             if (!videoRef.current) return;
-
             if (videoRef.current.paused) {
                 videoRef.current.play();
                 setIsPlaying(true);
-                // Запускаем таймер скрытия контролов
                 controlsTimeoutRef.current = window.setTimeout(
                     () => setShowControls(false),
                     3000
@@ -116,13 +116,9 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
         const toggleFullscreen = () => {
             if (!videoRef.current) return;
             const container = videoRef.current.parentElement;
-
             if (container) {
-                if (!document.fullscreenElement) {
-                    container.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
+                if (!document.fullscreenElement) container.requestFullscreen();
+                else document.exitFullscreen();
             }
         };
 
@@ -131,6 +127,7 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
             const seconds = Math.floor(time % 60);
             return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
         };
+        // -----------------------------------------
 
         return (
             <div
@@ -148,18 +145,15 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
                     onLoadedMetadata={handleLoadedMetadata}
                 />
 
-                {/* Оверлей (Тень + Заголовок + Кнопка Play по центру) */}
                 <div
                     className={`absolute inset-0 bg-black/30 transition-opacity duration-300 flex flex-col justify-between pointer-events-none ${
                         showControls || !isPlaying ? "opacity-100" : "opacity-0"
                     }`}
                 >
-                    {/* Заголовок */}
                     <div className="p-6 text-white font-medium text-lg drop-shadow-md">
                         {title}
                     </div>
 
-                    {/* Центральная кнопка Play (только если пауза) */}
                     {!isPlaying && (
                         <div className="absolute inset-0 flex items-center justify-center">
                             <button
@@ -174,19 +168,40 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
                         </div>
                     )}
 
-                    {/* Нижняя панель */}
                     <div className="bg-gradient-to-t from-black/90 to-transparent px-6 pb-6 pt-12 pointer-events-auto">
-                        {/* Прогресс бар */}
+                        {/* --- ПРОГРЕСС БАР С МАРКЕРАМИ --- */}
                         <div className="relative w-full h-1.5 flex items-center group/slider cursor-pointer mb-4">
                             {/* Фон */}
-                            <div className="absolute w-full h-full bg-white/30 rounded-full"></div>
+                            <div className="absolute w-full h-full bg-white/30 rounded-full overflow-hidden">
+                                {/* НОВОЕ: Маркеры глав 
+                  Мы рисуем их поверх фона, но под активным прогрессом.
+                  Используем z-index, чтобы они были видны на фоне, но перекрывались синим прогрессом.
+              */}
+                                {duration > 0 &&
+                                    timecodes.map((tc, index) => {
+                                        // Не рисуем маркер для самого начала (0:00)
+                                        if (tc.time <= 0) return null;
+                                        const position =
+                                            (tc.time / duration) * 100;
+                                        return (
+                                            <div
+                                                key={index}
+                                                // Тонкая белая полупрозрачная линия, создающая эффект "разреза"
+                                                className="absolute top-0 bottom-0 w-[1px] bg-white/70 z-10 pointer-events-none"
+                                                style={{ left: `${position}%` }}
+                                            />
+                                        );
+                                    })}
+                            </div>
+
                             {/* Прогресс (Accent Color) */}
                             <div
-                                className="absolute h-full bg-[#5F52F8] rounded-full"
+                                className="absolute h-full bg-[#5F52F8] rounded-full z-20 pointer-events-none"
                                 style={{
                                     width: `${(currentTime / duration) * 100}%`,
                                 }}
                             ></div>
+
                             {/* Input range (невидимый) */}
                             <input
                                 type="range"
@@ -194,11 +209,11 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
                                 max={duration || 0}
                                 value={currentTime}
                                 onChange={handleSeek}
-                                className="absolute w-full h-full opacity-0 cursor-pointer z-10"
+                                className="absolute w-full h-full opacity-0 cursor-pointer z-30"
                             />
                         </div>
+                        {/* -------------------------------- */}
 
-                        {/* Кнопки управления */}
                         <div className="flex items-center justify-between text-white">
                             <div className="flex items-center gap-4">
                                 <button

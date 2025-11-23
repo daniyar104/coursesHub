@@ -3,7 +3,8 @@ import { useUserStore } from "../../store/useUserStore";
 import type { Course } from "../../components/ui/Card/CardCourseProfile";
 import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
 import Avatar from "../../../assets/images/default_avatar.jpg";
-import {useCoursesStore} from "../../store/coursesStore.ts";
+import { useCoursesStore } from "../../store/coursesStore.ts";
+import Loading from "../../components/ui/Loading/Loading.tsx";
 
 const coursesData: Course[] = [
     {
@@ -37,12 +38,7 @@ export const Profile: React.FC = () => {
         fetchEnrolledCourses();
     }, [fetchUser]);
 
-    if (loading)
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <div className="w-16 h-16 border-4 border-indigo-600 border-dashed rounded-full animate-spin"></div>
-            </div>
-        );
+    if (loading) return <Loading />;
     if (error)
         return (
             <p className="text-center mt-20 text-lg text-red-600">{error}</p>
@@ -142,10 +138,12 @@ export const Profile: React.FC = () => {
                     {/* Сетка курсов */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {enrolledCourses?.map((course) => (
-                            <CardCourseProfile key={course.id} course={course} />
+                            <CardCourseProfile
+                                key={course.id}
+                                course={course}
+                            />
                         ))}
                     </div>
-
 
                     {/* Кнопка "Посмотреть все" */}
                     <div className="mt-10 text-center">

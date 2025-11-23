@@ -4,16 +4,15 @@ import CallToActionSection from "../../../components/ui/Slider/forSlider/CallToA
 import PresentPage from "../present/PresentPage.tsx";
 import CoursesList from "../coursesList/CoursesList.tsx";
 
-
 function HomePage() {
     return (
         <>
             <Header />
-            <div className=" max-w-[1320px] w-9/10 mx-auto">
+            <div className=" max-w-[1320px] w-9/10 max-h-100 mx-auto">
                 <Slider
                     elements={[
                         <CallToActionSection />,
-                        <CallToActionSection />
+                        <CallToActionSection />,
                     ]}
                 />
             </div>
