@@ -45,7 +45,7 @@ export default function Header() {
 
                             <li
                                 className="cursor-pointer hover:text-indigo-600 transition-colors"
-                                onClick={() => navigator("/course/1/enroll")}
+                                onClick={() => navigator("/my-courses")}
                             >
                                 Мое обучение
                             </li>
@@ -90,7 +90,7 @@ export default function Header() {
                         }
                         items={[
                             { text: "Профиль", link: "/profile" },
-                            { text: "Мое обучение", link: "/course/1/enroll" },
+                            { text: "Мое обучение", link: "/my-courses" },
                             { text: "Выход", link: "/logout" },
                         ]}
                         position="right"

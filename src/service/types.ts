@@ -178,3 +178,18 @@ export interface TeacherDetail extends Teacher {
     coursesCount: number;
     studentsCount: number;
 }
+
+// Lesson Material types
+export interface LessonMaterial {
+    lessonId: string;
+    title: string;
+    materialUrl: string;
+    expiresIn: number;
+    courseId?: string; // ID курса для навигации
+}
+
+// Enrollment Status types
+export interface EnrollmentStatus {
+    enrolled: boolean;
+    enrollmentId?: string;
+}

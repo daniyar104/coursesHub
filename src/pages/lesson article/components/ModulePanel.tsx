@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Пример props
 interface Lesson {
@@ -22,13 +23,13 @@ interface ModulePanelProps {
 export default function ModulePanel({ modules }: ModulePanelProps) {
     const [active, setActive] = useState(false);
     const [activeModule, setActiveModule] = useState<number | null>(null);
+    const navigate = useNavigate();
 
     return (
         <>
             <div
-                className={`fixed inset-0 bg-black z-10 transition-opacity duration-300 ${
-                    active ? "opacity-30" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 bg-black z-10 transition-opacity duration-300 ${active ? "opacity-30" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={() => setActive(false)}
             />
 
@@ -44,9 +45,8 @@ export default function ModulePanel({ modules }: ModulePanelProps) {
                     <div className="w-[35px] h-full flex items-center justify-center ">
                         <ChevronLeft
                             color="white"
-                            className={`${
-                                active ? "rotate-180" : ""
-                            } transition-all duration-700`}
+                            className={`${active ? "rotate-180" : ""
+                                } transition-all duration-700`}
                         />
                     </div>
 
@@ -76,11 +76,10 @@ export default function ModulePanel({ modules }: ModulePanelProps) {
 
                                         <ChevronLeft
                                             color="#3F3F8F"
-                                            className={`${
-                                                activeModule === i
-                                                    ? "rotate-90"
-                                                    : "rotate-270"
-                                            } transition-all duration-300`}
+                                            className={`${activeModule === i
+                                                ? "rotate-90"
+                                                : "rotate-270"
+                                                } transition-all duration-300`}
                                         />
                                     </div>
 
@@ -99,7 +98,11 @@ export default function ModulePanel({ modules }: ModulePanelProps) {
                                                 (lesson, lessonIndex) => (
                                                     <div
                                                         key={lesson.id}
-                                                        className="flex items-center gap-2 p-2 rounded-lg bg-[#F3F3FF] border border-[#E5E5F3] group"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigate(`/lesson/${lesson.id}/material`);
+                                                        }}
+                                                        className="flex items-center gap-2 p-2 rounded-lg bg-[#F3F3FF] border border-[#E5E5F3] hover:bg-[#E5E5F3] cursor-pointer group"
                                                     >
                                                         <span className="w-7 h-7 rounded-full flex items-center justify-center bg-gray-300 group-hover:bg-[#3F3F8F] group-hover:text-white duration-200">
                                                             {lessonIndex + 1}
