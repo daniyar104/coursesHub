@@ -125,3 +125,56 @@ export interface CourseWithModules extends Course {
     categories?: Category;
     reviews?: [];
 }
+
+// Teacher types
+export interface Teacher {
+    id: string;
+    firstName: string;
+    lastName: string;
+    position: string;
+    department: string;
+    specialization: string[];
+    avatar: string;
+    email: string;
+    phone: string;
+    shortBio: string;
+}
+
+export interface Experience {
+    id: string;
+    position: string;
+    organization: string;
+    startDate: string;
+    endDate?: string;
+    description: string;
+    current: boolean;
+}
+
+export interface Publication {
+    id: string;
+    title: string;
+    type: 'article' | 'book' | 'conference' | 'journal';
+    publisher: string;
+    publishDate: string;
+    url?: string;
+    description: string;
+}
+
+export interface Certificate {
+    id: string;
+    title: string;
+    issuer: string;
+    issueDate: string;
+    imageUrl: string;
+    credentialUrl?: string;
+}
+
+export interface TeacherDetail extends Teacher {
+    fullBio: string;
+    education: string[];
+    experience: Experience[];
+    publications: Publication[];
+    certificates: Certificate[];
+    coursesCount: number;
+    studentsCount: number;
+}

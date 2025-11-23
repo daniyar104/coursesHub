@@ -13,6 +13,8 @@ import CoursePage from "../src/pages/main/CoursePage.tsx";
 import { Profile } from "../src/pages/profile/Profile.tsx";
 import Enrollments from "../src/pages/enrollments/Enrollments.tsx";
 import LessonArticle from "../src/pages/lesson article/LessonArticle.tsx";
+import TeachersListPage from "../src/pages/teachers/TeachersListPage.tsx";
+import TeacherDetailPage from "../src/pages/teachers/TeacherDetailPage.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -97,6 +99,23 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <LessonArticle />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/teachers"
+                element={
+                    <PrivateRoute>
+                        <TeachersListPage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/teachers/:id"
+                element={
+                    <PrivateRoute>
+                        <TeacherDetailPage />
                     </PrivateRoute>
                 }
             />

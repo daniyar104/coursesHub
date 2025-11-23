@@ -15,7 +15,7 @@ const IconBox: React.FC<IconBoxProps> = ({ colorClass, delay = 0 }) => (
 export default function CallToActionSection() {
     return (
         <div className="w-full max-h-100 h-full">
-            <div className="bg-indigo-700 text-white overflow-hidden flex flex-col lg:flex-row items-center lg:items-stretch gap-8 relative min-h-[400px]">
+            <div className="bg-indigo-700 text-white overflow-hidden px-10 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 relative min-h-[400px]">
                 {/* Левый блок с текстом */}
                 <div className="flex-1 flex flex-col justify-center p-5">
                     <h2 className="text-3xl sm:text-4xl font-bold mb-4">
