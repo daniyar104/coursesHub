@@ -15,6 +15,9 @@ import Enrollments from "../src/pages/enrollments/Enrollments.tsx";
 import LessonArticle from "../src/pages/lesson article/LessonArticle.tsx";
 import TeachersListPage from "../src/pages/teachers/TeachersListPage.tsx";
 import TeacherDetailPage from "../src/pages/teachers/TeacherDetailPage.tsx";
+import MyCoursesPage from "../src/pages/my-courses/MyCoursesPage.tsx";
+import LessonMaterialPage from "../src/pages/lesson/LessonMaterialPage.tsx";
+import CourseCurriculumPage from "../src/pages/course/CourseCurriculumPage.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -116,6 +119,33 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <TeacherDetailPage />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/my-courses"
+                element={
+                    <PrivateRoute>
+                        <MyCoursesPage />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/lesson/:id/material"
+                element={
+                    <PrivateRoute>
+                        <LessonMaterialPage />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/course/:id/curriculum"
+                element={
+                    <PrivateRoute>
+                        <CourseCurriculumPage />
                     </PrivateRoute>
                 }
             />

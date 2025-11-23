@@ -1,4 +1,4 @@
-import { type Course, type CourseWithModules } from "../service/types";
+import { type Course, type CourseWithModules, type EnrolledCourse } from "../service/types";
 import { create } from "zustand";
 import {
     getAllCourses,
@@ -9,7 +9,7 @@ import {
 
 interface CourseState {
     courses: Course[] | null;
-    enrolledCourses: Course[] | null; // ← добавил
+    enrolledCourses: EnrolledCourse[] | null; // ← изменил тип
     courseDetail: CourseWithModules | null;
     courseReg: Object;
     loading: boolean;

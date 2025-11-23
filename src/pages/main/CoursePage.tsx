@@ -15,16 +15,27 @@ import {
     Sparkles,
 } from "lucide-react";
 import { useCoursesStore } from "../../store/coursesStore";
+import { checkEnrollmentStatus } from "../../service/coursesService";
 
 const CoursePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
     const [activeModule, setActiveModule] = useState<string | null>(null);
+    const [isEnrolled, setIsEnrolled] = useState(false);
+    const [checkingEnrollment, setCheckingEnrollment] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (id) fetchCourseById(id);
+        if (id) {
+            fetchCourseById(id);
+
+            // Проверяем статус регистрации
+            checkEnrollmentStatus(id).then((status) => {
+                setIsEnrolled(status.enrolled);
+                setCheckingEnrollment(false);
+            });
+        }
     }, [id, fetchCourseById]);
 
     if (!course) {
@@ -132,10 +143,11 @@ const CoursePage: React.FC = () => {
                                     </p>
                                 </div>
                                 <button
-                                    onClick={() => navigate(`/course/${id}/enroll`)}
-                                    className="w-full bg-white text-indigo-600 font-bold py-4 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg mb-4"
+                                    onClick={() => navigate(isEnrolled ? `/course/${id}/curriculum` : `/course/${id}/enroll`)}
+                                    disabled={checkingEnrollment}
+                                    className="w-full bg-white text-indigo-600 font-bold py-4 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Начать обучение
+                                    {checkingEnrollment ? 'Загрузка...' : (isEnrolled ? 'Перейти к обучению' : 'Начать обучение')}
                                 </button>
                                 <div className="space-y-2 text-sm text-indigo-100">
                                     <div className="flex items-center gap-2">
@@ -258,6 +270,7 @@ const CoursePage: React.FC = () => {
                                                 {mod.lessons.map((lesson, lessonIndex) => (
                                                     <div
                                                         key={lesson.id}
+                                                        onClick={() => navigate(`/lesson/${lesson.id}/material`)}
                                                         className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer group"
                                                     >
                                                         <div className="flex items-center justify-center w-6 h-6 bg-gray-200 group-hover:bg-indigo-600 text-gray-600 group-hover:text-white rounded-full text-xs font-bold transition-colors">

@@ -43,11 +43,44 @@ export async function registerCourseById(
 export const getEnrolledCourses = async () => {
     const token = getToken();
 
-    const response = await api.get("/courses/enrolled", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    if (!token) {
+        console.error("No token found in getEnrolledCourses");
+        throw new Error("Необходима авторизация");
+    }
 
-    return response.data.data; // массив Course[]
+    try {
+        const response = await api.get("/courses/enrolled", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data.data; // массив EnrolledCourse[]
+    } catch (error: any) {
+        console.error("Error fetching enrolled courses:", error.response?.status, error.response?.data);
+        throw error;
+    }
 };
+
+// Проверка регистрации на курс
+export const checkEnrollmentStatus = async (courseId: string) => {
+    const token = getToken();
+
+    if (!token) {
+        return { enrolled: false };
+    }
+
+    try {
+        const enrolledCourses = await getEnrolledCourses();
+        const enrollment = enrolledCourses.find((course: any) => course.course_id === courseId);
+
+        return {
+            enrolled: !!enrollment,
+            enrollmentId: enrollment?.id,
+        };
+    } catch (error) {
+        console.error("Error checking enrollment status:", error);
+        return { enrolled: false };
+    }
+};
+
