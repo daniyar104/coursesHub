@@ -2,7 +2,7 @@ import Header from "../../components/Header/HomeHeader";
 import { Clock, User } from "lucide-react";
 import Divider from "../../components/ui/Divider/Divider";
 import Button from "../../components/ui/Button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Description from "./tab/Description";
 import Practice from "./tab/Practice";
 import TeacherProfile from "./tab/TeacherProfile";
@@ -14,13 +14,34 @@ import VideoPlayer, {
 import TimecodeList from "../../components/ui/VideoPlayer/TimeCodeList";
 import ButtonLesson from "../../components/ui/Button/ButtonLesson";
 import MaterialRenderer from "./components/MaterialRenderer";
+import { useParams } from "react-router-dom";
+import { useCoursesStore } from "../../store/coursesStore";
 
-export default function LessonArticle() {
+export default function LessonPage() {
+    const { courseId, lessonId } = useParams<{
+        courseId: string;
+        lessonId: string;
+    }>();
+
+    const fetchCourseById = useCoursesStore((state) => state.fetchCourseById);
+    const course = useCoursesStore((state) => state.courseDetail);
+    const loading = useCoursesStore((state) => state.loading);
+
+    useEffect(() => {
+        if (courseId) fetchCourseById(courseId);
+    }, [courseId]);
+
+    if (loading) return <div>Загрузка...</div>;
+
+    if (!course) return <div>Курс не найден</div>;
+
+    const lesson = course.modules
+        ?.flatMap((m) => m.lessons)
+        .find((l) => l.id === lessonId);
+
+    console.log(course);
+
     const [activeTab, setActiveTab] = useState("description");
-
-    const handleClick = (el: string) => {
-        setActiveTab(el);
-    };
 
     const playerRef = useRef<VideoPlayerHandle>(null);
 
@@ -70,19 +91,19 @@ export default function LessonArticle() {
         ],
     };
 
-    const lesson = {
-        type: "presentation" as const,
-        title: "Что такое HTML",
-        material_url:
-            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
-        slides: null,
-        video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        timecodes: [
-            { label: "Вступление", time: 0 },
-            { label: "Глава 1: Основы HTML", time: 45 },
-            { label: "Глава 2: Теги", time: 120 },
-        ],
-    };
+    // const lesson = {
+    //     type: "presentation" as const,
+    //     title: "Что такое HTML",
+    //     material_url:
+    //         "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
+    //     slides: null,
+    //     video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    //     timecodes: [
+    //         { label: "Вступление", time: 0 },
+    //         { label: "Глава 1: Основы HTML", time: 45 },
+    //         { label: "Глава 2: Теги", time: 120 },
+    //     ],
+    // };
 
     return (
         <>
@@ -151,7 +172,7 @@ export default function LessonArticle() {
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
                             onClick={() => {
-                                handleClick("description");
+                                setActiveTab("description");
                             }}
                         />
                         <Button
@@ -163,7 +184,7 @@ export default function LessonArticle() {
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
                             onClick={() => {
-                                handleClick("practice");
+                                setActiveTab("practice");
                             }}
                         />
                         <Button
@@ -175,7 +196,7 @@ export default function LessonArticle() {
                                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                             }`}
                             onClick={() => {
-                                handleClick("teacher");
+                                setActiveTab("teacher");
                             }}
                         />
                     </div>
