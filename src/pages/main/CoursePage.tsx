@@ -96,7 +96,8 @@ const CoursePage: React.FC = () => {
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                                     <Star className="w-5 h-5 text-yellow-300" />
                                     <span className="font-semibold">
-                                        {Number(course.avg_rating).toFixed(1)} / 5.0
+                                        {Number(course.avg_rating).toFixed(1)} /
+                                        5.0
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
@@ -125,14 +126,18 @@ const CoursePage: React.FC = () => {
                             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
                                 <div className="text-center mb-4">
                                     <div className="text-4xl font-bold mb-2">
-                                        {course.price ? `${course.price} ₸` : "Бесплатно"}
+                                        {course.price
+                                            ? `${course.price} ₸`
+                                            : "Бесплатно"}
                                     </div>
                                     <p className="text-indigo-100 text-sm">
                                         Полный доступ к курсу
                                     </p>
                                 </div>
                                 <button
-                                    onClick={() => navigate(`/course/${id}/enroll`)}
+                                    onClick={() =>
+                                        navigate(`/course/${id}/enroll`)
+                                    }
                                     className="w-full bg-white text-indigo-600 font-bold py-4 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg mb-4"
                                 >
                                     Начать обучение
@@ -174,7 +179,8 @@ const CoursePage: React.FC = () => {
                                 О курсе
                             </h2>
                             <p className="text-gray-700 text-lg leading-relaxed">
-                                {course.full_description || course.short_description}
+                                {course.full_description ||
+                                    course.short_description}
                             </p>
                         </motion.div>
 
@@ -205,7 +211,9 @@ const CoursePage: React.FC = () => {
                                         <button
                                             onClick={() =>
                                                 setActiveModule(
-                                                    activeModule === mod.id ? null : mod.id
+                                                    activeModule === mod.id
+                                                        ? null
+                                                        : mod.id
                                                 )
                                             }
                                             className="w-full text-left p-6 bg-gradient-to-r from-gray-50 to-white hover:from-indigo-50 hover:to-purple-50 transition-all"
@@ -229,14 +237,20 @@ const CoursePage: React.FC = () => {
                                                 <div className="flex items-center gap-4 text-sm text-gray-500">
                                                     <span className="flex items-center gap-1">
                                                         <Play className="w-4 h-4" />
-                                                        {mod.lessons.length} уроков
+                                                        {mod.lessons.length}{" "}
+                                                        уроков
                                                     </span>
                                                     <motion.div
                                                         animate={{
                                                             rotate:
-                                                                activeModule === mod.id ? 180 : 0,
+                                                                activeModule ===
+                                                                mod.id
+                                                                    ? 180
+                                                                    : 0,
                                                         }}
-                                                        transition={{ duration: 0.3 }}
+                                                        transition={{
+                                                            duration: 0.3,
+                                                        }}
                                                     >
                                                         ▼
                                                     </motion.div>
@@ -248,32 +262,46 @@ const CoursePage: React.FC = () => {
                                         <motion.div
                                             initial={false}
                                             animate={{
-                                                height: activeModule === mod.id ? "auto" : 0,
-                                                opacity: activeModule === mod.id ? 1 : 0,
+                                                height:
+                                                    activeModule === mod.id
+                                                        ? "auto"
+                                                        : 0,
+                                                opacity:
+                                                    activeModule === mod.id
+                                                        ? 1
+                                                        : 0,
                                             }}
                                             transition={{ duration: 0.3 }}
                                             className="overflow-hidden"
                                         >
                                             <div className="p-6 pt-0 space-y-2 bg-gray-50">
-                                                {mod.lessons.map((lesson, lessonIndex) => (
-                                                    <div
-                                                        key={lesson.id}
-                                                        className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer group"
-                                                    >
-                                                        <div className="flex items-center justify-center w-6 h-6 bg-gray-200 group-hover:bg-indigo-600 text-gray-600 group-hover:text-white rounded-full text-xs font-bold transition-colors">
-                                                            {lessonIndex + 1}
-                                                        </div>
-                                                        <Play className="w-4 h-4 text-indigo-600" />
-                                                        <span className="flex-1 text-gray-700 group-hover:text-indigo-700 font-medium">
-                                                            {lesson.title}
-                                                        </span>
-                                                        {lesson.content && (
-                                                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                                                Материал
+                                                {mod.lessons.map(
+                                                    (lesson, lessonIndex) => (
+                                                        <div
+                                                            key={lesson.id}
+                                                            onClick={() => {
+                                                                navigate(
+                                                                    `/course/${course.id}/lesson/${lesson.id}`
+                                                                );
+                                                            }}
+                                                            className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer group"
+                                                        >
+                                                            <div className="flex items-center justify-center w-6 h-6 bg-gray-200 group-hover:bg-indigo-600 text-gray-600 group-hover:text-white rounded-full text-xs font-bold transition-colors">
+                                                                {lessonIndex +
+                                                                    1}
+                                                            </div>
+                                                            <Play className="w-4 h-4 text-indigo-600" />
+                                                            <span className="flex-1 text-gray-700 group-hover:text-indigo-700 font-medium">
+                                                                {lesson.title}
                                                             </span>
-                                                        )}
-                                                    </div>
-                                                ))}
+                                                            {lesson.content && (
+                                                                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                                                    Материал
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )
+                                                )}
                                             </div>
                                         </motion.div>
                                     </motion.div>
@@ -299,7 +327,9 @@ const CoursePage: React.FC = () => {
                                     <div className="flex items-start gap-3">
                                         <BookOpen className="w-5 h-5 text-indigo-600 mt-0.5" />
                                         <div>
-                                            <div className="text-sm text-gray-500">Категория</div>
+                                            <div className="text-sm text-gray-500">
+                                                Категория
+                                            </div>
                                             <div className="font-semibold text-gray-800">
                                                 {course.categories.name}
                                             </div>
@@ -309,7 +339,9 @@ const CoursePage: React.FC = () => {
                                 <div className="flex items-start gap-3">
                                     <Clock className="w-5 h-5 text-indigo-600 mt-0.5" />
                                     <div>
-                                        <div className="text-sm text-gray-500">Уровень</div>
+                                        <div className="text-sm text-gray-500">
+                                            Уровень
+                                        </div>
                                         <div className="font-semibold text-gray-800">
                                             {course.difficulty_level}
                                         </div>
@@ -318,18 +350,26 @@ const CoursePage: React.FC = () => {
                                 <div className="flex items-start gap-3">
                                     <Calendar className="w-5 h-5 text-indigo-600 mt-0.5" />
                                     <div>
-                                        <div className="text-sm text-gray-500">Создан</div>
+                                        <div className="text-sm text-gray-500">
+                                            Создан
+                                        </div>
                                         <div className="font-semibold text-gray-800">
-                                            {new Date(course.created_at).toLocaleDateString("ru-RU")}
+                                            {new Date(
+                                                course.created_at
+                                            ).toLocaleDateString("ru-RU")}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <TrendingUp className="w-5 h-5 text-indigo-600 mt-0.5" />
                                     <div>
-                                        <div className="text-sm text-gray-500">Последнее обновление</div>
+                                        <div className="text-sm text-gray-500">
+                                            Последнее обновление
+                                        </div>
                                         <div className="font-semibold text-gray-800">
-                                            {new Date(course.updated_at).toLocaleDateString("ru-RU")}
+                                            {new Date(
+                                                course.updated_at
+                                            ).toLocaleDateString("ru-RU")}
                                         </div>
                                     </div>
                                 </div>

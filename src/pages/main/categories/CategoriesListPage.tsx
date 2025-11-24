@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCategoriesStore } from "../../../store/categoriesStore";
-import { BookOpen, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowLeft, BookOpen, Sparkles, TrendingUp } from "lucide-react";
 
 const CategoriesListPage: React.FC = () => {
-    const { categories, loading, error, fetchCategories } = useCategoriesStore();
+    const { categories, loading, error, fetchCategories } =
+        useCategoriesStore();
 
     useEffect(() => {
         fetchCategories();
@@ -16,7 +17,9 @@ const CategoriesListPage: React.FC = () => {
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
-                    <p className="text-xl text-gray-600">Загрузка категорий...</p>
+                    <p className="text-xl text-gray-600">
+                        Загрузка категорий...
+                    </p>
                 </div>
             </div>
         );
@@ -65,8 +68,10 @@ const CategoriesListPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
             {/* Hero Section */}
+
             <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white">
                 <div className="absolute inset-0 bg-black opacity-10"></div>
+
                 <div className="relative max-w-7xl mx-auto px-6 py-20">
                     <motion.div
                         initial={{ opacity: 0, y: -30 }}
@@ -81,12 +86,17 @@ const CategoriesListPage: React.FC = () => {
                             </h1>
                         </div>
                         <p className="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto">
-                            Выберите направление и начните свой путь к новым знаниям
+                            Выберите направление и начните свой путь к новым
+                            знаниям
                         </p>
                     </motion.div>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0">
-                    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
                         <path
                             d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
                             fill="rgb(238, 242, 255)"
@@ -110,14 +120,17 @@ const CategoriesListPage: React.FC = () => {
                                     <div className="group relative h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
                                         {/* Gradient Header */}
                                         <div
-                                            className={`h-32 bg-gradient-to-br ${gradients[index % gradients.length]
-                                                } relative overflow-hidden`}
+                                            className={`h-32 bg-gradient-to-br ${
+                                                gradients[
+                                                    index % gradients.length
+                                                ]
+                                            } relative overflow-hidden`}
                                         >
                                             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
                                             <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-3">
                                                 <BookOpen className="w-6 h-6 text-white" />
                                             </div>
-                                            <div className="absolute bottom-0 left-0 right-0">
+                                            <div className="absolute -bottom-px left-0 right-0">
                                                 <svg
                                                     viewBox="0 0 400 40"
                                                     fill="none"
@@ -137,11 +150,14 @@ const CategoriesListPage: React.FC = () => {
                                                 {category.name}
                                             </h3>
                                             <p className="text-gray-600 mb-4 line-clamp-3">
-                                                {category.description || "Изучайте новые навыки и развивайтесь вместе с нами"}
+                                                {category.description ||
+                                                    "Изучайте новые навыки и развивайтесь вместе с нами"}
                                             </p>
                                             <div className="flex items-center text-sm text-gray-500">
                                                 <TrendingUp className="w-4 h-4 mr-2" />
-                                                <span>Популярное направление</span>
+                                                <span>
+                                                    Популярное направление
+                                                </span>
                                             </div>
                                         </div>
 
@@ -155,7 +171,9 @@ const CategoriesListPage: React.FC = () => {
                 ) : (
                     <div className="text-center py-20">
                         <div className="text-6xl mb-4">📚</div>
-                        <p className="text-2xl text-gray-600">Категории не найдены</p>
+                        <p className="text-2xl text-gray-600">
+                            Категории не найдены
+                        </p>
                     </div>
                 )}
             </div>

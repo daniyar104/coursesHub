@@ -1,5 +1,5 @@
 import Header from "../../components/Header/HomeHeader";
-import { Clock, User } from "lucide-react";
+import { Clock, Presentation, User } from "lucide-react";
 import Divider from "../../components/ui/Divider/Divider";
 import Button from "../../components/ui/Button";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,8 @@ import ButtonLesson from "../../components/ui/Button/ButtonLesson";
 import MaterialRenderer from "./components/MaterialRenderer";
 import { useParams } from "react-router-dom";
 import { useCoursesStore } from "../../store/coursesStore";
+import durationFormat from "../../utils/durationFormat";
+import Loading from "../../components/ui/Loading/Loading";
 
 export default function LessonPage() {
     const { courseId, lessonId } = useParams<{
@@ -31,7 +33,12 @@ export default function LessonPage() {
         if (courseId) fetchCourseById(courseId);
     }, [courseId]);
 
-    if (loading) return <div>Загрузка...</div>;
+    const [activeTab, setActiveTab] = useState("description");
+    const [videoDuration, setVideoDuration] = useState(0);
+
+    const playerRef = useRef<VideoPlayerHandle>(null);
+
+    if (loading) return <Loading />;
 
     if (!course) return <div>Курс не найден</div>;
 
@@ -39,16 +46,15 @@ export default function LessonPage() {
         ?.flatMap((m) => m.lessons)
         .find((l) => l.id === lessonId);
 
+    if (!lesson) return <div>Урок не найден</div>;
+
     console.log(course);
-
-    const [activeTab, setActiveTab] = useState("description");
-
-    const playerRef = useRef<VideoPlayerHandle>(null);
+    console.log(lesson);
 
     const lessonTimecodes = [
         { label: "Вступление", time: 0 },
-        { label: "Глава 1: Основы монтажа", time: 125 }, // 2:05
-        { label: "Глава 2: Цветокоррекция", time: 340 }, // 5:40
+        { label: "Глава 1: Основы монтажа", time: 3 }, // 2:05
+        { label: "Глава 2: Цветокоррекция", time: 7 }, // 5:40
         { label: "Глава 3: Экспорт", time: 510 }, // 8:30
     ];
 
@@ -56,54 +62,6 @@ export default function LessonPage() {
         // Обращаемся к методу seekTo внутри VideoPlayer
         playerRef.current?.seekTo(time);
     };
-
-    const courseData = {
-        modules: [
-            {
-                id: "MOD1763819794148",
-                title: "Введение",
-                lessons: [
-                    {
-                        id: "LSN1763820309006",
-                        title: "Что такое HTML",
-                        material_url:
-                            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
-                    },
-                    {
-                        id: "LSN1763826786460",
-                        title: "VSCode Что это такое и с чем его едят?",
-                        material_url:
-                            "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763826800588_j5pyi.pdf",
-                    },
-                ],
-            },
-            {
-                id: "MOD1763826657730",
-                title: "Что такое HTML?",
-                lessons: [
-                    {
-                        id: "LSN1763826681526",
-                        title: "Создаем новый файл и открываем его в браузере",
-                        material_url: null,
-                    },
-                ],
-            },
-        ],
-    };
-
-    // const lesson = {
-    //     type: "presentation" as const,
-    //     title: "Что такое HTML",
-    //     material_url:
-    //         "https://sdwhgpvdfjbvkoqhipyd.supabase.co/storage/v1/object/public/materials/1763821690731_owm3ld.pdf",
-    //     slides: null,
-    //     video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    //     timecodes: [
-    //         { label: "Вступление", time: 0 },
-    //         { label: "Глава 1: Основы HTML", time: 45 },
-    //         { label: "Глава 2: Теги", time: 120 },
-    //     ],
-    // };
 
     return (
         <>
@@ -113,10 +71,13 @@ export default function LessonPage() {
             <div className="relative max-w-[1550px] w-[90%] mx-auto min-h-screen shadow-xl overflow-x-hidden">
                 {/* Внутрений Хэдэр на всю ширину */}
                 <div className="w-full min-h-16 bg-[#3F3F8F]/10 px-7 py-3 flex items-center justify-between">
-                    <ButtonLesson text="Вернуться" link="/home" />
+                    <ButtonLesson
+                        text="Вернуться"
+                        link={`/course/${courseId}`}
+                    />
 
                     <h3 className="text-2xl text-center uppercase flex-1 max-w-[700px]  text-[#4D5756]">
-                        Web-разработка
+                        {course.title}
                     </h3>
 
                     <div>Фокус Мод(нету пока)</div>
@@ -126,40 +87,53 @@ export default function LessonPage() {
                 <div className="w-[90%] max-w-[1230px] mx-auto mt-5 flex flex-col items-start gap-6">
                     <div className="w-full h-full">
                         <MaterialRenderer
-                            type={lesson.type}
+                            type={lesson.material_type}
                             title={lesson.title}
                             material_url={lesson.material_url}
-                            video={lesson.video_url}
-                            timecodes={lesson.timecodes}
+                            timecodes={lessonTimecodes}
+                            onVideoDuration={setVideoDuration}
                         />
                     </div>
 
                     {/* Боковая панель с уроками */}
-                    <ModulePanel modules={courseData.modules} />
+                    <ModulePanel
+                        modules={course.modules}
+                        courseId={course.id}
+                    />
 
                     <h3 className="text-5xl text-[#0E2A46] leading-[120%] font-bold capitalize">
-                        Знакомство с основами HTML
+                        {lesson.title}
                     </h3>
+
                     <div className="flex max-w-full gap-5">
-                        <div className="flex items-center gap-1">
-                            <Clock size={20} color="#3F3F8F" />
-                            <p className="text-xl">
-                                Продолжительность урока
-                                <span className="font-bold"> 17m 23s</span>
-                            </p>
-                        </div>
+                        {lesson.material_type == "VIDEO" ? (
+                            <div className="flex items-center gap-1">
+                                <Clock size={20} color="#3F3F8F" />
+                                <p className="text-xl flex gap-2">
+                                    Продолжительность урока
+                                    <span className="font-bold">
+                                        {durationFormat(videoDuration)}
+                                    </span>
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-1">
+                                <Presentation size={20} color="#3F3F8F" />
+                                <p className="text-xl flex gap-2">
+                                    Количество слайдов
+                                    <span className="font-bold">{20}</span>
+                                </p>
+                            </div>
+                        )}
                         <div className="flex items-center gap-1">
                             <User size={20} color="#3F3F8F" />
-                            <p className="text-xl">
+                            <p className="text-xl flex gap-2">
                                 Students
-                                <span className="font-bold"> 20+</span>
+                                <span className="font-bold">20+</span>
                             </p>
                         </div>
                     </div>
-                    {/* <TimecodeList
-                        items={lessonTimecodes}
-                        onTimecodeClick={handleTimecodeSelect}
-                    /> */}
+
                     <Divider className="w-full" thickness="2px" />
 
                     <div className="flex gap-5">
@@ -203,22 +177,22 @@ export default function LessonPage() {
 
                     {activeTab == "description" ? <Description /> : null}
                     {activeTab == "practice" ? <Practice /> : null}
+                    {activeTab == "teacher" ? (
+                        <TeacherProfile
+                            name="Каюпов Еркебулан"
+                            role="Преподаватель"
+                            description="Tempor orci dapibus ultrices in iaculis nunc sed augue. Feugiat in ante metus dictum at tempor commodo."
+                            education={[
+                                "Bachelor of Computer Science, MIT",
+                                "Master in Educational Technology, Harvard",
+                            ]}
+                            avatarUrl="https://randomuser.me/api/portraits/women/32.jpg"
+                            phone="(568) 367-987-237"
+                            location="Hudson, Wisconsin(WI), 54016"
+                            email="govillage@gmail.com"
+                        />
+                    ) : null}
                 </div>
-                {activeTab == "teacher" ? (
-                    <TeacherProfile
-                        name="Каюпов Еркебулан"
-                        role="Преподаватель"
-                        description="Tempor orci dapibus ultrices in iaculis nunc sed augue. Feugiat in ante metus dictum at tempor commodo."
-                        education={[
-                            "Bachelor of Computer Science, MIT",
-                            "Master in Educational Technology, Harvard",
-                        ]}
-                        avatarUrl="https://randomuser.me/api/portraits/women/32.jpg"
-                        phone="(568) 367-987-237"
-                        location="Hudson, Wisconsin(WI), 54016"
-                        email="govillage@gmail.com"
-                    />
-                ) : null}
 
                 <Footer />
             </div>

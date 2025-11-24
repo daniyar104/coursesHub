@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Arrow from "../../../../assets/icon/Arrow.svg";
 
 interface ButtonProps {
-    text: string;
+    text?: string;
     link: string;
 }
 

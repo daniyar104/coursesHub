@@ -23,10 +23,11 @@ interface VideoPlayerProps {
     title?: string;
     // НОВЫЙ ПРОП: массив таймкодов для отображения на баре
     timecodes?: TimecodeMarker[];
+    onDuration?: (duration: number) => void;
 }
 
 const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
-    ({ src, poster, title, timecodes = [] }, ref) => {
+    ({ src, poster, title, timecodes = [], onDuration }, ref) => {
         const videoRef = useRef<HTMLVideoElement>(null);
         const [isPlaying, setIsPlaying] = useState(false);
         const [currentTime, setCurrentTime] = useState(0);
@@ -96,6 +97,12 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
 
         const handleLoadedMetadata = () => {
             if (videoRef.current) setDuration(videoRef.current.duration);
+
+            const d = videoRef.current.duration;
+            setDuration(d);
+
+            // отправляем родителю
+            if (onDuration) onDuration(d);
         };
 
         const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +138,7 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
 
         return (
             <div
-                className="relative w-full aspect-video bg-black rounded-xl overflow-hidden group shadow-lg select-none"
+                className="relative w-full h-full aspect-video bg-black rounded-xl overflow-hidden group shadow-lg select-none"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
             >
@@ -139,7 +146,7 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
                     ref={videoRef}
                     src={src}
                     poster={poster}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     onClick={togglePlay}
                     onTimeUpdate={handleTimeUpdate}
                     onLoadedMetadata={handleLoadedMetadata}
