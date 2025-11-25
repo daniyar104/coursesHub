@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Lesson } from "../../../service/types";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,12 +18,13 @@ interface Module {
     title: string;
     lessons: Lesson[];
 }
-
 interface ModulePanelProps {
     modules: Module[];
+    courseId: string;
 }
 
-export default function ModulePanel({ modules }: ModulePanelProps) {
+export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
+    const navigate = useNavigate();
     const [active, setActive] = useState(false);
     const [activeModule, setActiveModule] = useState<number | null>(null);
     const navigate = useNavigate();
@@ -98,11 +102,12 @@ export default function ModulePanel({ modules }: ModulePanelProps) {
                                                 (lesson, lessonIndex) => (
                                                     <div
                                                         key={lesson.id}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            navigate(`/lesson/${lesson.id}/material`);
+                                                        className="flex items-center gap-2 p-2 rounded-lg bg-[#F3F3FF] border border-[#E5E5F3] group"
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/course/${courseId}/lesson/${lesson.id}`
+                                                            );
                                                         }}
-                                                        className="flex items-center gap-2 p-2 rounded-lg bg-[#F3F3FF] border border-[#E5E5F3] hover:bg-[#E5E5F3] cursor-pointer group"
                                                     >
                                                         <span className="w-7 h-7 rounded-full flex items-center justify-center bg-gray-300 group-hover:bg-[#3F3F8F] group-hover:text-white duration-200">
                                                             {lessonIndex + 1}

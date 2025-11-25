@@ -75,12 +75,11 @@ export interface EnrolledCourse {
     };
     enrollment: {
         id: string;
-        status: string;      // "active", "completed", etc.
-        progress: string;    // как строка, поэтому преобразуем
+        status: string; // "active", "completed", etc.
+        progress: string; // как строка, поэтому преобразуем
         enrolled_at: string;
     };
 }
-
 
 export interface Category {
     id: string;
@@ -104,6 +103,8 @@ export interface Lesson {
     video_url?: string;
     image_url?: string;
     test?: LessonTest;
+    material_url?: string; // добавить
+    material_type?: "PRESENTATION" | "VIDEO" | "OTHER"; // добавить
     position: number;
     created_at: string;
     updated_at: string;
