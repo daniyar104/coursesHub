@@ -13,6 +13,7 @@ export default function Header() {
         { text: "Новая скидка на курс 'React Pro'", unread: true },
         { text: "Вы успешно завершили курс 'HTML & CSS'", unread: false },
     ];
+
     return (
         <header className="w-full bg-white/90 shadow-[0_1px_3px_0_rgba(18,20,32,0.14)] h-[95px] flex items-center ">
             <div className="max-w-[1350px] w-[90%] mx-auto flex items-center justify-between h-15 ">
@@ -35,21 +36,19 @@ export default function Header() {
                     {/* Навигация */}
                     <nav className="hidden md:block mr-10">
                         <ul className="flex gap-10 items-center ">
-                            <li className="cursor-pointer">Все курсы</li>
+                            <li
+                                className="cursor-pointer hover:text-indigo-600 transition-colors"
+                                onClick={() => navigator("/categories")}
+                            >
+                                Все курсы
+                            </li>
 
-                            <DropdownMenu
-                                elements={
-                                    <li className="cursor-pointer">
-                                        Мое обучение
-                                    </li>
-                                }
-                                items={[
-                                    { text: "Профиль", link: "/profile" },
-                                    { text: "Настройки", link: "/settings" },
-                                    { text: "Выход", link: "/logout" },
-                                ]}
-                                position="left"
-                            />
+                            <li
+                                className="cursor-pointer hover:text-indigo-600 transition-colors"
+                                onClick={() => navigator("/my-courses")}
+                            >
+                                Мое обучение
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -66,11 +65,10 @@ export default function Header() {
                         items={notifications.map((n) => ({
                             text: (
                                 <div
-                                    className={`flex items-center gap-2 ${
-                                        n.unread
-                                            ? "font-medium text-[#37368C]"
-                                            : "text-gray-600"
-                                    }`}
+                                    className={`flex items-center gap-2 ${n.unread
+                                        ? "font-medium text-[#37368C]"
+                                        : "text-gray-600"
+                                        }`}
                                 >
                                     {n.text}
                                 </div>
@@ -92,7 +90,7 @@ export default function Header() {
                         }
                         items={[
                             { text: "Профиль", link: "/profile" },
-                            { text: "Настройки", link: "/settings" },
+                            { text: "Мое обучение", link: "/my-courses" },
                             { text: "Выход", link: "/logout" },
                         ]}
                         position="right"

@@ -1,5 +1,4 @@
 import CasesSection from "../../components/section/CasesSection";
-import TestimonialsSection from "../../components/section/TestimonialsSection";
 import MainSection from "../../components/section/MainSection";
 import Header from "../../components/Header/WelcomeHeader.tsx";
 import Footer from "../../components/Footer/FooterWelcome.tsx";
@@ -57,7 +56,7 @@ export default function WelcomePage() {
             {/* Hero */}
             <MainSection />
             <CasesSection articles={articles} />
-            <TestimonialsSection testimonials={testimonials} />
+            {/* <TestimonialsSection testimonials={testimonials} /> */}
             <Footer />
         </div>
     );

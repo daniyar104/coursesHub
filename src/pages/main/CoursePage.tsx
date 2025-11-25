@@ -15,16 +15,27 @@ import {
     Sparkles,
 } from "lucide-react";
 import { useCoursesStore } from "../../store/coursesStore";
+import { checkEnrollmentStatus } from "../../service/coursesService";
 
 const CoursePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
     const [activeModule, setActiveModule] = useState<string | null>(null);
+    const [isEnrolled, setIsEnrolled] = useState(false);
+    const [checkingEnrollment, setCheckingEnrollment] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (id) fetchCourseById(id);
+        if (id) {
+            fetchCourseById(id);
+
+            // Проверяем статус регистрации
+            checkEnrollmentStatus(id).then((status) => {
+                setIsEnrolled(status.enrolled);
+                setCheckingEnrollment(false);
+            });
+        }
     }, [id, fetchCourseById]);
 
     if (!course) {
@@ -140,7 +151,7 @@ const CoursePage: React.FC = () => {
                                     }
                                     className="w-full bg-white text-indigo-600 font-bold py-4 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg mb-4"
                                 >
-                                    Начать обучение
+                                    {checkingEnrollment ? 'Загрузка...' : (isEnrolled ? 'Перейти к обучению' : 'Начать обучение')}
                                 </button>
                                 <div className="space-y-2 text-sm text-indigo-100">
                                     <div className="flex items-center gap-2">
@@ -293,6 +304,7 @@ const CoursePage: React.FC = () => {
                                                             <Play className="w-4 h-4 text-indigo-600" />
                                                             <span className="flex-1 text-gray-700 group-hover:text-indigo-700 font-medium">
                                                                 {lesson.title}
+
                                                             </span>
                                                             {lesson.content && (
                                                                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
