@@ -76,7 +76,7 @@ export default function LessonPage() {
                         link={`/course/${courseId}`}
                     />
 
-                    <h3 className="text-2xl text-center uppercase flex-1 max-w-[700px]  text-[#4D5756]">
+                    <h3 className="text-2xl text-center font-bold uppercase flex-1 max-w-[700px]  text-[#4D5756]">
                         {course.title}
                     </h3>
 
@@ -90,7 +90,7 @@ export default function LessonPage() {
                             type={lesson.material_type}
                             title={lesson.title}
                             material_url={lesson.material_url}
-                            timecodes={lessonTimecodes}
+                            // timecodes={lessonTimecodes}
                             onVideoDuration={setVideoDuration}
                         />
                     </div>
@@ -186,7 +186,7 @@ export default function LessonPage() {
                                 "Bachelor of Computer Science, MIT",
                                 "Master in Educational Technology, Harvard",
                             ]}
-                            avatarUrl="https://randomuser.me/api/portraits/women/32.jpg"
+                            avatarUrl="https://randomuser.me/api/portraits/men/32.jpg"
                             phone="(568) 367-987-237"
                             location="Hudson, Wisconsin(WI), 54016"
                             email="govillage@gmail.com"

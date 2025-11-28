@@ -3,15 +3,6 @@ import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Lesson } from "../../../service/types";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-// Пример props
-interface Lesson {
-    id: string;
-    title: string;
-    material_url: string | null;
-}
 
 interface Module {
     id: string;
@@ -24,7 +15,6 @@ interface ModulePanelProps {
 }
 
 export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
-    const navigate = useNavigate();
     const [active, setActive] = useState(false);
     const [activeModule, setActiveModule] = useState<number | null>(null);
     const navigate = useNavigate();
@@ -32,8 +22,9 @@ export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
     return (
         <>
             <div
-                className={`fixed inset-0 bg-black z-10 transition-opacity duration-300 ${active ? "opacity-30" : "opacity-0 pointer-events-none"
-                    }`}
+                className={`fixed inset-0 bg-black z-10 transition-opacity duration-300 ${
+                    active ? "opacity-30" : "opacity-0 pointer-events-none"
+                }`}
                 onClick={() => setActive(false)}
             />
 
@@ -49,8 +40,9 @@ export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
                     <div className="w-[35px] h-full flex items-center justify-center ">
                         <ChevronLeft
                             color="white"
-                            className={`${active ? "rotate-180" : ""
-                                } transition-all duration-700`}
+                            className={`${
+                                active ? "rotate-180" : ""
+                            } transition-all duration-700`}
                         />
                     </div>
 
@@ -80,10 +72,11 @@ export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
 
                                         <ChevronLeft
                                             color="#3F3F8F"
-                                            className={`${activeModule === i
-                                                ? "rotate-90"
-                                                : "rotate-270"
-                                                } transition-all duration-300`}
+                                            className={`${
+                                                activeModule === i
+                                                    ? "rotate-90"
+                                                    : "rotate-270"
+                                            } transition-all duration-300`}
                                         />
                                     </div>
 

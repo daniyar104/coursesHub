@@ -2,7 +2,7 @@ import Divider from "../../../components/ui/Divider/Divider";
 
 export default function Description() {
     return (
-        <div className="max-w-full">
+        <div className="max-w-full  mb-10">
             <h2 className="text-2xl text-[#0E2A46] font-bold mb-4">
                 ОПИСАНИЕ УРОКА
             </h2>

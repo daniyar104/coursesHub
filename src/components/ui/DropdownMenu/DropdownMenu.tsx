@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 interface DropdownItem {
     text: ReactNode;
     link: string;
+    hundleFunc?: () => void;
 }
 
 interface DropdownMenuProps {
@@ -39,7 +40,9 @@ export default function DropdownMenu({
     return (
         <div className="relative inline-block text-left" ref={menuRef}>
             <div
-                onClick={() => setOpen((prev) => !prev)}
+                onClick={() => {
+                    setOpen((prev) => !prev);
+                }}
                 className="cursor-pointer"
             >
                 {elements}
@@ -61,6 +64,7 @@ export default function DropdownMenu({
                                 onClick={() => {
                                     navigator(item.link);
                                     setOpen(false);
+                                    item.hundleFunc?.();
                                 }}
                                 className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                             >

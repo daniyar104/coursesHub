@@ -57,7 +57,11 @@ export const getEnrolledCourses = async () => {
 
         return response.data.data; // массив EnrolledCourse[]
     } catch (error: any) {
-        console.error("Error fetching enrolled courses:", error.response?.status, error.response?.data);
+        console.error(
+            "Error fetching enrolled courses:",
+            error.response?.status,
+            error.response?.data
+        );
         throw error;
     }
 };
@@ -72,7 +76,9 @@ export const checkEnrollmentStatus = async (courseId: string) => {
 
     try {
         const enrolledCourses = await getEnrolledCourses();
-        const enrollment = enrolledCourses.find((course: any) => course.course_id === courseId);
+        const enrollment = enrolledCourses.find(
+            (course: any) => course.course_id === courseId
+        );
 
         return {
             enrolled: !!enrollment,
@@ -84,3 +90,19 @@ export const checkEnrollmentStatus = async (courseId: string) => {
     }
 };
 
+export const checkRegistration = async (id: string) => {
+    const token = getToken();
+
+    try {
+        const res = await api.get(`/courses/${id}/check-registration`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return res.data;
+    } catch (error) {
+        console.error("Error checking enrollment status:", error);
+        return { enrolled: false };
+    }
+};

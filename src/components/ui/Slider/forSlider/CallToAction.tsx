@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IconBoxProps {
     colorClass: string;
@@ -13,6 +14,7 @@ const IconBox: React.FC<IconBoxProps> = ({ colorClass, delay = 0 }) => (
 );
 
 export default function CallToActionSection() {
+    const navigate = useNavigate();
     return (
         <div className="w-full max-h-100 h-full">
             <div className="bg-indigo-700 text-white overflow-hidden px-10 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 relative min-h-[400px]">
@@ -27,7 +29,12 @@ export default function CallToActionSection() {
                         от экспертов по обучению.
                     </p>
                     <div className="flex gap-4 flex-wrap">
-                        <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
+                        <button
+                            onClick={() => {
+                                navigate("/course/CRS1763819786238");
+                            }}
+                            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition"
+                        >
                             Начните действовать
                         </button>
                         <button className="border-2 border-white text-white font-semibold py-2 px-6 rounded-lg hover:bg-white/10 transition">

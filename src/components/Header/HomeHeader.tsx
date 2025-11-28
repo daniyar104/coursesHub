@@ -4,6 +4,7 @@ import Avatar from "../../../assets/images/Avatar.png";
 import SearchBar from "../ui/Input/SearchBar";
 import DropdownMenu from "../ui/DropdownMenu/DropdownMenu";
 import { Bell } from "lucide-react";
+import { deleteToken } from "../../utils/auth";
 
 export default function Header() {
     const navigator = useNavigate();
@@ -65,10 +66,11 @@ export default function Header() {
                         items={notifications.map((n) => ({
                             text: (
                                 <div
-                                    className={`flex items-center gap-2 ${n.unread
-                                        ? "font-medium text-[#37368C]"
-                                        : "text-gray-600"
-                                        }`}
+                                    className={`flex items-center gap-2 ${
+                                        n.unread
+                                            ? "font-medium text-[#37368C]"
+                                            : "text-gray-600"
+                                    }`}
                                 >
                                     {n.text}
                                 </div>
@@ -91,7 +93,11 @@ export default function Header() {
                         items={[
                             { text: "Профиль", link: "/profile" },
                             { text: "Мое обучение", link: "/my-courses" },
-                            { text: "Выход", link: "/logout" },
+                            {
+                                text: "Выход",
+                                link: "/logout",
+                                hundleFunc: deleteToken,
+                            },
                         ]}
                         position="right"
                     />

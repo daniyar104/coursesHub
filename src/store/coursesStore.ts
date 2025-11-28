@@ -1,10 +1,15 @@
-import { type Course, type CourseWithModules, type EnrolledCourse } from "../service/types";
+import {
+    type Course,
+    type CourseWithModules,
+    type EnrolledCourse,
+} from "../service/types";
 import { create } from "zustand";
 import {
     getAllCourses,
     getCourseById,
     registerCourseById,
-    getEnrolledCourses, // ← добавил
+    getEnrolledCourses,
+    checkRegistration,
 } from "../service/coursesService";
 
 interface CourseState {
@@ -12,6 +17,7 @@ interface CourseState {
     enrolledCourses: EnrolledCourse[] | null; // ← изменил тип
     courseDetail: CourseWithModules | null;
     courseReg: Object;
+    courseBool: boolean;
     loading: boolean;
     error: boolean | null;
 
@@ -21,6 +27,8 @@ interface CourseState {
     fetchRegisterCourse: (
         id: string
     ) => Promise<{ success: boolean; message?: string }>;
+
+    checkRegisterCourse: (id: string) => Promise<void>;
 }
 
 export const useCoursesStore = create<CourseState>((set) => ({
@@ -28,6 +36,7 @@ export const useCoursesStore = create<CourseState>((set) => ({
     enrolledCourses: null, // ← добавил
     courseDetail: null,
     courseReg: {},
+    courseBool: false,
     loading: false,
     error: false,
 
@@ -66,7 +75,8 @@ export const useCoursesStore = create<CourseState>((set) => ({
             set({
                 enrolledCourses: null,
                 loading: false,
-                error: error?.message || "Не удалось загрузить записанные курсы!",
+                error:
+                    error?.message || "Не удалось загрузить записанные курсы!",
             });
         }
     },
@@ -105,6 +115,17 @@ export const useCoursesStore = create<CourseState>((set) => ({
                 error: err?.message || "Ошибка с покупкой курса",
             });
             return { success: false, message: err?.message || "Ошибка" };
+        }
+    },
+    checkRegisterCourse: async (id: string) => {
+        set({ loading: true, error: null });
+        try {
+            const res = await checkRegistration(id); // возвращает { isRegistered, enrollment }
+            set({ courseBool: res.isRegistered, loading: false });
+            return res;
+        } catch (err: any) {
+            set({ loading: false, error: err?.message || "Ошибка" });
+            return { isRegistered: false, enrollment: null };
         }
     },
 }));
