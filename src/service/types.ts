@@ -195,3 +195,35 @@ export interface EnrollmentStatus {
     enrolled: boolean;
     enrollmentId?: string;
 }
+
+// TEST
+export interface Answer {
+    id: string;
+    question_id: string;
+    text: string;
+    is_correct: boolean;
+    created_at: string;
+}
+
+export interface Question {
+    id: string;
+    test_id: string;
+    text: string;
+    type: 'single_choice' | 'multiple_choice'; // можно расширить если будут другие типы
+    created_at: string;
+    answers: Answer[];
+}
+
+export interface Test {
+    id: string;
+    title: string;
+    description: string | null;
+    lesson_id: string | null;
+    module_id: string | null;
+    course_id: string | null;
+    questions_to_show: number;
+    passing_score: number;
+    created_at: string;
+    updated_at: string;
+    questions: Question[];
+}

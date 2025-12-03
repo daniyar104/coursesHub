@@ -24,6 +24,7 @@ import durationFormat from '../../utils/durationFormat';
 
 // Types
 import type { Course } from '../../service/types';
+import { useTestStore } from '../../store/useTestStore';
 
 // Static Data
 const TEACHER_DATA = {
@@ -68,6 +69,10 @@ export default function LessonPage() {
     const fetchCompleteLesson = useLessonStore((state) => state.fetchCompleteLesson);
     const fetchMarkLessonAcces = useLessonStore((state) => state.fetchMarkLessonAccess);
 
+    // Test Store
+    const { currentTest, answers, loading, error, result, fetchLessonTest, submitTest, setAnswer } =
+        useTestStore();
+
     // Local State
     const [activeTab, setActiveTab] = useState('description');
     const [videoDuration, setVideoDuration] = useState(0);
@@ -95,6 +100,16 @@ export default function LessonPage() {
             nextLesson: allLessons[currentIndex + 1] || null,
         };
     }, [course, lessonId]);
+
+    useEffect(() => {
+        if (lessonId) {
+            fetchLessonTest(lessonId);
+        }
+    }, [lessonId, fetchLessonTest]);
+
+    useEffect(() => {
+        console.log(currentTest);
+    }, [currentTest]);
 
     // Helpers
     const getTabClass = (tabName: string) =>
@@ -200,6 +215,7 @@ export default function LessonPage() {
                     <div className="flex gap-5">
                         {BUTTON_DATA.map((btn, idx) => (
                             <Button
+                                key={idx}
                                 children={btn.title}
                                 variant="none"
                                 className={getTabClass(btn.for_what)}
