@@ -1,20 +1,29 @@
-import Header from "../../../components/Header/HomeHeader.tsx";
-import Slider from "../../../components/ui/Slider/Slider.tsx";
-import CallToActionSection from "../../../components/ui/Slider/forSlider/CallToAction.tsx";
-import PresentPage from "../present/PresentPage.tsx";
-import CoursesList from "../coursesList/CoursesList.tsx";
+import Header from '../../../components/Header/HomeHeader.tsx';
+import Slider from '../../../components/ui/Slider/Slider.tsx';
+import CallToActionSection from '../../../components/ui/Slider/forSlider/CallToAction.tsx';
+import PresentPage from '../present/PresentPage.tsx';
+import CoursesList from '../coursesList/CoursesList.tsx';
+import ModalInfo from '../../../components/Footer/ModalInfo.tsx';
+import { useLessonStore } from '../../../store/lessonStore.ts';
+import { useEffect } from 'react';
 
 function HomePage() {
+    const lastCourse = useLessonStore((state) => state.lastCourse);
+    const fetchLastCourse = useLessonStore((state) => state.fetchLastCourse);
+
+    useEffect(() => {
+        fetchLastCourse();
+    }, [fetchLastCourse]);
+
+    useEffect(() => {
+        console.log(lastCourse);
+    }, [lastCourse]);
+
     return (
         <>
             <Header />
             <div className=" max-w-[1320px] w-9/10 max-h-100 mx-auto">
-                <Slider
-                    elements={[
-                        <CallToActionSection />,
-                        <CallToActionSection />,
-                    ]}
-                />
+                <Slider elements={[<CallToActionSection />, <CallToActionSection />]} />
             </div>
 
             {/* About Platform Section */}
@@ -24,10 +33,9 @@ function HomePage() {
                         Платформа для студентов университетов города
                     </h2>
                     <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                        Образовательная платформа для студентов местных
-                        университетов. Получайте доступ к курсам вашего учебного
-                        заведения, изучайте материалы и отслеживайте свой
-                        прогресс в одном месте.
+                        Образовательная платформа для студентов местных университетов. Получайте
+                        доступ к курсам вашего учебного заведения, изучайте материалы и отслеживайте
+                        свой прогресс в одном месте.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                         <div className="flex items-start gap-3">
@@ -48,9 +56,7 @@ function HomePage() {
                                 <span className="text-2xl">👨‍🎓</span>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-gray-900 mb-1">
-                                    Для студентов
-                                </h3>
+                                <h3 className="font-semibold text-gray-900 mb-1">Для студентов</h3>
                                 <p className="text-sm text-gray-600">
                                     Только студенты и преподаватели вашего вуза
                                 </p>
@@ -74,22 +80,24 @@ function HomePage() {
             </div>
 
             {/* Continue Learning Section */}
-            <div className="max-w-[1320px] w-9/10 mx-auto mb-16">
-                <PresentPage />
-            </div>
+            {lastCourse.length > 0 && (
+                <div className="max-w-[1320px] w-9/10 mx-auto mb-16">
+                    <PresentPage lastCourses={lastCourse} />
+                </div>
+            )}
 
             {/* Available Courses Section */}
             <div className="max-w-[1320px] w-9/10 mx-auto mb-16">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                        Доступные курсы
-                    </h2>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-3">Доступные курсы</h2>
                     <p className="text-lg text-gray-600">
                         Курсы от преподавателей вашего университета
                     </p>
                 </div>
                 <CoursesList />
             </div>
+
+            <ModalInfo />
         </>
     );
 }

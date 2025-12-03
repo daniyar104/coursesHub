@@ -108,6 +108,7 @@ export interface Lesson {
     position: number;
     created_at: string;
     updated_at: string;
+    complete: boolean;
 }
 
 export interface Module {
@@ -154,7 +155,7 @@ export interface Experience {
 export interface Publication {
     id: string;
     title: string;
-    type: 'article' | 'book' | 'conference' | 'journal';
+    type: "article" | "book" | "conference" | "journal";
     publisher: string;
     publishDate: string;
     url?: string;

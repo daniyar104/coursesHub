@@ -31,7 +31,7 @@ export default function ModulePanel({ modules, courseId }: ModulePanelProps) {
             {/* Боковая панель с Модулями и уроками */}
             <aside
                 style={{ left: active ? "calc(100% - 520px)" : undefined }}
-                className={`w-130  md:h-[50vh] lg:h-[60vh] z-100 max-h-[700px] absolute md:left-[calc(100%-40px)] left-[calc(100%-20px)] transition-all duration-300 cursor-pointer`}
+                className={`w-130 z-100 max-h-[700px] min-h-[300px] h-full absolute md:left-[calc(100%-40px)] left-[calc(100%-20px)] transition-all duration-300 cursor-pointer`}
                 onClick={() => {
                     setActive(true);
                 }}

@@ -1,0 +1,22 @@
+   - POST /courses/:id/lessons/:lessonId/access
+     - Params: id (string), lessonId (string)
+     - Headers: Authorization: Bearer <token>
+     - Returns:
+       - 200 OK: { message: "Last lesson updated successfully" }
+       - 404 Not Found: { message: "User is not enrolled in this course" }
+       - 404 Not Found: { message: "Lesson not found in this course" }
+
+   - POST /courses/:id/lessons/:lessonId/complete
+     - Params: id (string), lessonId (string)
+     - Headers: Authorization: Bearer <token>
+     - Returns:
+       - 201 Created: { message: "Lesson completed", progress: number }
+       - 404 Not Found: { message: "User is not enrolled in this course" }
+       - 404 Not Found: { message: "Lesson not found in this course" }
+
+
+Попадаю на урок идёт запрос /courses/:id/lessons/:lessonId/access то что я начал
+После нажатия на кнопку пейти на следующий урок идёт запрос о завершений урока /courses/:id/lessons/:lessonId/complete
+
+
+

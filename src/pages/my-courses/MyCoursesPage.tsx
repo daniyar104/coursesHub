@@ -6,11 +6,16 @@ import { BookOpen, Clock, TrendingUp } from "lucide-react";
 
 export default function MyCoursesPage() {
     const navigate = useNavigate();
-    const { enrolledCourses, fetchEnrolledCourses, loading, error } = useCoursesStore();
+    const { enrolledCourses, fetchEnrolledCourses, loading, error } =
+        useCoursesStore();
 
     useEffect(() => {
         fetchEnrolledCourses();
     }, [fetchEnrolledCourses]);
+
+    useEffect(() => {
+        console.log(enrolledCourses);
+    }, [enrolledCourses]);
 
     if (loading) {
         return (
@@ -56,8 +61,12 @@ export default function MyCoursesPage() {
                             <div className="flex items-center justify-between mb-2">
                                 <BookOpen className="w-8 h-8" />
                             </div>
-                            <div className="text-3xl font-bold mb-1">{enrolledCourses.length}</div>
-                            <div className="text-indigo-100">Активных курсов</div>
+                            <div className="text-3xl font-bold mb-1">
+                                {enrolledCourses.length}
+                            </div>
+                            <div className="text-indigo-100">
+                                Активных курсов
+                            </div>
                         </div>
 
                         <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
@@ -67,12 +76,18 @@ export default function MyCoursesPage() {
                             <div className="text-3xl font-bold mb-1">
                                 {Math.round(
                                     enrolledCourses.reduce((acc, course) => {
-                                        const progress = parseFloat(course.enrollment.progress) || 0;
+                                        const progress =
+                                            parseFloat(
+                                                course.enrollment.progress
+                                            ) || 0;
                                         return acc + progress;
                                     }, 0) / enrolledCourses.length
-                                )}%
+                                )}
+                                %
                             </div>
-                            <div className="text-emerald-100">Средний прогресс</div>
+                            <div className="text-emerald-100">
+                                Средний прогресс
+                            </div>
                         </div>
 
                         <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white">
@@ -80,7 +95,11 @@ export default function MyCoursesPage() {
                                 <Clock className="w-8 h-8" />
                             </div>
                             <div className="text-3xl font-bold mb-1">
-                                {enrolledCourses.filter(c => c.enrollment.status === 'active').length}
+                                {
+                                    enrolledCourses.filter(
+                                        (c) => c.enrollment.status === "active"
+                                    ).length
+                                }
                             </div>
                             <div className="text-amber-100">В процессе</div>
                         </div>
@@ -91,14 +110,20 @@ export default function MyCoursesPage() {
                 {enrolledCourses && enrolledCourses.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {enrolledCourses.map((course) => {
-                            const progress = parseFloat(course.enrollment.progress) || 0;
-                            const isCompleted = course.enrollment.status === 'completed';
+                            const progress =
+                                parseFloat(course.enrollment.progress) || 0;
+                            const isCompleted =
+                                course.enrollment.status === "completed";
 
                             return (
                                 <div
                                     key={course.id}
                                     className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-gray-100"
-                                    onClick={() => navigate(`/course/${course.id}/curriculum`)}
+                                    onClick={() =>
+                                        navigate(
+                                            `/course/${course.id}/curriculum`
+                                        )
+                                    }
                                 >
                                     {/* Course Header */}
                                     <div className="p-6">
@@ -122,11 +147,17 @@ export default function MyCoursesPage() {
                                         <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                                             <div className="flex items-center gap-1">
                                                 <BookOpen className="w-4 h-4" />
-                                                <span>{course._count.modules} модулей</span>
+                                                <span>
+                                                    {course._count.modules}{" "}
+                                                    модулей
+                                                </span>
                                             </div>
                                             <div className="flex items-center gap-1">
                                                 <Clock className="w-4 h-4" />
-                                                <span>{course._count.lessons} уроков</span>
+                                                <span>
+                                                    {course._count.lessons}{" "}
+                                                    уроков
+                                                </span>
                                             </div>
                                         </div>
 
@@ -142,27 +173,45 @@ export default function MyCoursesPage() {
                                             </div>
                                             <div className="w-full bg-gray-200 rounded-full h-2.5">
                                                 <div
-                                                    className={`h-2.5 rounded-full transition-all duration-300 ${isCompleted
-                                                        ? 'bg-green-500'
-                                                        : 'bg-indigo-600'
-                                                        }`}
-                                                    style={{ width: `${progress}%` }}
+                                                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                                                        isCompleted
+                                                            ? "bg-green-500"
+                                                            : "bg-indigo-600"
+                                                    }`}
+                                                    style={{
+                                                        width: `${progress}%`,
+                                                    }}
                                                 ></div>
                                             </div>
                                         </div>
 
                                         {/* Enrollment Date */}
                                         <div className="text-xs text-gray-500">
-                                            Записан: {new Date(course.enrollment.enrolled_at).toLocaleDateString('ru-RU')}
+                                            Записан:{" "}
+                                            {new Date(
+                                                course.enrollment.enrolled_at
+                                            ).toLocaleDateString("ru-RU")}
                                         </div>
                                     </div>
 
                                     {/* Action Button */}
                                     <div className="px-6 pb-6">
                                         <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 group">
-                                            {isCompleted ? 'Повторить курс' : 'Продолжить обучение'}
-                                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            {isCompleted
+                                                ? "Повторить курс"
+                                                : "Продолжить обучение"}
+                                            <svg
+                                                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M9 5l7 7-7 7"
+                                                />
                                             </svg>
                                         </button>
                                     </div>
@@ -182,7 +231,7 @@ export default function MyCoursesPage() {
                             Начните обучение, выбрав курс из каталога
                         </p>
                         <button
-                            onClick={() => navigate('/categories')}
+                            onClick={() => navigate("/categories")}
                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
                         >
                             Перейти к курсам

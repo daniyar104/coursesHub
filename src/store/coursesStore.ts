@@ -14,7 +14,7 @@ import {
 
 interface CourseState {
     courses: Course[] | null;
-    enrolledCourses: EnrolledCourse[] | null; // ← изменил тип
+    enrolledCourses: EnrolledCourse[] | null;
     courseDetail: CourseWithModules | null;
     courseReg: Object;
     courseBool: boolean;
@@ -22,7 +22,7 @@ interface CourseState {
     error: boolean | null;
 
     fetchAllCourses: () => Promise<void>;
-    fetchEnrolledCourses: () => Promise<void>; // ← добавил
+    fetchEnrolledCourses: () => Promise<void>;
     fetchCourseById: (id: string) => Promise<void>;
     fetchRegisterCourse: (
         id: string
@@ -33,7 +33,7 @@ interface CourseState {
 
 export const useCoursesStore = create<CourseState>((set) => ({
     courses: null,
-    enrolledCourses: null, // ← добавил
+    enrolledCourses: null,
     courseDetail: null,
     courseReg: {},
     courseBool: false,
