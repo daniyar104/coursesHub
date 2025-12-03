@@ -104,7 +104,7 @@ export interface Lesson {
     image_url?: string;
     test?: LessonTest;
     material_url?: string; // добавить
-    material_type?: "PRESENTATION" | "VIDEO" | "OTHER"; // добавить
+    material_type?: 'PRESENTATION' | 'VIDEO' | 'OTHER'; // добавить
     position: number;
     created_at: string;
     updated_at: string;
@@ -155,7 +155,7 @@ export interface Experience {
 export interface Publication {
     id: string;
     title: string;
-    type: "article" | "book" | "conference" | "journal";
+    type: 'article' | 'book' | 'conference' | 'journal';
     publisher: string;
     publishDate: string;
     url?: string;
