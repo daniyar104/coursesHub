@@ -15,9 +15,7 @@ function HomePage() {
         fetchLastCourse();
     }, [fetchLastCourse]);
 
-    useEffect(() => {
-        console.log(lastCourse);
-    }, [lastCourse]);
+    console.log(lastCourse);
 
     return (
         <>

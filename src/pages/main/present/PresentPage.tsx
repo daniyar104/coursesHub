@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { PresentCourses } from '../../../../data/courses.tsx';
 import type { Course } from '../../../service/types.ts';
 
@@ -6,6 +7,8 @@ interface PresentPageProps {
 }
 
 export default function PresentPage({ lastCourses }: PresentPageProps) {
+    const navigate = useNavigate();
+
     return (
         <section className="py-8">
             <div className="flex items-center justify-between mb-8">
@@ -22,6 +25,9 @@ export default function PresentPage({ lastCourses }: PresentPageProps) {
                     <div
                         key={course.id}
                         className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                        onClick={() => {
+                            navigate(`/course/${course.id}/lesson/${course.lastLesson.id}`);
+                        }}
                     >
                         {/* Декоративная полоска сверху (опционально) */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

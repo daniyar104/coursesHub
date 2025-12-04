@@ -46,8 +46,8 @@ export const useLessonStore = create<LessonState>((set) => ({
         set({ loading: true, error: false });
 
         try {
-            const res = await markLessonAccess(courseId, lessonId);
-            set((state) => ({ loading: false }));
+            await markLessonAccess(courseId, lessonId);
+            set({ loading: false });
         } catch (error) {
             set({ error: true, loading: false });
         }
@@ -66,9 +66,8 @@ export const useLessonStore = create<LessonState>((set) => ({
 
             set({
                 loading: false,
-                lastCourse: res.data.data.filter(
-                    (el) => el.lastLesson !== null || el.lastLesson.enrollment.progress !== '100',
-                ),
+                lastCourse: res.filter((el) => el.lastLesson?.enrollment?.progress !== '100'),
+                // lastCourse: res.data,
             });
         } catch (error) {
             set({ error: true, loading: false });

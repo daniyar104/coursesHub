@@ -1,9 +1,9 @@
-import VideoPlayer from "../../../components/ui/VideoPlayer/VideoPlayer";
-import LectureViewer from "./LectureViewer";
-import PDFViewer from "./PDFViewer";
+import VideoPlayer from '../../../components/ui/VideoPlayer/VideoPlayer';
+import LectureViewer from './LectureViewer';
+import PDFViewer from './PDFViewer';
 
 interface MaterialProps {
-    type: "PRESENTATION" | "VIDEO" | "OTHER";
+    type: 'PRESENTATION' | 'VIDEO' | 'OTHER' | undefined;
     title: string;
     material_url?: string | null;
     slides?: string[];
@@ -13,14 +13,13 @@ interface MaterialProps {
 }
 
 export default function MaterialRenderer(props: MaterialProps) {
-    switch (props.type.toLowerCase()) {
-        case "presentation":
+    if (!props.type) return null;
+
+    switch (props.type) {
+        case 'PRESENTATION':
             return <PDFViewer url={props.material_url!} />;
 
-        case "lecture":
-            return <LectureViewer />;
-
-        case "video":
+        case 'VIDEO':
             return (
                 <div className="relative w-full md:h-[50vh] lg:h-[60vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
                     <VideoPlayer
@@ -32,6 +31,9 @@ export default function MaterialRenderer(props: MaterialProps) {
                     />
                 </div>
             );
+
+        case 'OTHER':
+            return <LectureViewer />;
 
         default:
             return <div>Неизвестный тип контента</div>;
