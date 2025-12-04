@@ -25,6 +25,7 @@ import durationFormat from '../../utils/durationFormat';
 // Types
 import type { Course } from '../../service/types';
 import { useTestStore } from '../../store/useTestStore';
+import TestSection from '../test/TestSection';
 
 // Static Data
 const TEACHER_DATA = {
@@ -246,6 +247,8 @@ export default function LessonPage() {
                         loading={lessonLoading}
                         disabled={lessonLoading || isJustCompleted}
                     />
+
+                    {currentTest && <TestSection />}
                 </div>
 
                 <Footer />

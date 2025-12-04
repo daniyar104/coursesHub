@@ -65,7 +65,7 @@ export const useTestStore = create<TestState>((set, get) => ({
                 currentTest.id,
                 Object.entries(answers).map(([questionId, answerId]) => ({ questionId, answerId })),
             );
-            set({ result: res.data, loading: false });
+            set({ result: res, loading: false });
         } catch {
             set({ error: true, loading: false });
         }
