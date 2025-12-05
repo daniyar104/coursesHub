@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Play, Clock, GraduationCap, CheckCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Play, Clock, GraduationCap, CheckCircle, Lock } from 'lucide-react';
 import { useCoursesStore } from '../../store/coursesStore';
 import Header from '../../components/Header/HomeHeader';
 import { getModuleTest, getCourseTest } from '../../service/testService';
@@ -139,82 +139,93 @@ const CourseCurriculumPage: React.FC = () => {
                                     Модули курса
                                 </h2>
                                 <div className="space-y-2">
-                                    {course.modules.map((module, index) => (
-                                        <button
-                                            key={module.id}
-                                            onClick={() => setSelectedModuleId(module.id)}
-                                            className={`w-full text-left p-4 rounded-xl transition-all ${selectedModuleId === module.id
-                                                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                                                : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-                                                }`}
-                                        >
-                                            <div className="flex items-start gap-3">
-                                                <div className="relative">
-                                                    <span
-                                                        className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold flex-shrink-0 ${selectedModuleId === module.id
+                                    {course.modules.map((module, index) => {
+                                        const isLocked = index > 0 && !course.modules[index - 1].completed;
+
+                                        return (
+                                            <button
+                                                key={module.id}
+                                                disabled={isLocked}
+                                                onClick={() => !isLocked && setSelectedModuleId(module.id)}
+                                                className={`w-full text-left p-4 rounded-xl transition-all ${selectedModuleId === module.id
+                                                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                                                    : isLocked
+                                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                                                    }`}
+                                            >
+                                                <div className="flex items-start gap-3">
+                                                    <div className="relative">
+                                                        <span
+                                                            className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold flex-shrink-0 ${selectedModuleId === module.id
                                                                 ? 'bg-white text-indigo-600'
-                                                                : 'bg-indigo-100 text-indigo-600'
-                                                            }`}
-                                                    >
-                                                        {index + 1}
-                                                    </span>
-                                                    {/* Completion checkmark for completed modules */}
-                                                    {module.completed && (
-                                                        <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5">
-                                                            <CheckCircle className="w-3 h-3 text-white" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h3
-                                                        className={`font-semibold mb-1 line-clamp-2 ${selectedModuleId === module.id
+                                                                : isLocked
+                                                                    ? 'bg-gray-200 text-gray-400'
+                                                                    : 'bg-indigo-100 text-indigo-600'
+                                                                }`}
+                                                        >
+                                                            {isLocked ? <Lock className="w-4 h-4" /> : index + 1}
+                                                        </span>
+                                                        {/* Completion checkmark for completed modules */}
+                                                        {module.completed && (
+                                                            <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5">
+                                                                <CheckCircle className="w-3 h-3 text-white" />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3
+                                                            className={`font-semibold mb-1 line-clamp-2 ${selectedModuleId === module.id
                                                                 ? 'text-white'
-                                                                : 'text-gray-900'
-                                                            }`}
-                                                    >
-                                                        {module.title}
-                                                    </h3>
-                                                    <p
-                                                        className={`text-sm mb-2 ${selectedModuleId === module.id
+                                                                : isLocked
+                                                                    ? 'text-gray-500'
+                                                                    : 'text-gray-900'
+                                                                }`}
+                                                        >
+                                                            {module.title}
+                                                        </h3>
+                                                        <p
+                                                            className={`text-sm mb-2 ${selectedModuleId === module.id
                                                                 ? 'text-indigo-100'
                                                                 : 'text-gray-500'
-                                                            }`}
-                                                    >
-                                                        {module.lessons.length}{' '}
-                                                        {module.lessons.length === 1
-                                                            ? 'урок'
-                                                            : 'уроков'}
-                                                    </p>
-                                                    {/* Progress Bar */}
-                                                    {module.progress !== undefined && (
-                                                        <div className="space-y-1">
-                                                            <div className="flex items-center justify-between text-xs">
-                                                                <span className={selectedModuleId === module.id ? 'text-indigo-100' : 'text-gray-600'}>
-                                                                    Прогресс
-                                                                </span>
-                                                                <span className={`font-semibold ${module.progress === 100
+                                                                }`}
+                                                        >
+                                                            {module.lessons.length}{' '}
+                                                            {module.lessons.length === 1
+                                                                ? 'урок'
+                                                                : 'уроков'}
+                                                        </p>
+                                                        {/* Progress Bar */}
+                                                        {module.progress !== undefined && !isLocked && (
+                                                            <div className="space-y-1">
+                                                                <div className="flex items-center justify-between text-xs">
+                                                                    <span className={selectedModuleId === module.id ? 'text-indigo-100' : 'text-gray-600'}>
+                                                                        Прогресс
+                                                                    </span>
+                                                                    <span className={`font-semibold ${module.progress === 100
                                                                         ? (selectedModuleId === module.id ? 'text-white' : 'text-green-600')
                                                                         : (selectedModuleId === module.id ? 'text-white' : 'text-indigo-600')
+                                                                        }`}>
+                                                                        {Math.round(module.progress)}%
+                                                                    </span>
+                                                                </div>
+                                                                <div className={`h-2 rounded-full overflow-hidden shadow-inner ${selectedModuleId === module.id ? 'bg-white/30' : 'bg-gray-200'
                                                                     }`}>
-                                                                    {Math.round(module.progress)}%
-                                                                </span>
-                                                            </div>
-                                                            <div className={`h-2 rounded-full overflow-hidden shadow-inner ${selectedModuleId === module.id ? 'bg-white/30' : 'bg-gray-200'
-                                                                }`}>
-                                                                <div
-                                                                    className={`h-full transition-all duration-500 ease-out ${module.progress === 100
+                                                                    <div
+                                                                        className={`h-full transition-all duration-500 ease-out ${module.progress === 100
                                                                             ? 'bg-gradient-to-r from-green-500 to-emerald-500'
                                                                             : (selectedModuleId === module.id ? 'bg-white' : 'bg-gradient-to-r from-indigo-500 to-purple-500')
-                                                                        }`}
-                                                                    style={{ width: `${module.progress}%` }}
-                                                                />
+                                                                            }`}
+                                                                        style={{ width: `${module.progress}%` }}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </button>
-                                    ))}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -267,8 +278,8 @@ const CourseCurriculumPage: React.FC = () => {
                                                     navigate(`/course/${id}/lesson/${lesson.id}`)
                                                 }
                                                 className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all cursor-pointer border-2 group overflow-hidden relative ${lesson.complete
-                                                        ? 'border-green-200 hover:border-green-300 bg-gradient-to-br from-white to-green-50/30'
-                                                        : 'border-gray-100 hover:border-indigo-200'
+                                                    ? 'border-green-200 hover:border-green-300 bg-gradient-to-br from-white to-green-50/30'
+                                                    : 'border-gray-100 hover:border-indigo-200'
                                                     }`}
                                             >
                                                 {/* Completion Badge Overlay */}
@@ -284,8 +295,8 @@ const CourseCurriculumPage: React.FC = () => {
                                                 <div className="p-6">
                                                     <div className="flex items-start gap-4 mb-4">
                                                         <div className={`flex items-center justify-center w-12 h-12 rounded-xl text-lg font-bold transition-all flex-shrink-0 shadow-sm ${lesson.complete
-                                                                ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white group-hover:scale-110'
-                                                                : 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-105'
+                                                            ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white group-hover:scale-110'
+                                                            : 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-105'
                                                             }`}>
                                                             {lesson.complete ? (
                                                                 <CheckCircle className="w-7 h-7" />
@@ -296,8 +307,8 @@ const CourseCurriculumPage: React.FC = () => {
                                                         <div className="flex-1 min-w-0">
                                                             <div className="flex items-center gap-2 mb-2">
                                                                 <h3 className={`text-lg font-bold transition-colors line-clamp-2 ${lesson.complete
-                                                                        ? 'text-gray-800 group-hover:text-green-700'
-                                                                        : 'text-gray-900 group-hover:text-indigo-700'
+                                                                    ? 'text-gray-800 group-hover:text-green-700'
+                                                                    : 'text-gray-900 group-hover:text-indigo-700'
                                                                     }`}>
                                                                     {lesson.title}
                                                                 </h3>

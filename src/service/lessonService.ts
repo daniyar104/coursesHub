@@ -1,5 +1,5 @@
 import api from "./api";
-import { getToken, isTokenValid } from "../utils/auth";
+import { getToken } from "../utils/auth";
 import type { LessonMaterial } from "./types";
 
 export async function getLessonMaterial(
@@ -25,6 +25,21 @@ export async function getLessonMaterial(
             error.response?.status,
             error.response?.data
         );
+        throw error;
+    }
+}
+
+export async function getLessonById(lessonId: string): Promise<any> {
+    const token = getToken();
+    if (!token) throw new Error("Необходима авторизация");
+
+    try {
+        const { data } = await api.get(`/lessons/${lessonId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return data;
+    } catch (error: any) {
+        console.error("Error fetching lesson info:", error);
         throw error;
     }
 }

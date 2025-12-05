@@ -8,7 +8,14 @@ export async function getAllCourses(): Promise<Course[]> {
 }
 
 export async function getCourseById(id: string): Promise<CourseWithModules> {
-    const { data } = await api.get(`/courses/${id}`);
+    const token = getToken();
+    const headers: Record<string, string> = {};
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    const { data } = await api.get(`/courses/${id}`, { headers });
     return data.data;
 }
 

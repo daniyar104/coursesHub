@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/HomeHeader";
-import { getLessonMaterial, markLessonComplete, markLessonAccess } from "../../service/lessonService";
+import { getLessonMaterial, markLessonComplete, markLessonAccess, getLessonById } from "../../service/lessonService";
 import { getLessonTest } from "../../service/testService";
 import { useCoursesStore } from "../../store/coursesStore";
 import type { LessonMaterial, Lesson } from "../../service/types";
@@ -18,6 +18,7 @@ export default function LessonMaterialPage() {
     const [completingLesson, setCompletingLesson] = useState(false);
     const [hasTest, setHasTest] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [lessonDebug, setLessonDebug] = useState<any>(null);
 
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
@@ -37,6 +38,20 @@ export default function LessonMaterialPage() {
                 // Set completion status from material data
                 if (data.complete !== undefined) {
                     setIsCompleted(data.complete);
+                }
+
+                // Fetch full lesson info to check completion status (source of truth)
+                try {
+                    const lessonInfo = await getLessonById(id);
+                    console.log("Full lesson info:", lessonInfo);
+                    setLessonDebug(lessonInfo);
+                    if (lessonInfo.completed === true) {
+                        setIsCompleted(true);
+                        // Update material state as well
+                        setMaterial(prev => prev ? { ...prev, complete: true } : prev);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch full lesson info:", err);
                 }
 
                 // Если courseId есть в ответе, используем его
@@ -89,13 +104,22 @@ export default function LessonMaterialPage() {
         let next: Lesson | null = null;
         let currentLesson: Lesson | null = null;
 
-        for (const module of course.modules) {
+        for (let mIndex = 0; mIndex < course.modules.length; mIndex++) {
+            const module = course.modules[mIndex];
+
             for (let i = 0; i < module.lessons.length; i++) {
                 if (found) {
                     next = module.lessons[i];
                     break;
                 }
                 if (module.lessons[i].id === id) {
+                    // Check if module is locked
+                    const isLocked = mIndex > 0 && !course.modules[mIndex - 1].completed;
+                    if (isLocked) {
+                        setError("Этот модуль недоступен. Пожалуйста, завершите предыдущий модуль.");
+                        return;
+                    }
+
                     currentLesson = module.lessons[i];
                     found = true;
                     // Проверяем есть ли следующий урок в этом модуле
@@ -111,12 +135,17 @@ export default function LessonMaterialPage() {
         setNextLesson(next);
 
         // Обновляем статус завершения из данных курса
+        // Используем данные курса, если:
+        // 1. Материал еще не загружен
+        // 2. ИЛИ в материале нет поля complete (undefined)
         if (currentLesson) {
-            console.log("Current lesson from course:", currentLesson);
-            console.log("Lesson complete status:", currentLesson.complete);
-            setIsCompleted(currentLesson.complete || false);
+            console.log("Syncing completion status. Material:", material?.complete, "Course:", currentLesson.complete);
+
+            if (!material || material.complete === undefined) {
+                setIsCompleted(currentLesson.complete || false);
+            }
         }
-    }, [course, id]);
+    }, [course, id, material]);
 
     const handleCompleteAndNext = async () => {
         console.log("handleCompleteAndNext called");
@@ -124,12 +153,12 @@ export default function LessonMaterialPage() {
         console.log("course:", course);
         console.log("nextLesson:", nextLesson);
 
-        // Получаем courseId из загруженного курса
-        const courseId = course?.id;
+        // Получаем courseId из загруженного курса или материала
+        const courseId = course?.id || material?.courseId;
 
         if (!id || !courseId) {
-            console.error("Missing required data:", { id, courseId });
-            alert("Не удалось определить курс. Пожалуйста, вернитесь к списку уроков и попробуйте снова.");
+            console.error("Missing required data:", { id, courseId, materialCourseId: material?.courseId });
+            alert("Не удалось определить курс. Пожалуйста, перезагрузите страницу.");
             return;
         }
 
@@ -141,8 +170,13 @@ export default function LessonMaterialPage() {
             const result = await markLessonComplete(courseId, id);
             console.log("Lesson completed, progress:", result.progress);
 
-            // Update completion status
+            // Update completion status in both states
             setIsCompleted(true);
+
+            // Update material state to reflect completion
+            if (material) {
+                setMaterial({ ...material, complete: true });
+            }
 
             // Обновляем данные курса чтобы получить актуальный статус
             if (fetchCourseById) {
@@ -231,6 +265,9 @@ export default function LessonMaterialPage() {
             </>
         );
     }
+
+    // Temporary Debug
+    // console.log("RENDER: isCompleted:", isCompleted);
 
     const materialType = getMaterialType(material.materialUrl);
 
@@ -435,7 +472,17 @@ export default function LessonMaterialPage() {
                         </div>
                     </div>
                 )}
-            </div>
+
+                {/* Debug Info */}
+                {lessonDebug && (
+                    <div className="mt-8 p-4 bg-gray-100 rounded-lg text-xs font-mono overflow-auto">
+                        <p className="font-bold mb-2">Debug Info (from /lessons/:id):</p>
+                        <p>ID: {lessonDebug.id}</p>
+                        <p>Completed: {String(lessonDebug.completed)}</p>
+                        <p>IsCompleted State: {String(isCompleted)}</p>
+                    </div>
+                )}
+            </div >
 
         </>
     );

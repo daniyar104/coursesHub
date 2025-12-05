@@ -18,7 +18,7 @@ import TeacherDetailPage from "../src/pages/teachers/TeacherDetailPage.tsx";
 import MyCoursesPage from "../src/pages/my-courses/MyCoursesPage.tsx";
 import LessonMaterialPage from "../src/pages/lesson/LessonMaterialPage.tsx";
 import CourseCurriculumPage from "../src/pages/course/CourseCurriculumPage.tsx";
-import TestPage from "../src/pages/test/TestPage.tsx";
+
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -147,15 +147,6 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <CourseCurriculumPage />
-                    </PrivateRoute>
-                }
-            />
-
-            <Route
-                path="/test/:type/:id"
-                element={
-                    <PrivateRoute>
-                        <TestPage />
                     </PrivateRoute>
                 }
             />
