@@ -76,6 +76,7 @@ const LoginPage: React.FC = () => {
                             Войти
                         </Button>
                     </div>
+                    {error && <p className="text-red-500">Неправильная почта или пароль</p>}
                     <div className="my-4 flex items-center">
                         <hr className="flex-1 border-gray-300" />
                         <span className="mx-2 text-gray-400">или</span>
