@@ -120,6 +120,8 @@ export interface Module {
     created_at: string;
     updated_at: string;
     lessons: Lesson[];
+    completed?: boolean;  // All lessons in module completed
+    progress?: number;    // Progress percentage 0-100
 }
 
 export interface CourseWithModules extends Course {
@@ -188,6 +190,7 @@ export interface LessonMaterial {
     materialUrl: string;
     expiresIn: number;
     courseId?: string; // ID курса для навигации
+    complete?: boolean; // Урок завершен пользователем
 }
 
 // Enrollment Status types

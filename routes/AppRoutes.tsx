@@ -13,12 +13,12 @@ import CoursePage from "../src/pages/main/CoursePage.tsx";
 import { Profile } from "../src/pages/profile/Profile.tsx";
 import Enrollments from "../src/pages/enrollments/Enrollments.tsx";
 import LessonPage from "../src/pages/lesson article/LessonPage.tsx";
-import LessonArticle from "../src/pages/lesson article/LessonArticle.tsx";
 import TeachersListPage from "../src/pages/teachers/TeachersListPage.tsx";
 import TeacherDetailPage from "../src/pages/teachers/TeacherDetailPage.tsx";
 import MyCoursesPage from "../src/pages/my-courses/MyCoursesPage.tsx";
 import LessonMaterialPage from "../src/pages/lesson/LessonMaterialPage.tsx";
 import CourseCurriculumPage from "../src/pages/course/CourseCurriculumPage.tsx";
+import TestPage from "../src/pages/test/TestPage.tsx";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -147,6 +147,15 @@ export const AppRoutes: React.FC = () => {
                 element={
                     <PrivateRoute>
                         <CourseCurriculumPage />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/test/:type/:id"
+                element={
+                    <PrivateRoute>
+                        <TestPage />
                     </PrivateRoute>
                 }
             />
