@@ -1,33 +1,33 @@
-import React, { useEffect } from "react";
-import { useUserStore } from "../../store/useUserStore";
-import type { Course } from "../../components/ui/Card/CardCourseProfile";
-import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
-import Avatar from "../../../assets/images/default_avatar.jpg";
-import { useCoursesStore } from "../../store/coursesStore.ts";
-import Loading from "../../components/ui/Loading/Loading.tsx";
-import Header from "../../components/Header/HomeHeader.tsx";
+import React, { useEffect } from 'react';
+import { useUserStore } from '../../store/useUserStore';
+import type { Course } from '../../components/ui/Card/CardCourseProfile';
+import CardCourseProfile from '../../components/ui/Card/CardCourseProfile';
+import Avatar from '../../../assets/images/default_avatar.jpg';
+import { useCoursesStore } from '../../store/coursesStore.ts';
+import Loading from '../../components/ui/Loading/Loading.tsx';
+import Header from '../../components/Header/HomeHeader.tsx';
 
 const coursesData: Course[] = [
     {
         id: 1,
-        title: "Полный курс по React и Next.js",
+        title: 'Полный курс по React и Next.js',
         progress: 75,
-        status: "В процессе",
-        color: "bg-indigo-500",
+        status: 'В процессе',
+        color: 'bg-indigo-500',
     },
     {
         id: 2,
-        title: "Основы дизайна с Figma",
+        title: 'Основы дизайна с Figma',
         progress: 100,
-        status: "Завершен",
-        color: "bg-green-500",
+        status: 'Завершен',
+        color: 'bg-green-500',
     },
     {
         id: 3,
-        title: "Введение в Python для анализа данных",
+        title: 'Введение в Python для анализа данных',
         progress: 20,
-        status: "В процессе",
-        color: "bg-yellow-500",
+        status: 'В процессе',
+        color: 'bg-yellow-500',
     },
 ];
 
@@ -41,15 +41,14 @@ export const Profile: React.FC = () => {
 
     console.log(user);
 
-    if (loading) return <Loading />;
-    if (error)
+    if (loading)
         return (
-            <p className="text-center mt-20 text-lg text-red-600">{error}</p>
+            <div className="w-screen h-screen">
+                <Loading />
+            </div>
         );
-    if (!user)
-        return (
-            <p className="text-center mt-20 text-lg">Пользователь не найден</p>
-        );
+    if (error) return <p className="text-center mt-20 text-lg text-red-600">{error}</p>;
+    if (!user) return <p className="text-center mt-20 text-lg">Пользователь не найден</p>;
 
     // console.log(user);
     console.log(enrolledCourses);
@@ -97,18 +96,14 @@ export const Profile: React.FC = () => {
                                     {`${user.first_name} ${user.sur_name}`}
                                 </p>
                                 <p className="text-3xl font-extrabold text-gray-900"></p>
-                                <p className="text-lg text-gray-600 mt-1">
-                                    {user.email}
-                                </p>
-                                <p className="text-lg text-gray-600 mt-1">
-                                    Роль: {user.role}
-                                </p>
+                                <p className="text-lg text-gray-600 mt-1">{user.email}</p>
+                                <p className="text-lg text-gray-600 mt-1">Роль: {user.role}</p>
 
                                 <div className="mt-4 pt-4 border-t border-gray-100">
                                     <p className="text-sm text-gray-500">
                                         <span className="font-semibold text-gray-700">
                                             Дата регистрации:
-                                        </span>{" "}
+                                        </span>{' '}
                                         {user.created_at}
                                     </p>
                                 </div>
@@ -144,10 +139,7 @@ export const Profile: React.FC = () => {
                         {/* Сетка курсов */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {enrolledCourses?.map((course) => (
-                                <CardCourseProfile
-                                    key={course.id}
-                                    course={course}
-                                />
+                                <CardCourseProfile key={course.id} course={course} />
                             ))}
                         </div>
 

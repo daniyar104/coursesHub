@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 
 interface TeamMember {
     name: string;
@@ -22,72 +22,76 @@ interface TeamGroup {
 
 const TEAM: TeamGroup = {
     developer: {
-        trueLabel: "Разработчики",
-        label: "«Создатели багов»",
+        trueLabel: 'Разработчики',
+        label: '«Создатели багов»',
         member: [
             {
-                name: "Темиров Данияр",
-                role: "Team Lead / Full-stack",
-                photo: "",
+                name: 'Темиров Данияр',
+                role: 'Team Lead / Full-stack',
+                photo: '',
             },
-            { name: "Тлеулин Асылхан", role: "Web-developer", photo: "" },
             {
-                name: "Токтар Айдын",
-                role: "Developer, но сам об этом незнает",
-                photo: "",
+                name: 'Тлеулин Асылхан',
+                role: 'Web-developer',
+                photo: 'https://drive.google.com/uc?export=view&id=1UfOXrYTXr61lDWo_ciCR7dldAWb2O40c',
+            },
+            {
+                name: 'Токтар Айдын',
+                role: 'Developer, но сам об этом незнает',
+                photo: '',
             },
         ],
     },
     dataBase: {
-        trueLabel: "База Данных",
-        label: "«Хранитель священных таблиц»",
+        trueLabel: 'База Данных',
+        label: '«Хранитель священных таблиц»',
         member: [
             {
-                name: "Сериков Мирас",
-                role: "Database Administrator",
-                photo: "",
+                name: 'Сериков Мирас',
+                role: 'Database Administrator',
+                photo: '',
             },
         ],
     },
     designer: {
-        trueLabel: "Дизайнеры",
-        label: "«Повелители кривых макетов»",
+        trueLabel: 'Дизайнеры',
+        label: '«Повелители кривых макетов»',
         member: [
             {
-                name: "Құрманғазин Еламан",
-                role: "Главный Дизайнер",
-                photo: "",
+                name: 'Құрманғазин Еламан',
+                role: 'Главный Дизайнер',
+                photo: '',
             },
             {
-                name: "Асланұлы Арыстан",
-                role: "Тоже Главный Дизайнер",
-                photo: "",
+                name: 'Асланұлы Арыстан',
+                role: 'Тоже Главный Дизайнер',
+                photo: '',
             },
             {
-                name: "Тлеуберген Бағұстар",
-                role: "Главный Главный Дизайнер",
-                photo: "",
+                name: 'Тлеуберген Бағұстар',
+                role: 'Главный Главный Дизайнер',
+                photo: '',
             },
         ],
     },
     tester: {
-        trueLabel: "QA-Тестеры",
-        label: "«Палачи фичей»",
+        trueLabel: 'QA-Тестеры',
+        label: '«Палачи фичей»',
         member: [
             {
-                name: "Сәрсембай  Дидар",
-                role: "Тестировщик",
-                photo: "",
+                name: 'Сәрсембай  Дидар',
+                role: 'Тестировщик',
+                photo: '',
             },
             {
-                name: "Достаев Наиль",
-                role: "Тестировал тесты Дидара",
-                photo: "",
+                name: 'Достаев Наиль',
+                role: 'Тестировал тесты Дидара',
+                photo: '',
             },
             {
-                name: "Шамутов Дамир",
-                role: "Тестировал тесты Наиля",
-                photo: "",
+                name: 'Шамутов Дамир',
+                role: 'Тестировал тесты Наиля',
+                photo: '',
             },
         ],
     },
@@ -98,15 +102,15 @@ export default function ModalInfo() {
     const [keys, setKeys] = useState<string[]>([]);
 
     // Секретная комбинация
-    const secret = ["KeyQ", "KeyW", "KeyE"]; // пример
+    const secret = ['KeyQ', 'KeyW', 'KeyE']; // пример
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
             setKeys((prev) => [...prev.slice(-2), e.code]);
         };
 
-        window.addEventListener("keydown", down);
-        return () => window.removeEventListener("keydown", down);
+        window.addEventListener('keydown', down);
+        return () => window.removeEventListener('keydown', down);
     }, []);
 
     useEffect(() => {
@@ -135,9 +139,7 @@ export default function ModalInfo() {
                                         Над проектом работала группа
                                         <strong> ВТ-23Б Типо</strong>
                                     </h2>
-                                    <p className="text-sm text-gray-600">
-                                        Мы старались!
-                                    </p>
+                                    <p className="text-sm text-gray-600">Мы старались!</p>
                                 </div>
                                 <button
                                     className="p-2 rounded-full bg-white hover:bg-gray-200 cursor-pointer duration-300"
@@ -148,14 +150,8 @@ export default function ModalInfo() {
                             </div>
 
                             {Object.entries(TEAM).map(
-                                ([groupName, groupValue]: [
-                                    string,
-                                    TeamGroupItem
-                                ]) => (
-                                    <div
-                                        className="flex flex-col gap-5"
-                                        key={groupName}
-                                    >
+                                ([groupName, groupValue]: [string, TeamGroupItem]) => (
+                                    <div className="flex flex-col gap-5" key={groupName}>
                                         <div>
                                             <h3 className="font-bold text-2xl">
                                                 {groupValue.trueLabel}
@@ -166,28 +162,24 @@ export default function ModalInfo() {
                                         </div>
 
                                         <div className="grid grid-cols-3 gap-4">
-                                            {groupValue.member.map(
-                                                (el, idx) => (
-                                                    <div
-                                                        key={idx}
-                                                        className="bg-gray-100 rounded-xl p-4 text-center"
-                                                    >
-                                                        <img
-                                                            src={el.photo}
-                                                            className="w-28 h-28 object-cover rounded-full mx-auto mb-3"
-                                                        />
-                                                        <h3 className="text-xl font-semibold">
-                                                            {el.name}
-                                                        </h3>
-                                                        <p className="text-gray-600">
-                                                            {el.role}
-                                                        </p>
-                                                    </div>
-                                                )
-                                            )}
+                                            {groupValue.member.map((el, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="bg-gray-100 rounded-xl p-4 text-center"
+                                                >
+                                                    <img
+                                                        src={el.photo}
+                                                        className="w-28 h-28 object-cover rounded-full mx-auto mb-3"
+                                                    />
+                                                    <h3 className="text-xl font-semibold">
+                                                        {el.name}
+                                                    </h3>
+                                                    <p className="text-gray-600">{el.role}</p>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                )
+                                ),
                             )}
                             <div className="grid grid-cols-4 gap-4">
                                 {/* {TEAM.map((p) => (

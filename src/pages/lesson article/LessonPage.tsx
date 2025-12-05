@@ -127,7 +127,12 @@ export default function LessonPage() {
     }, [course, currentLesson]);
 
     // Renders
-    if (courseLoading) return <Loading />;
+    if (courseLoading)
+        return (
+            <div className="w-screen h-screen">
+                <Loading />
+            </div>
+        );
     if (!course) return <div>Курс не найден</div>;
     if (!currentLesson) return <div>Урок не найден</div>;
 
@@ -166,7 +171,7 @@ export default function LessonPage() {
 
                 {/* Контент */}
                 <div className="w-[90%] max-w-[1230px] mx-auto mt-5 flex flex-col items-start gap-6">
-                    <div className="w-full h-full ">
+                    <div className="w-full h-full  max-h-[700px]">
                         <MaterialRenderer
                             type={currentLesson.material_type}
                             title={currentLesson.title}
