@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/HomeHeader";
 import { getLessonMaterial, markLessonComplete, markLessonAccess } from "../../service/lessonService";
+import { getLessonTest } from "../../service/testService";
 import { useCoursesStore } from "../../store/coursesStore";
 import type { LessonMaterial, Lesson } from "../../service/types";
-import { FileText, Download, Clock, AlertCircle, ArrowRight, CheckCircle } from "lucide-react";
+import { FileText, Download, Clock, AlertCircle, ArrowRight, CheckCircle, ClipboardList } from "lucide-react";
 import PDFSlider from "../../components/ui/PDFSlider/PDFSlider";
 
 export default function LessonMaterialPage() {
@@ -15,6 +16,8 @@ export default function LessonMaterialPage() {
     const [error, setError] = useState<string | null>(null);
     const [nextLesson, setNextLesson] = useState<Lesson | null>(null);
     const [completingLesson, setCompletingLesson] = useState(false);
+    const [hasTest, setHasTest] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
@@ -31,6 +34,11 @@ export default function LessonMaterialPage() {
                 console.log("Loaded material:", data);
                 setMaterial(data);
 
+                // Set completion status from material data
+                if (data.complete !== undefined) {
+                    setIsCompleted(data.complete);
+                }
+
                 // Если courseId есть в ответе, используем его
                 if (data.courseId && fetchCourseById) {
                     console.log("Fetching course with ID:", data.courseId);
@@ -45,6 +53,17 @@ export default function LessonMaterialPage() {
                 } else {
                     console.warn("No courseId in material data - will try to get from course context");
                 }
+
+                // Check if lesson has a test
+                try {
+                    const test = await getLessonTest(id);
+                    if (test) {
+                        setHasTest(true);
+                    }
+                } catch (err) {
+                    console.error("Failed to check for test:", err);
+                }
+
             } catch (err: any) {
                 console.error("Failed to load material:", err);
                 if (err.response?.status === 401) {
@@ -62,12 +81,13 @@ export default function LessonMaterialPage() {
         fetchMaterial();
     }, [id, fetchCourseById]);
 
-    // Определяем следующий урок
+    // Определяем следующий урок и статус завершения текущего урока
     useEffect(() => {
         if (!course || !id) return;
 
         let found = false;
         let next: Lesson | null = null;
+        let currentLesson: Lesson | null = null;
 
         for (const module of course.modules) {
             for (let i = 0; i < module.lessons.length; i++) {
@@ -76,6 +96,7 @@ export default function LessonMaterialPage() {
                     break;
                 }
                 if (module.lessons[i].id === id) {
+                    currentLesson = module.lessons[i];
                     found = true;
                     // Проверяем есть ли следующий урок в этом модуле
                     if (i + 1 < module.lessons.length) {
@@ -88,6 +109,13 @@ export default function LessonMaterialPage() {
         }
 
         setNextLesson(next);
+
+        // Обновляем статус завершения из данных курса
+        if (currentLesson) {
+            console.log("Current lesson from course:", currentLesson);
+            console.log("Lesson complete status:", currentLesson.complete);
+            setIsCompleted(currentLesson.complete || false);
+        }
     }, [course, id]);
 
     const handleCompleteAndNext = async () => {
@@ -112,6 +140,14 @@ export default function LessonMaterialPage() {
             console.log("Marking lesson complete:", courseId, id);
             const result = await markLessonComplete(courseId, id);
             console.log("Lesson completed, progress:", result.progress);
+
+            // Update completion status
+            setIsCompleted(true);
+
+            // Обновляем данные курса чтобы получить актуальный статус
+            if (fetchCourseById) {
+                await fetchCourseById(courseId);
+            }
 
             // Переходим к следующему уроку если он есть
             if (nextLesson) {
@@ -296,18 +332,40 @@ export default function LessonMaterialPage() {
                     </div>
                 </div>
 
+                {/* Test Button */}
+                {hasTest && (
+                    <div className="mt-6">
+                        <button
+                            onClick={() => navigate(`/test/lesson/${id}`)}
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-3"
+                        >
+                            <ClipboardList className="w-6 h-6" />
+                            <span>Пройти тест к уроку</span>
+                        </button>
+                    </div>
+                )}
+
                 {/* Next Lesson Button */}
                 {nextLesson && (
                     <div className="mt-6">
                         <button
                             onClick={handleCompleteAndNext}
-                            disabled={completingLesson}
-                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                            disabled={completingLesson || isCompleted}
+                            className={`w-full font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 ${isCompleted
+                                ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+                                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white'
+                                }`}
                         >
                             {completingLesson ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                     <span>Сохранение прогресса...</span>
+                                </>
+                            ) : isCompleted ? (
+                                <>
+                                    <CheckCircle className="w-6 h-6" />
+                                    <span>Урок завершен</span>
+                                    <CheckCircle className="w-6 h-6" />
                                 </>
                             ) : (
                                 <>
@@ -317,9 +375,16 @@ export default function LessonMaterialPage() {
                                 </>
                             )}
                         </button>
-                        <p className="text-center text-sm text-gray-600 mt-2">
-                            Следующий урок: <span className="font-semibold">{nextLesson.title}</span>
-                        </p>
+                        {!isCompleted && (
+                            <p className="text-center text-sm text-gray-600 mt-2">
+                                Следующий урок: <span className="font-semibold">{nextLesson.title}</span>
+                            </p>
+                        )}
+                        {isCompleted && (
+                            <p className="text-center text-sm text-green-600 mt-2 font-semibold">
+                                ✓ Вы уже завершили этот урок
+                            </p>
+                        )}
                     </div>
                 )}
 
@@ -327,13 +392,22 @@ export default function LessonMaterialPage() {
                     <div className="mt-6">
                         <button
                             onClick={handleCompleteAndNext}
-                            disabled={completingLesson}
-                            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mb-6"
+                            disabled={completingLesson || isCompleted}
+                            className={`w-full font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mb-6 ${isCompleted
+                                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                                : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+                                }`}
                         >
                             {completingLesson ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                     <span>Сохранение прогресса...</span>
+                                </>
+                            ) : isCompleted ? (
+                                <>
+                                    <CheckCircle className="w-6 h-6" />
+                                    <span>Урок завершен</span>
+                                    <CheckCircle className="w-6 h-6" />
                                 </>
                             ) : (
                                 <>
@@ -346,7 +420,12 @@ export default function LessonMaterialPage() {
                         <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                             <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-green-800 mb-2">Поздравляем!</h3>
-                            <p className="text-green-700 mb-4">Вы завершили все уроки этого курса</p>
+                            <p className="text-green-700 mb-4">
+                                {isCompleted
+                                    ? 'Вы завершили этот урок и все остальные уроки курса!'
+                                    : 'Вы завершили все уроки этого курса'
+                                }
+                            </p>
                             <button
                                 onClick={() => navigate('/my-courses')}
                                 className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
@@ -357,6 +436,7 @@ export default function LessonMaterialPage() {
                     </div>
                 )}
             </div>
+
         </>
     );
 }
