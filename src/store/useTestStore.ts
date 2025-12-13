@@ -1,13 +1,13 @@
 import { create } from 'zustand';
-import type { Test } from '../service/types';
-import { getCourseTest, getLessonTest, getModuleTest, submitTest } from '../service/testService';
+import type { Test, TestResult } from '../service/types';
+import { getCourseTest, getLessonTest, getModuleTest, submitTest, getTestResult } from '../service/testService';
 
 interface TestState {
     currentTest: Test | null;
     answers: Record<string, string>;
     loading: boolean;
     error: boolean;
-    result: { score: number; passed: boolean } | null;
+    result: TestResult | null;
 
     fetchLessonTest: (id: string) => Promise<void>;
     fetchModuleTest: (id: string) => Promise<void>;
@@ -25,31 +25,61 @@ export const useTestStore = create<TestState>((set, get) => ({
     result: null,
 
     fetchLessonTest: async (id) => {
-        set({ loading: true, error: false });
+        set({ loading: true, error: false, answers: {}, result: null });
         try {
             let res = await getLessonTest(id);
 
-            set({ currentTest: res, loading: false });
+            // If test exists, try to fetch its result
+            if (res && res.id) {
+                try {
+                    const resultData = await getTestResult(res.id);
+                    if (resultData) {
+                        set({ result: resultData });
+                    }
+                } catch (e) {
+                    // Ignore result fetching errors
+                }
+            }
+
+            set((state) => ({ ...state, currentTest: res, loading: false }));
         } catch {
             set({ error: true, loading: false });
         }
     },
     fetchModuleTest: async (id) => {
-        set({ loading: true, error: false });
+        set({ loading: true, error: false, answers: {}, result: null });
         try {
             let res = await getModuleTest(id);
 
-            set({ currentTest: res, loading: false });
+            if (res && res.id) {
+                try {
+                    const resultData = await getTestResult(res.id);
+                    if (resultData) {
+                        set({ result: resultData });
+                    }
+                } catch (e) { }
+            }
+
+            set((state) => ({ ...state, currentTest: res, loading: false }));
         } catch {
             set({ error: true, loading: false });
         }
     },
     fetchCourseTest: async (id) => {
-        set({ loading: true, error: false });
+        set({ loading: true, error: false, answers: {}, result: null });
         try {
             let res = await getCourseTest(id);
 
-            set({ currentTest: res, loading: false });
+            if (res && res.id) {
+                try {
+                    const resultData = await getTestResult(res.id);
+                    if (resultData) {
+                        set({ result: resultData });
+                    }
+                } catch (e) { }
+            }
+
+            set((state) => ({ ...state, currentTest: res, loading: false }));
         } catch {
             set({ error: true, loading: false });
         }

@@ -23,6 +23,7 @@ export default function LessonMaterialPage() {
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
 
+
     useEffect(() => {
         const fetchMaterial = async () => {
             if (!id) return;

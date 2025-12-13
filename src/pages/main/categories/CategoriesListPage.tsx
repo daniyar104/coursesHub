@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCategoriesStore } from "../../../store/categoriesStore";
-import { ArrowLeft, BookOpen, Sparkles, TrendingUp } from "lucide-react";
+import { BookOpen } from "lucide-react";
+import Header from "../../../components/Header/HomeHeader";
 
 const CategoriesListPage: React.FC = () => {
     const { categories, loading, error, fetchCategories } =
@@ -66,47 +67,21 @@ const CategoriesListPage: React.FC = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-            {/* Hero Section */}
+        <div className="min-h-screen bg-[#F8F9FB]">
+            <Header />
 
-            <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white">
-                <div className="absolute inset-0 bg-black opacity-10"></div>
-
-                <div className="relative max-w-7xl mx-auto px-6 py-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: -30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center"
-                    >
-                        <div className="flex items-center justify-center mb-4">
-                            <Sparkles className="w-12 h-12 mr-3" />
-                            <h1 className="text-5xl md:text-6xl font-bold">
-                                Категории курсов
-                            </h1>
-                        </div>
-                        <p className="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto">
-                            Выберите направление и начните свой путь к новым
-                            знаниям
-                        </p>
-                    </motion.div>
+            <div className="max-w-[1350px] w-[90%] mx-auto py-10">
+                {/* Page Title */}
+                <div className="mb-10">
+                    <h1 className="text-4xl font-bold text-[#37368C] mb-4">
+                        Категории курсов
+                    </h1>
+                    <p className="text-xl text-gray-500 max-w-2xl">
+                        Выберите направление и начните свой путь к новым знаниям
+                    </p>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0">
-                    <svg
-                        viewBox="0 0 1440 120"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-                            fill="rgb(238, 242, 255)"
-                        />
-                    </svg>
-                </div>
-            </div>
 
-            {/* Categories Grid */}
-            <div className="max-w-7xl mx-auto px-6 py-16">
+                {/* Categories Grid */}
                 {categories && categories.length > 0 ? (
                     <motion.div
                         variants={container}
@@ -117,63 +92,41 @@ const CategoriesListPage: React.FC = () => {
                         {categories.map((category, index) => (
                             <motion.div key={category.id} variants={item}>
                                 <Link to={`/home/category/${category.id}`}>
-                                    <div className="group relative h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
-                                        {/* Gradient Header */}
-                                        <div
-                                            className={`h-32 bg-gradient-to-br ${
-                                                gradients[
-                                                    index % gradients.length
-                                                ]
-                                            } relative overflow-hidden`}
-                                        >
-                                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                                            <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-3">
-                                                <BookOpen className="w-6 h-6 text-white" />
-                                            </div>
-                                            <div className="absolute -bottom-px left-0 right-0">
-                                                <svg
-                                                    viewBox="0 0 400 40"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M0 40L13.3 35C26.7 30 53.3 20 80 15C106.7 10 133.3 10 160 12.5C186.7 15 213.3 20 240 22.5C266.7 25 293.3 25 320 25C346.7 25 373.3 25 386.7 25L400 25V40H386.7C373.3 40 346.7 40 320 40C293.3 40 266.7 40 240 40C213.3 40 186.7 40 160 40C133.3 40 106.7 40 80 40C53.3 40 26.7 40 13.3 40H0Z"
-                                                        fill="white"
-                                                    />
-                                                </svg>
+                                    <div className="group relative h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200">
+                                        {/* Simplified Header Area */}
+                                        <div className={`h-24 bg-gradient-to-r ${gradients[index % gradients.length]} opacity-90 group-hover:opacity-100 transition-opacity relative`}>
+                                            <div className="absolute -bottom-6 right-6 bg-white p-3 rounded-xl shadow-lg">
+                                                <BookOpen className="w-8 h-8 text-indigo-600" />
                                             </div>
                                         </div>
 
                                         {/* Content */}
-                                        <div className="p-6">
+                                        <div className="p-8 pt-10">
                                             <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-indigo-600 transition-colors">
                                                 {category.name}
                                             </h3>
-                                            <p className="text-gray-600 mb-4 line-clamp-3">
+                                            <p className="text-gray-500 mb-4 line-clamp-3 leading-relaxed">
                                                 {category.description ||
                                                     "Изучайте новые навыки и развивайтесь вместе с нами"}
                                             </p>
-                                            <div className="flex items-center text-sm text-gray-500">
-                                                <TrendingUp className="w-4 h-4 mr-2" />
-                                                <span>
-                                                    Популярное направление
-                                                </span>
+
+                                            <div className="flex items-center text-sm font-medium text-indigo-500 pt-4 border-t border-gray-50">
+                                                <span>Перейти к курсам</span>
+                                                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                </svg>
                                             </div>
                                         </div>
-
-                                        {/* Hover Effect */}
-                                        <div className="absolute inset-0 border-2 border-transparent group-hover:border-indigo-400 rounded-2xl transition-all pointer-events-none"></div>
                                     </div>
                                 </Link>
                             </motion.div>
                         ))}
                     </motion.div>
                 ) : (
-                    <div className="text-center py-20">
-                        <div className="text-6xl mb-4">📚</div>
-                        <p className="text-2xl text-gray-600">
-                            Категории не найдены
-                        </p>
+                    <div className="text-center py-32 bg-white rounded-3xl shadow-sm border border-gray-100">
+                        <div className="text-6xl mb-6">📚</div>
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">Категории не найдены</h3>
+                        <p className="text-gray-500">Попробуйте обновить страницу позже</p>
                     </div>
                 )}
             </div>

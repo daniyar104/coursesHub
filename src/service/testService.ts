@@ -58,3 +58,50 @@ export async function submitTest(
         console.error(e);
     }
 }
+
+export async function getModuleTestResult(moduleId: string) {
+    try {
+        const res = await api.get(`/user/tests/module/${moduleId}/result`, {
+            headers: authHeader(),
+        });
+        return res.data;
+    } catch (e: any) {
+        // 404 means no result found (test not taken/passed), which is fine
+        if (e.response && e.response.status === 404) {
+            return null;
+        }
+        console.error(`Error fetching module test result for ${moduleId}:`, e);
+        return null;
+    }
+}
+
+export async function getCourseTestResult(courseId: string) {
+    try {
+        const res = await api.get(`/user/tests/course/${courseId}/result`, {
+            headers: authHeader(),
+        });
+        return res.data;
+    } catch (e: any) {
+        if (e.response && e.response.status === 404) {
+            return null;
+        }
+        console.error(`Error fetching course test result for ${courseId}:`, e);
+        return null;
+    }
+}
+
+export async function getTestResult(testId: string) {
+    try {
+        const res = await api.get(`/user/tests/${testId}/result`, {
+            headers: authHeader(),
+        });
+        return res.data;
+    } catch (e: any) {
+        if (e.response && e.response.status === 404) {
+            return null;
+        }
+        console.error(`Error fetching test result for ${testId}:`, e);
+        return null;
+    }
+}
+

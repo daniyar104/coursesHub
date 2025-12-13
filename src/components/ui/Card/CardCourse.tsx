@@ -1,116 +1,81 @@
-import Star from "../../../../assets/icon/Star.png";
-import StudentIcon from "../../../../assets/icon/CardStudent.png";
-import TimeIcon from "../../../../assets/icon/CardTime.png";
-import CourseIcon from "../../../../assets/icon/CardCourse.png";
-import Arrow from "../../../../assets/icon/Arrow.svg";
-import CardBackground from "../../../../assets/icon/CardBackground.png";
+import { BookOpen, Star, ArrowRight } from "lucide-react";
 import type { Course } from "../../../service/types.ts";
 import { useNavigate } from "react-router-dom";
 
 interface CardCoursesProps {
     course: Course;
 }
+
 export default function CardCourses({ course }: CardCoursesProps) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/course/${course.id}`);
     };
+
     return (
         <div
-            className="max-w-[420px] w-full max-h-[585px] h-full rounded-[10px] bg-[#F4F5F8] border border-dashed border-[#704fe6] p-5 pb-7 flex flex-col cursor-pointer"
+            className="group h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200 cursor-pointer flex flex-col"
             onClick={handleClick}
         >
             {/* Картинка курса */}
-            <div className="w-full max-h-[250px] h-full rounded-md relative overflow-hidden mb-8">
-                <img
-                    src={course.image || "https://picsum.photos/400/200"}
-                    alt={course.title}
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-2 left-2 py-3 px-7 rounded-sm text-md bg-[#17254e] text-white text-bold">
-                    {course.categories.name}
-                </div>
-            </div>
-
-            {/* Основной блок с фоном */}
-            <div
-                className="bg-no-repeat bg-center bg-contain"
-                style={{ backgroundImage: `url(${CardBackground})` }}
-            >
-                {/* Рейтинг и цена */}
-                <div className="flex justify-between items-center mb-5">
-                    <div className="flex gap-1 items-center">
-                        <img
-                            src={Star}
-                            alt="star icon"
-                            className="h-[14px] w-auto"
-                        />
-                        <span className="text-[#4D5756] text-sm font-medium">
-                            {/* {course.rating} */}
-                        </span>
+            <div className="relative h-48 bg-gray-100 overflow-hidden shrink-0">
+                {course.image ? (
+                    <img
+                        src={course.image}
+                        alt={course.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                        <BookOpen className="w-16 h-16 text-indigo-200" />
                     </div>
-                    <span className="text-[#704FE6] text-sm font-medium">
-                        {/*{course.price === 0 ? "Free" : course.price.toLocaleString()}*/}
+                )}
+
+                {/* Category Badge */}
+                <div className="absolute top-4 left-4">
+                    <span className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-indigo-900 shadow-sm">
+                        {(course as any).categories?.name || 'Курс'}
                     </span>
                 </div>
 
-                {/* Название курса */}
-                <h3 className="text-[#0E2A46] font-semibold text-[22px] leading-8 mb-6">
-                    {course.title}
-                </h3>
+                {/* Difficulty Badge */}
+                <div className="absolute top-4 right-4 z-10">
+                    <span className="bg-indigo-600/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm border border-indigo-500">
+                        {course.difficulty_level || 'General'}
+                    </span>
+                </div>
+            </div>
 
-                {/* Информация: уроки / время / студенты */}
-                <div className="p-5 flex w-full justify-between items-center rounded-sm bg-white mb-8">
-                    <div className="flex gap-2 items-center">
-                        <img
-                            src={CourseIcon}
-                            alt="Course Icon"
-                            className="w-auto h-full"
-                        />
-                        <span className="text-sm text-[#17254E]">
-                            Уроков {course._count?.lessons}
-                        </span>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                        <img
-                            src={TimeIcon}
-                            alt="Time Icon"
-                            className="w-auto h-full"
-                        />
-                        {/*<span className="text-sm text-[#17254E]">{course.duration}</span>*/}
-                    </div>
-                    <div className="flex gap-2 items-center">
-                        <img
-                            src={StudentIcon}
-                            alt="Student Icon"
-                            className="w-auto h-full"
-                        />
-                        <span className="text-sm text-[#17254E]">
-                            {/*Студентов {course.students}+*/}
-                        </span>
-                    </div>
+            {/* Content */}
+            <div className="p-6 flex flex-col flex-grow">
+                <div className="mb-4">
+                    <h3 className="text-lg font-bold text-gray-800 line-clamp-2 group-hover:text-indigo-600 transition-colors h-14">
+                        {course.title}
+                    </h3>
                 </div>
 
-                {/* Автор и кнопка */}
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <img
-                            src={
-                                course.authorImage ||
-                                "https://cdn.hackaday.io/images/3553251501638077867.png"
-                            }
-                            alt="Author Avatar"
-                            className="w-11 h-11 rounded-full border-2 border-[#704fe6]"
-                        />
-                        <span className="text-[#17254E] text-sm font-medium">
-                            {/*{course.author}*/}
-                        </span>
+                <p className="text-gray-500 text-sm mb-6 line-clamp-2 h-10">
+                    {course.short_description || "Описание курса отсутствует"}
+                </p>
+
+                <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                    {/* Stats */}
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1.5">
+                            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                            <span className="font-medium text-gray-700">{course.avg_rating ? Number(course.avg_rating).toFixed(1) : '5.0'}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <BookOpen className="w-4 h-4 text-indigo-400" />
+                            <span>{course._count?.lessons || 0} уроков</span>
+                        </div>
                     </div>
 
-                    <button className="w-[120px] h-10 flex items-center justify-center gap-[6px] text-white text-sm bg-[#3F3F8F] rounded-[50px] hover:bg-[#5a3fd8] transition">
-                        Enroll <img src={Arrow} alt="Arrow Icon" />
-                    </button>
+                    {/* Action */}
+                    <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
+                        <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:text-white transition-colors" />
+                    </div>
                 </div>
             </div>
         </div>

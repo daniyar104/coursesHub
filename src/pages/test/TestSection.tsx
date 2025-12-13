@@ -1,26 +1,36 @@
-import { useEffect } from 'react';
 import { useTestStore } from '../../store/useTestStore';
+import { CheckCircle } from 'lucide-react';
 
 export default function TestSection() {
     const { currentTest, setAnswer, submitTest, result } = useTestStore();
 
-    useEffect(() => {
-        console.log(result);
-    }, [result]);
-
     if (!currentTest) return null;
+
+    // Если тест сдан успешно, показываем только результат
+    if (result && result.passed) {
+        return (
+            <div className="w-full mx-auto p-8 bg-white rounded-2xl shadow-md text-center">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-900">{currentTest.title}</h2>
+                <div className="flex flex-col items-center justify-center p-8 bg-green-50 rounded-2xl border border-green-100">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <CheckCircle className="w-8 h-8 text-green-600" />
+                    </div>
+                    <p className="text-2xl font-bold text-green-700 mb-2">Тест успешно сдан!</p>
+                    <p className="text-lg text-green-600">
+                        Ваш результат: <span className="font-bold">{result.score}%</span>
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full mx-auto p-6 bg-white rounded-2xl shadow-md">
             <h2 className="text-2xl font-semibold mb-6 text-gray-900">{currentTest.title}</h2>
-            {result && (
-                <p
-                    className={`text-xl font-semibold ${
-                        result.passed ? 'text-green-500' : 'text-red-500'
-                    }`}
-                >
-                    Результат: {result.score}%
-                </p>
+            {result && !result.passed && (
+                <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-center font-medium">
+                    Тест не сдан. Результат: {result.score}%. Попробуйте еще раз.
+                </div>
             )}
 
             <div className="space-y-8">
@@ -55,7 +65,7 @@ export default function TestSection() {
 
             <button
                 onClick={submitTest}
-                className="mt-8 w-full py-3 rounded-xl bg-[#5344B6] text-white text-lg font-semibold hover:bg-[#312679] transition"
+                className="mt-8 w-full py-3 rounded-xl bg-[#5344B6] text-white text-lg font-semibold hover:bg-[#312679] transition shadow-lg hover:shadow-xl transform active:scale-95"
             >
                 Отправить тест
             </button>

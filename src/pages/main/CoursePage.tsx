@@ -13,6 +13,7 @@ import {
     Calendar,
     TrendingUp,
     Sparkles,
+    Lock,
 } from "lucide-react";
 import { useCoursesStore } from "../../store/coursesStore";
 
@@ -158,8 +159,8 @@ const CoursePage: React.FC = () => {
                                     onClick={() => {
                                         isEnrolled
                                             ? navigate(
-                                                  `/course/${id}/curriculum`
-                                              )
+                                                `/course/${id}/curriculum`
+                                            )
                                             : navigate(`/course/${id}/enroll`);
                                     }}
                                     className="w-full bg-white text-indigo-600 font-bold py-4 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg mb-4"
@@ -167,8 +168,8 @@ const CoursePage: React.FC = () => {
                                     {checkingEnrollment
                                         ? "Загрузка..."
                                         : isEnrolled
-                                        ? "Перейти к обучению"
-                                        : "Начать обучение"}
+                                            ? "Перейти к обучению"
+                                            : "Начать обучение"}
                                 </button>
                                 <div className="space-y-2 text-sm text-indigo-100">
                                     <div className="flex items-center gap-2">
@@ -255,6 +256,9 @@ const CoursePage: React.FC = () => {
                                                         <h3 className="text-xl font-bold text-gray-800">
                                                             {mod.title}
                                                         </h3>
+                                                        {!isEnrolled && (
+                                                            <Lock className="w-5 h-5 text-gray-400 ml-2" />
+                                                        )}
                                                     </div>
                                                     {mod.description && (
                                                         <p className="text-gray-600 ml-11">
@@ -272,7 +276,7 @@ const CoursePage: React.FC = () => {
                                                         animate={{
                                                             rotate:
                                                                 activeModule ===
-                                                                mod.id
+                                                                    mod.id
                                                                     ? 180
                                                                     : 0,
                                                         }}
@@ -308,18 +312,37 @@ const CoursePage: React.FC = () => {
                                                         <div
                                                             key={lesson.id}
                                                             onClick={() => {
-                                                                navigate(
-                                                                    `/course/${course.id}/lesson/${lesson.id}`
-                                                                );
+                                                                if (isEnrolled) {
+                                                                    navigate(
+                                                                        `/course/${course.id}/lesson/${lesson.id}`
+                                                                    );
+                                                                }
                                                             }}
-                                                            className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer group"
+                                                            className={`flex items-center gap-3 p-4 rounded-lg transition-colors group ${isEnrolled
+                                                                    ? "bg-white hover:bg-indigo-50 cursor-pointer"
+                                                                    : "bg-gray-100 opacity-70 cursor-not-allowed"
+                                                                }`}
                                                         >
-                                                            <div className="flex items-center justify-center w-6 h-6 bg-gray-200 group-hover:bg-indigo-600 text-gray-600 group-hover:text-white rounded-full text-xs font-bold transition-colors">
+                                                            <div
+                                                                className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold transition-colors ${isEnrolled
+                                                                        ? "bg-gray-200 group-hover:bg-indigo-600 text-gray-600 group-hover:text-white"
+                                                                        : "bg-gray-300 text-gray-500"
+                                                                    }`}
+                                                            >
                                                                 {lessonIndex +
                                                                     1}
                                                             </div>
-                                                            <Play className="w-4 h-4 text-indigo-600" />
-                                                            <span className="flex-1 text-gray-700 group-hover:text-indigo-700 font-medium">
+                                                            {isEnrolled ? (
+                                                                <Play className="w-4 h-4 text-indigo-600" />
+                                                            ) : (
+                                                                <Lock className="w-4 h-4 text-gray-500" />
+                                                            )}
+                                                            <span
+                                                                className={`flex-1 font-medium ${isEnrolled
+                                                                        ? "text-gray-700 group-hover:text-indigo-700"
+                                                                        : "text-gray-500"
+                                                                    }`}
+                                                            >
                                                                 {lesson.title}
                                                             </span>
                                                             {lesson.content && (

@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Play, Clock, GraduationCap, CheckCircle, Lock } from 'lucide-react';
 import { useCoursesStore } from '../../store/coursesStore';
+import { getModuleTest, getModuleTestResult, getCourseTestResult } from '../../service/testService';
 import Header from '../../components/Header/HomeHeader';
-import { getModuleTest, getCourseTest } from '../../service/testService';
 
 const CourseCurriculumPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -12,10 +12,8 @@ const CourseCurriculumPage: React.FC = () => {
     const course = useCoursesStore((s) => s.courseDetail);
     const fetchCourseById = useCoursesStore((s) => s.fetchCourseById);
     const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
-
-    // Test states
-    const [moduleHasTest, setModuleHasTest] = useState<Record<string, boolean>>({});
-    const [courseHasTest, setCourseHasTest] = useState(false);
+    const [moduleTestStatus, setModuleTestStatus] = useState<Record<string, { completed: boolean; passed: boolean; score: number } | null>>({});
+    const [courseTestResult, setCourseTestResult] = useState<{ completed: boolean; passed: boolean; score: number } | null>(null);
 
     useEffect(() => {
         if (id) fetchCourseById(id);
@@ -28,46 +26,79 @@ const CourseCurriculumPage: React.FC = () => {
         }
     }, [course, selectedModuleId]);
 
-    // Check for tests availability
+    // Fetch course test result
     useEffect(() => {
-        const checkTests = async () => {
-            if (!course) return;
-
-            // Check course test
-            try {
-                const courseTest = await getCourseTest(course.id);
-                if (courseTest) setCourseHasTest(true);
-            } catch (e) {
-                console.error("Failed to check course test", e);
-            }
-
-            // Check module tests
-            const moduleTests: Record<string, boolean> = {};
-            for (const module of course.modules) {
+        const fetchCourseResult = async () => {
+            if (!course || !course.id) return;
+            // Only check if course has a test
+            if (course.tests && course.tests.length > 0) {
                 try {
-                    const moduleTest = await getModuleTest(module.id);
-                    console.log(`Module ${module.id} test result:`, moduleTest, `Type: ${typeof moduleTest}`, `Truthy: ${!!moduleTest}`);
-                    // Check if moduleTest is a valid object (not null, undefined, or empty string)
-                    if (moduleTest && typeof moduleTest === 'object') {
-                        moduleTests[module.id] = true;
+                    const result = await getCourseTestResult(course.id);
+                    if (result) {
+                        setCourseTestResult({
+                            completed: true,
+                            passed: result.passed,
+                            score: result.score
+                        });
                     }
                 } catch (e) {
-                    console.error(`Failed to check module test for ${module.id}`, e);
+                    console.error("Failed to fetch course test result", e);
                 }
             }
-            setModuleHasTest(moduleTests);
-            console.log("Module tests check complete:", moduleTests);
         };
-
-        checkTests();
+        fetchCourseResult();
     }, [course]);
 
+    // Fetch module test status
     useEffect(() => {
-        console.log("Current moduleHasTest state:", moduleHasTest);
-        console.log("Selected module ID:", selectedModuleId);
-    }, [moduleHasTest, selectedModuleId]);
+        const fetchModuleTestStatuses = async () => {
+            if (!course) return;
 
+            const statuses: Record<string, { completed: boolean; passed: boolean; score: number } | null> = {};
 
+            for (const module of course.modules) {
+                if (module.tests && module.tests.length > 0) {
+                    try {
+                        // Try fetching result by module ID first (as per existing service function)
+                        // If this endpoint exists in backend, it should return the result
+                        try {
+                            const resultData = await getModuleTestResult(module.id);
+
+                            if (resultData) {
+                                statuses[module.id] = {
+                                    completed: true,
+                                    passed: resultData.passed,
+                                    score: resultData.score,
+                                };
+                                continue; // Found result, move to next module
+                            }
+                        } catch (e) {
+                            // Ignore errors (handled in service now)
+                        }
+
+                        // If no result found via module result endpoint, check if test object itself has status
+                        // (Fallback, though we saw it doesn't have it)
+                        const testData = await getModuleTest(module.id);
+                        if (testData && (testData.completed !== undefined || testData.passed !== undefined)) {
+                            statuses[module.id] = {
+                                completed: testData.completed || false,
+                                passed: testData.passed || false,
+                                score: testData.score || 0,
+                            };
+                        }
+                    } catch (error) {
+                        console.error(`Failed to fetch test status for module ${module.id}:`, error);
+                    }
+                }
+            }
+
+            setModuleTestStatus(statuses);
+        };
+
+        fetchModuleTestStatuses();
+    }, [course]);
+
+    // console.log(course?.modules.map(less => less.lessons.map(lesson => lesson.completed)))
     if (!course) {
         return (
             <>
@@ -82,8 +113,29 @@ const CourseCurriculumPage: React.FC = () => {
         );
     }
 
-    const selectedModule = course.modules.find((m) => m.id === selectedModuleId);
-    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+    const modulesWithProgress = course.modules.map((module) => {
+        // Normalize lessons to handle potential backend inconsistency (complete vs completed)
+        const normalizedLessons = module.lessons.map(lesson => ({
+            ...lesson,
+            complete: lesson.complete || lesson.completed || false
+        }));
+
+        const totalLessons = normalizedLessons.length;
+        const completedLessons = normalizedLessons.filter((l) => l.complete).length;
+        const calculatedProgress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+        const calculatedCompleted = totalLessons > 0 && completedLessons === totalLessons;
+
+        return {
+            ...module,
+            lessons: normalizedLessons,
+            completed: module.completed ?? calculatedCompleted,
+            progress: module.progress ?? calculatedProgress,
+        };
+    });
+
+    const selectedModule = modulesWithProgress.find((m) => m.id === selectedModuleId);
+    const totalLessons = modulesWithProgress.reduce((acc, mod) => acc + mod.lessons.length, 0);
+
 
     return (
         <>
@@ -118,14 +170,33 @@ const CourseCurriculumPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            {courseHasTest && (
-                                <button
-                                    onClick={() => navigate(`/test/course/${course.id}`)}
-                                    className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-                                >
-                                    <GraduationCap className="w-6 h-6" />
-                                    <span>Финальный тест</span>
-                                </button>
+                            {course.tests && course.tests.length > 0 && (
+                                <div className="flex flex-col items-end gap-2">
+                                    <button
+                                        onClick={() => navigate(`/test/course/${course.id}`)}
+                                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 ${courseTestResult?.passed
+                                            ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white'
+                                            : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                                            }`}
+                                    >
+                                        {courseTestResult?.passed ? (
+                                            <>
+                                                <CheckCircle className="w-6 h-6" />
+                                                <span>Тест пройден</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <GraduationCap className="w-6 h-6" />
+                                                <span>Финальный тест</span>
+                                            </>
+                                        )}
+                                    </button>
+                                    {courseTestResult?.passed && (
+                                        <span className="text-sm text-emerald-600 font-semibold">
+                                            Результат: {courseTestResult.score}%
+                                        </span>
+                                    )}
+                                </div>
                             )}
                         </div>
                     </div>
@@ -139,8 +210,8 @@ const CourseCurriculumPage: React.FC = () => {
                                     Модули курса
                                 </h2>
                                 <div className="space-y-2">
-                                    {course.modules.map((module, index) => {
-                                        const isLocked = index > 0 && !course.modules[index - 1].completed;
+                                    {modulesWithProgress.map((module, index) => {
+                                        const isLocked = index > 0 && !modulesWithProgress[index - 1].completed;
 
                                         return (
                                             <button
@@ -260,32 +331,147 @@ const CourseCurriculumPage: React.FC = () => {
 
                                     {/* Lesson Cards Grid */}
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {selectedModule.lessons.map((lesson, lessonIndex) => (
+                                        {selectedModule.lessons.map((lesson, lessonIndex) => {
+                                            // Logic for locking lessons:
+                                            // 1. First lesson of the first module is always unlocked.
+                                            // 2. For subsequent lessons in the SAME module, the previous lesson must be completed.
+                                            // 3. Note: If the module itself is unlocked, it implies the previous module is done.
+                                            //    So for the first lesson of any *accessible* module, it is unlocked by default.
+
+                                            const isLessonLocked = lessonIndex > 0 && !selectedModule.lessons[lessonIndex - 1].complete;
+
+                                            return (
+                                                <React.Fragment key={lesson.id}>
+                                                    {/* Lesson Card */}
+                                                    <motion.div
+                                                        initial={{
+                                                            opacity: 0,
+                                                            scale: 0.95,
+                                                        }}
+                                                        animate={{
+                                                            opacity: 1,
+                                                            scale: 1,
+                                                        }}
+                                                        transition={{
+                                                            delay: lessonIndex * 0.05,
+                                                        }}
+                                                        onClick={() =>
+                                                            !isLessonLocked && navigate(`/course/${id}/lesson/${lesson.id}`)
+                                                        }
+                                                        className={`relative overflow-hidden rounded-2xl border-2 transition-all group ${isLessonLocked
+                                                            ? 'bg-gray-50 border-gray-100 cursor-not-allowed opacity-75'
+                                                            : lesson.complete
+                                                                ? 'bg-emerald-50/50 border-emerald-100/50 hover:border-emerald-200 cursor-pointer hover:shadow-lg'
+                                                                : 'bg-white border-gray-100 hover:border-indigo-200 cursor-pointer hover:shadow-lg'
+                                                            }`}
+                                                    >
+                                                        {lesson.complete && (
+                                                            <div className="absolute top-0 right-0 bg-emerald-500 text-white p-1 rounded-bl-xl z-10">
+                                                                <CheckCircle className="w-3.5 h-3.5" />
+                                                            </div>
+                                                        )}
+
+                                                        {isLessonLocked && (
+                                                            <div className="absolute top-3 right-3 text-gray-400 z-10">
+                                                                <Lock className="w-4 h-4" />
+                                                            </div>
+                                                        )}
+
+                                                        <div className="p-5">
+                                                            <div className="flex items-start gap-4 mb-3">
+                                                                <div
+                                                                    className={`flex items-center justify-center w-10 h-10 rounded-xl font-bold flex-shrink-0 transition-colors ${isLessonLocked
+                                                                        ? 'bg-gray-200 text-gray-400'
+                                                                        : lesson.complete
+                                                                            ? 'bg-emerald-100 text-emerald-600'
+                                                                            : 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white'
+                                                                        }`}
+                                                                >
+                                                                    {isLessonLocked ? (
+                                                                        <Lock className="w-5 h-5" />
+                                                                    ) : lesson.complete ? (
+                                                                        <CheckCircle className="w-5 h-5" />
+                                                                    ) : (
+                                                                        lessonIndex + 1
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <h4
+                                                                        className={`font-semibold mb-1 line-clamp-2 ${lesson.complete
+                                                                            ? 'text-emerald-900'
+                                                                            : isLessonLocked
+                                                                                ? 'text-gray-400'
+                                                                                : 'text-gray-900 group-hover:text-indigo-600 transition-colors'
+                                                                            }`}
+                                                                    >
+                                                                        {lesson.title}
+                                                                    </h4>
+                                                                    <p
+                                                                        className={`text-xs line-clamp-2 ${isLessonLocked
+                                                                            ? 'text-gray-300'
+                                                                            : 'text-gray-500'
+                                                                            }`}
+                                                                    >
+                                                                        {lesson.content}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className={`flex items-center justify-between pt-4 border-t ${lesson.complete ? 'border-emerald-200/50' : 'border-gray-100'}`}>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`flex items-center gap-2 text-sm ${isLessonLocked ? 'text-gray-300' : lesson.complete ? 'text-emerald-600' : 'text-gray-500'}`}>
+                                                                        <Clock className="w-4 h-4" />
+                                                                        <span>~15 мин</span>
+                                                                    </div>
+                                                                    {/* Test indicator */}
+                                                                    {lesson.tests && lesson.tests.length > 0 && !isLessonLocked && (
+                                                                        <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-md font-semibold ${lesson.tests[0]?.passed
+                                                                                ? 'bg-emerald-500 text-white'
+                                                                                : 'bg-purple-500 text-white'
+                                                                            }`}>
+                                                                            <GraduationCap className="w-3 h-3" />
+                                                                            <span>
+                                                                                {lesson.tests[0]?.passed
+                                                                                    ? `Тест: ${lesson.tests[0]?.score}%`
+                                                                                    : 'Есть тест'}
+                                                                            </span>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {!isLessonLocked && (
+                                                                    lesson.complete ? (
+                                                                        <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+                                                                            <span>Пройден</span>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm group-hover:text-indigo-700">
+                                                                            <span>Начать</span>
+                                                                            <Play className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                </React.Fragment>
+                                            );
+                                        })}
+                                        {selectedModule.tests && selectedModule.tests.length > 0 && (
                                             <motion.div
-                                                key={lesson.id}
-                                                initial={{
-                                                    opacity: 0,
-                                                    scale: 0.95,
-                                                }}
-                                                animate={{
-                                                    opacity: 1,
-                                                    scale: 1,
-                                                }}
-                                                transition={{
-                                                    delay: lessonIndex * 0.05,
-                                                }}
-                                                onClick={() =>
-                                                    navigate(`/course/${id}/lesson/${lesson.id}`)
-                                                }
-                                                className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all cursor-pointer border-2 group overflow-hidden relative ${lesson.complete
-                                                    ? 'border-green-200 hover:border-green-300 bg-gradient-to-br from-white to-green-50/30'
-                                                    : 'border-gray-100 hover:border-indigo-200'
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: selectedModule.lessons.length * 0.05 }}
+                                                onClick={() => navigate(`/test/module/${selectedModule.id}`)}
+                                                className={`rounded-2xl transition-all cursor-pointer border-2 group overflow-hidden relative ${moduleTestStatus[selectedModule.id]?.passed
+                                                    ? 'bg-emerald-50/80 border-emerald-500/50 hover:border-emerald-500 hover:shadow-emerald-100 shadow-md hover:shadow-xl'
+                                                    : 'bg-white border-gray-100 hover:border-indigo-200 shadow-md hover:shadow-xl'
                                                     }`}
                                             >
                                                 {/* Completion Badge Overlay */}
-                                                {lesson.complete && (
-                                                    <div className="absolute top-3 right-3 z-10">
-                                                        <div className="bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1">
+                                                {moduleTestStatus[selectedModule.id]?.passed && (
+                                                    <div className="absolute top-0 right-0 z-10">
+                                                        <div className="bg-emerald-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-bl-xl shadow-sm flex items-center gap-1">
                                                             <CheckCircle className="w-3 h-3" />
                                                             <span>Пройден</span>
                                                         </div>
@@ -294,85 +480,58 @@ const CourseCurriculumPage: React.FC = () => {
 
                                                 <div className="p-6">
                                                     <div className="flex items-start gap-4 mb-4">
-                                                        <div className={`flex items-center justify-center w-12 h-12 rounded-xl text-lg font-bold transition-all flex-shrink-0 shadow-sm ${lesson.complete
-                                                            ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white group-hover:scale-110'
-                                                            : 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-105'
+                                                        <div className={`flex items-center justify-center w-12 h-12 rounded-2xl text-lg font-bold transition-all flex-shrink-0 shadow-sm ${moduleTestStatus[selectedModule.id]?.passed
+                                                            ? 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white group-hover:scale-105'
+                                                            : 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-105'
                                                             }`}>
-                                                            {lesson.complete ? (
-                                                                <CheckCircle className="w-7 h-7" />
+                                                            {moduleTestStatus[selectedModule.id]?.passed ? (
+                                                                <CheckCircle className="w-6 h-6" />
                                                             ) : (
-                                                                lessonIndex + 1
+                                                                selectedModule.lessons.length + 1
                                                             )}
                                                         </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center gap-2 mb-2">
-                                                                <h3 className={`text-lg font-bold transition-colors line-clamp-2 ${lesson.complete
-                                                                    ? 'text-gray-800 group-hover:text-green-700'
+                                                        <div className="flex-1 min-w-0 pt-1">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <h3 className={`text-lg font-bold transition-colors line-clamp-2 ${moduleTestStatus[selectedModule.id]?.passed
+                                                                    ? 'text-emerald-900'
                                                                     : 'text-gray-900 group-hover:text-indigo-700'
                                                                     }`}>
-                                                                    {lesson.title}
+                                                                    Тест модуля: {selectedModule.title}
                                                                 </h3>
                                                             </div>
-                                                            {lesson.content && (
-                                                                <p className="text-sm text-gray-600 line-clamp-2">
-                                                                    {lesson.content}
-                                                                </p>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                                                            <Clock className="w-4 h-4" />
-                                                            <span>~15 мин</span>
-                                                        </div>
-                                                        {lesson.complete ? (
-                                                            <div className="flex items-center gap-2 text-green-600 font-bold">
-                                                                <CheckCircle className="w-5 h-5" />
-                                                                <span>Завершено</span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="flex items-center gap-2 text-indigo-600 group-hover:text-indigo-700 font-semibold">
-                                                                <span>Начать</span>
-                                                                <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        ))}
-                                        {moduleHasTest[selectedModule.id] && (
-                                            <motion.div
-                                                initial={{ opacity: 0, scale: 0.95 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: selectedModule.lessons.length * 0.05 }}
-                                                onClick={() => navigate(`/test/module/${selectedModule.id}`)}
-                                                className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all cursor-pointer border border-gray-100 hover:border-indigo-200 group overflow-hidden"
-                                            >
-                                                <div className="p-6">
-                                                    <div className="flex items-start gap-4 mb-4">
-                                                        <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white rounded-xl text-lg font-bold transition-colors flex-shrink-0">
-                                                            {selectedModule.lessons.length + 1}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-indigo-700 transition-colors mb-2 line-clamp-2">
-                                                                Тест модуля: {selectedModule.title}
-                                                            </h3>
-                                                            <p className="text-sm text-gray-600 line-clamp-2">
-                                                                Проверьте свои знания по материалам модуля
+                                                            <p className={`text-sm line-clamp-2 ${moduleTestStatus[selectedModule.id]?.passed
+                                                                ? 'text-emerald-700/70'
+                                                                : 'text-gray-500'
+                                                                }`}>
+                                                                {moduleTestStatus[selectedModule.id]?.passed
+                                                                    ? `Результат: ${moduleTestStatus[selectedModule.id]?.score}%`
+                                                                    : 'Проверьте свои знания по материалам модуля'}
                                                             </p>
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                                                    <div className={`flex items-center justify-between pt-4 border-t ${moduleTestStatus[selectedModule.id]?.passed
+                                                        ? 'border-emerald-200/50'
+                                                        : 'border-gray-100'
+                                                        }`}>
+                                                        <div className={`flex items-center gap-2 text-sm ${moduleTestStatus[selectedModule.id]?.passed
+                                                            ? 'text-emerald-600'
+                                                            : 'text-gray-500'
+                                                            }`}>
                                                             <Clock className="w-4 h-4" />
                                                             <span>~20 мин</span>
                                                         </div>
-                                                        <div className="flex items-center gap-2 text-indigo-600 group-hover:text-indigo-700 font-semibold">
-                                                            <span>Начать</span>
-                                                            <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                                        </div>
+                                                        {moduleTestStatus[selectedModule.id]?.passed ? (
+                                                            <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+                                                                <span>Повторить</span>
+                                                                <Play className="w-4 h-4" />
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2 text-indigo-600 group-hover:text-indigo-700 font-bold text-sm">
+                                                                <span>Начать</span>
+                                                                <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </motion.div>

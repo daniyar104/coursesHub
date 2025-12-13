@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Clock, Presentation, User } from 'lucide-react';
 
 // Components
 import Header from '../../components/Header/HomeHeader';
-import Footer from '../../components/Footer/FooterLesson';
 import Button from '../../components/ui/Button';
 import ButtonLesson from '../../components/ui/Button/ButtonLesson';
 import Divider from '../../components/ui/Divider/Divider';
 import Loading from '../../components/ui/Loading/Loading';
 import MaterialRenderer from './components/MaterialRenderer';
 import ModulePanel from './components/ModulePanel';
+import LessonCompletion from './components/LessonCompletion'; // Import new component
 
 // Tabs
 import Description from './tab/Description';
@@ -23,7 +23,6 @@ import { useLessonStore } from '../../store/lessonStore';
 import durationFormat from '../../utils/durationFormat';
 
 // Types
-import type { Course } from '../../service/types';
 import { useTestStore } from '../../store/useTestStore';
 import TestSection from '../test/TestSection';
 
@@ -71,15 +70,14 @@ export default function LessonPage() {
     const fetchMarkLessonAcces = useLessonStore((state) => state.fetchMarkLessonAccess);
 
     // Test Store
-    const { currentTest, answers, loading, error, result, fetchLessonTest, submitTest, setAnswer } =
-        useTestStore();
+    // Test Store
+    const { currentTest, fetchLessonTest } = useTestStore();
 
     // Local State
     const [activeTab, setActiveTab] = useState('description');
     const [videoDuration, setVideoDuration] = useState(0);
 
-    // Computed Logic
-    const isJustCompleted = lessonComplete.length > 0;
+    const navigate = useNavigate(); // Need this for redirect
 
     useEffect(() => {
         if (courseId) fetchCourseById(courseId);
@@ -89,7 +87,6 @@ export default function LessonPage() {
     const { prevLesson, currentLesson, nextLesson } = useMemo(() => {
         if (!course || !lessonId)
             return { prevLesson: null, currentLesson: null, nextLesson: null };
-
         const allLessons = course.modules.flatMap((m) => m.lessons);
         const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
 
@@ -102,22 +99,65 @@ export default function LessonPage() {
         };
     }, [course, lessonId]);
 
+    // Enforce Sequential Access
+    useEffect(() => {
+        if (currentLesson && prevLesson && !prevLesson.complete && !prevLesson.completed) {
+            // Check if module is different?
+            // Actually, my logic in CurriculumPage was:
+            // - First lesson of any module is open if previous module done (implied by access to module).
+            // - If distinct modules, we might need check.
+            // But simple check: if prevLesson exists and is NOT complete...
+
+            // Wait, what if it's the first lesson of a NEW module?
+            // In CurriculumPage: `index > 0` check within module.
+            // If it's a new module, we assumed previous module is done.
+            // Let's rely on `course.modules` structure.
+
+            // Re-evaluating lock logic:
+            // We need to know if the lesson is locked.
+            // A lesson is locked if:
+            // 1. It's NOT the first lesson of the first module.
+            // 2. AND the immediately preceding lesson (in the whole course sequence) is NOT complete.
+
+            const allLessons = course?.modules.flatMap(m => m.lessons) || [];
+            const currentIndex = allLessons.findIndex(l => l.id === lessonId);
+
+            if (currentIndex > 0) {
+                const globalPrevLesson = allLessons[currentIndex - 1];
+                const isPrevComplete = globalPrevLesson.complete || globalPrevLesson.completed;
+
+                if (!isPrevComplete) {
+                    // Redirect to the last completed lesson or the locking lesson
+                    // For now, just redirect to curriculum to show locked state is safer/easier
+                    navigate(`/course/${courseId}/curriculum`);
+                }
+            }
+        }
+    }, [currentLesson, prevLesson, course, courseId, lessonId, navigate]);
+
+
+    // Computed Logic (Moved after currentLesson definition)
+    const isAlreadyCompleted = currentLesson?.complete || currentLesson?.completed || false;
+    const isJustCompleted = lessonComplete.length > 0 || isAlreadyCompleted;
+
+    const handleLessonComplete = async () => {
+        await fetchCompleteLesson(courseId!, lessonId!);
+        if (courseId) {
+            fetchCourseById(courseId); // Refresh course data to reflect changes
+        }
+    };
+
     useEffect(() => {
         if (lessonId) {
             fetchLessonTest(lessonId);
         }
     }, [lessonId, fetchLessonTest]);
 
-    useEffect(() => {
-        console.log(currentTest);
-    }, [currentTest]);
-
     // Helpers
     const getTabClass = (tabName: string) =>
-        `cursor-pointer text-xl ${
-            activeTab === tabName
-                ? 'bg-[#5344B6] text-white hover:bg-[#312679]'
-                : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+        `cursor-pointer text-xl ${activeTab === tabName
+            ? 'bg-[#5344B6] text-white hover:bg-[#312679]'
+            : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
         }`;
 
     useEffect(() => {
@@ -153,7 +193,7 @@ export default function LessonPage() {
                                 />
                             </div>
                         )}
-                        {nextLesson && (
+                        {nextLesson && (currentLesson.complete || isJustCompleted) && (
                             <div className="flex-1 flex justify-end">
                                 <ButtonLesson
                                     link={`/course/${courseId}/lesson/${nextLesson.id}`}
@@ -168,7 +208,7 @@ export default function LessonPage() {
                 <div className="w-[90%] max-w-[1230px] mx-auto mt-5 flex flex-col items-start gap-6">
                     <div className="w-full h-full ">
                         <MaterialRenderer
-                            type={currentLesson.material_type}
+                            type={currentLesson.material_type || 'OTHER'}
                             title={currentLesson.title}
                             material_url={currentLesson.material_url}
                             onVideoDuration={setVideoDuration}
@@ -223,35 +263,29 @@ export default function LessonPage() {
                                 onClick={() => setActiveTab(btn.for_what)}
                             />
                         ))}
+                        {currentTest && (
+                            <Button
+                                children="Тест"
+                                variant="none"
+                                className={getTabClass('test')}
+                                onClick={() => setActiveTab('test')}
+                            />
+                        )}
                     </div>
 
-                    {activeTab === 'description' && <Description />}
+                    {activeTab === 'description' && <Description content={currentLesson.content} />}
                     {activeTab === 'practice' && <Practice />}
                     {activeTab === 'teacher' && <TeacherProfile {...TEACHER_DATA} />}
+                    {activeTab === 'test' && currentTest && <TestSection />}
 
-                    <Button
-                        children={
-                            isJustCompleted ? 'Урок пройден!' : 'Отметить урок как выполненный'
-                        }
-                        variant="none"
-                        className={`cursor-pointer text-xl w-full mb-20 transition-colors ${
-                            isJustCompleted
-                                ? 'bg-green-600 text-white cursor-default'
-                                : 'bg-[#5344B6] text-white hover:bg-[#312679]'
-                        }`}
-                        onClick={() => {
-                            if (!isJustCompleted) {
-                                fetchCompleteLesson(courseId!, lessonId!);
-                            }
-                        }}
-                        loading={lessonLoading}
-                        disabled={lessonLoading || isJustCompleted}
+                    <LessonCompletion
+                        isCompleted={isJustCompleted}
+                        isLoading={lessonLoading}
+                        hasVideo={currentLesson.material_type === 'VIDEO'}
+                        videoDuration={videoDuration}
+                        onComplete={handleLessonComplete}
                     />
-
-                    {currentTest && <TestSection />}
                 </div>
-
-                <Footer />
             </div>
         </>
     );

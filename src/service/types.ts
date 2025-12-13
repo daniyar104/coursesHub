@@ -109,6 +109,8 @@ export interface Lesson {
     created_at: string;
     updated_at: string;
     complete: boolean;
+    completed?: boolean;
+    tests?: Test[]; // Tests with completion status
 }
 
 export interface Module {
@@ -122,12 +124,16 @@ export interface Module {
     lessons: Lesson[];
     completed?: boolean;  // All lessons in module completed
     progress?: number;    // Progress percentage 0-100
+    isLocked?: boolean;   // Locked if user not enrolled
+    tests?: Test[];       // Tests with completion status
 }
 
 export interface CourseWithModules extends Course {
     modules: Module[];
     categories?: Category;
     reviews?: [];
+    isEnrolled?: boolean; // Is user enrolled in course
+    tests?: Test[];       // Course tests with completion status
 }
 
 // Teacher types
@@ -229,4 +235,37 @@ export interface Test {
     created_at: string;
     updated_at: string;
     questions: Question[];
+    // Completion status (from API when fetching course details)
+    completed?: boolean;
+    passed?: boolean;
+    score?: number;
+}
+
+export interface TestResult {
+    id: string;
+    score: number;
+    passed: boolean;
+    completed_at: string;
+}
+
+
+export interface PracticeTestCase {
+    input: any[]; // Changed to array of inputs as per example [2, 2]
+    output: any;  // Changed from expectedOutput to output
+}
+
+export interface Practice {
+    id: string;
+    lesson_id: string;
+    title: string;
+    description: string | null;
+    language: string; // default "javascript"
+    initial_code: string | null;
+    expected_output: string | null;
+    test_cases: PracticeTestCase[] | null;
+    solution_code: string | null;
+    created_at: string;
+
+    // Optional helper (not in strict API but needed for frontend execution context)
+    arg_names?: string[];
 }
