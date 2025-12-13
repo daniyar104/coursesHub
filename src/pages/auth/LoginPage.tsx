@@ -38,7 +38,14 @@ const LoginPage: React.FC = () => {
 
             <div className="w-[40%] p-8">
                 <div className="flex items-center justify-between w-full">
-                    <img src={logo} alt="AIU Logo" className="w-[163px] h-[51px]" />
+                    <img
+                        src={logo}
+                        alt="AIU Logo"
+                        onClick={() => {
+                            navigate('/welcome');
+                        }}
+                        className="w-[163px] h-[51px] cursor-pointer"
+                    />
                     <p className="flex">
                         Courses <b className="text-[#3F3F8F]">HUB</b>
                     </p>

@@ -1,41 +1,50 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import Logo from "../../../assets/icon/Logo.png";
-import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import Logo from '../../../assets/icon/Logo.png';
+import { useNavigate } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     return (
-        <nav className="bg-white shadow-sm fixed w-full z-100">
+        <header className="bg-white shadow-sm fixed w-full z-100">
             <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
                 <div className="flex items-center gap-6">
                     <img src={Logo} alt="logo" className="h-10 w-auto" />
                 </div>
 
                 {/* Десктоп меню */}
-                <div className="hidden md:flex gap-6 text-gray-600 text-sm md:text-base">
-                    <a className="hover:text-gray-800">Возможности</a>
-                    <a href="#" className="hover:text-gray-800">
-                        Преимущества
-                    </a>
-                    <a href="#contacts" className="hover:text-gray-800">
-                        Контакты
-                    </a>
-                </div>
+                <nav className="hidden md:flex gap-6 text-gray-600 text-sm md:text-base">
+                    <p
+                        className="hover:text-gray-800 cursor-pointer"
+                        onClick={() => {
+                            navigate('/categories');
+                        }}
+                    >
+                        Все курсы
+                    </p>
+                    <p
+                        className="hover:text-gray-800 cursor-pointer"
+                        onClick={() => {
+                            navigate('/about-us');
+                        }}
+                    >
+                        О нас
+                    </p>
+                </nav>
 
                 {/* Десктоп кнопки */}
                 <div className="hidden md:flex gap-2">
                     <button
-                        onClick={() => navigator("/login")}
+                        onClick={() => navigate('/login')}
                         className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100"
                     >
                         Войти
                     </button>
                     <button
-                        onClick={() => navigator("/register")}
+                        onClick={() => navigate('/register')}
                         className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700"
                     >
                         Зарегистрироваться
@@ -43,50 +52,48 @@ export default function Header() {
                 </div>
 
                 {/* Мобильное меню */}
-                <div className="md:hidden">
+                <nav className="md:hidden">
                     <button onClick={() => setIsOpen(!isOpen)}>
                         {isOpen ? <X size={25} /> : <Menu size={25} />}
                     </button>
-                </div>
+                </nav>
             </div>
 
             {/* Выпадающее мобильное меню */}
             {isOpen && (
                 <div className="md:hidden px-4 pb-4 space-y-2">
-                    <a
-                        href="#features"
-                        className="block text-gray-600 hover:text-gray-800"
+                    <p
+                        className="hover:text-gray-800 cursor-pointer"
+                        onClick={() => {
+                            navigate('/categories');
+                        }}
                     >
-                        Возможности
-                    </a>
-                    <a
-                        href="#benefits"
-                        className="block text-gray-600 hover:text-gray-800"
+                        Все курсы
+                    </p>
+                    <p
+                        className="hover:text-gray-800 cursor-pointer"
+                        onClick={() => {
+                            navigate('/about-us');
+                        }}
                     >
-                        Преимущества
-                    </a>
-                    <a
-                        href="#contacts"
-                        className="block text-gray-600 hover:text-gray-800"
-                    >
-                        Контакты
-                    </a>
+                        О нас
+                    </p>
                     <div className="flex flex-col gap-2 mt-2">
                         <button
                             className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100"
-                            onClick={() => navigator("/login")}
+                            onClick={() => navigate('/login')}
                         >
                             Войти
                         </button>
                         <button
                             className="border px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700"
-                            onClick={() => navigator("/register")}
+                            onClick={() => navigate('/register')}
                         >
                             Зарегистрироваться
                         </button>
                     </div>
                 </div>
             )}
-        </nav>
+        </header>
     );
 }

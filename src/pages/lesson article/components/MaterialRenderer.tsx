@@ -21,7 +21,7 @@ export default function MaterialRenderer(props: MaterialProps) {
 
         case 'VIDEO':
             return (
-                <div className="relative w-full md:h-[50vh] lg:h-[60vh] max-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
+                <div className="relative w-full md:h-[50vh] lg:h-[60vh] min-h-[700px] bg-gray-300 overflow-hidden rounded-[50px]">
                     <VideoPlayer
                         src={props.material_url!}
                         poster=""

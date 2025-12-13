@@ -1,5 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 interface IconBoxProps {
     colorClass: string;
@@ -7,10 +8,17 @@ interface IconBoxProps {
 }
 
 const IconBox: React.FC<IconBoxProps> = ({ colorClass, delay = 0 }) => (
-    <div
-        className={`w-16 h-16 sm:w-20 sm:h-20 p-4 sm:p-6 rounded-3xl shadow-xl flex items-center justify-center transform hover:scale-105 ${colorClass}`}
-        style={{ transitionDelay: `${delay}ms` }}
-    ></div>
+    <motion.div
+        className={`w-16 h-16 sm:w-20 sm:h-20 p-4 sm:p-6 rounded-3xl shadow-xl flex items-center justify-center ${colorClass}`}
+        animate={{ y: [0, -10, 0] }} // движение вверх-вниз
+        transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatType: 'loop',
+            ease: 'easeInOut',
+            delay,
+        }}
+    ></motion.div>
 );
 
 export default function CallToActionSection() {
@@ -24,14 +32,13 @@ export default function CallToActionSection() {
                         Изучайте навыки для будущего уже сегодня
                     </h2>
                     <p className="text-white/80 mb-6">
-                        Отрабатывайте навыки работы с ИИ, профессиональные и
-                        жизненные навыки с помощью самых актуальных материалов
-                        от экспертов по обучению.
+                        Отрабатывайте навыки работы с ИИ, профессиональные и жизненные навыки с
+                        помощью самых актуальных материалов от экспертов по обучению.
                     </p>
                     <div className="flex gap-4 flex-wrap">
                         <button
                             onClick={() => {
-                                navigate("/course/CRS1763819786238");
+                                navigate('/course/CRS1763819786238');
                             }}
                             className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition"
                         >
@@ -53,22 +60,13 @@ export default function CallToActionSection() {
                             const target = e.target as HTMLImageElement;
                             target.onerror = null;
                             target.src =
-                                "https://placehold.co/400x400/4C0D7F/ffffff?text=Image+Error";
+                                'https://placehold.co/400x400/4C0D7F/ffffff?text=Image+Error';
                         }}
                     />
-                    {/* Иконки */}
-                    <IconBox
-                        colorClass="bg-red-500 absolute top-0 right-4"
-                        delay={200}
-                    />
-                    <IconBox
-                        colorClass="bg-yellow-500 absolute bottom-0 left-4"
-                        delay={400}
-                    />
-                    <IconBox
-                        colorClass="bg-teal-500 absolute bottom-1/4 right-8"
-                        delay={600}
-                    />
+                    {/* Иконки с анимацией */}
+                    <IconBox colorClass="bg-red-500 absolute top-0 right-4" delay={0.2} />
+                    <IconBox colorClass="bg-yellow-500 absolute bottom-0 left-4" delay={0.4} />
+                    <IconBox colorClass="bg-teal-500 absolute bottom-1/4 right-8" delay={0.6} />
                 </div>
             </div>
         </div>

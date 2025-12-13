@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
     Menu,
     X,
@@ -10,8 +10,9 @@ import {
     Twitter,
     Linkedin,
     ChevronRight,
-} from "lucide-react";
-import Header from "../../components/Header/WelcomeHeader";
+} from 'lucide-react';
+import Header from '../../components/Header/WelcomeHeader';
+import { useNavigate } from 'react-router-dom';
 
 // --- ТИПЫ ДАННЫХ ---
 interface Article {
@@ -29,111 +30,58 @@ interface Testimonial {
 }
 
 // --- КОНСТАНТЫ ---
-const PRIMARY_COLOR = "text-[#5F52F8]";
-const BG_PRIMARY = "bg-[#5F52F8]";
-const BORDER_PRIMARY = "border-[#5F52F8]";
+const PRIMARY_COLOR = 'text-[#5F52F8]';
+const BG_PRIMARY = 'bg-[#5F52F8]';
+const BORDER_PRIMARY = 'border-[#5F52F8]';
 
 const articles: Article[] = [
     {
-        title: "Учитесь новым навыкам",
-        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80",
-        alt: "Online learning concept",
-        description:
-            "Доступ к курсам с любого устройства в любое время. Учитесь в своем темпе.",
+        title: 'Учитесь новым навыкам',
+        image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80',
+        alt: 'Online learning concept',
+        description: 'Доступ к курсам с любого устройства в любое время. Учитесь в своем темпе.',
     },
     {
-        title: "Курсы от экспертов",
-        image: "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1000&q=80",
-        alt: "Woman learning online",
+        title: 'Курсы от экспертов',
+        image: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1000&q=80',
+        alt: 'Woman learning online',
         description:
-            "Актуальные знания и практические навыки для вашего развития от лучших менторов.",
+            'Актуальные знания и практические навыки для вашего развития от лучших менторов.',
     },
     {
-        title: "Карьерный рост",
-        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80",
-        alt: "Professional development",
-        description:
-            "Курсы для повышения квалификации. Получите навыки, востребованные на рынке.",
+        title: 'Карьерный рост',
+        image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80',
+        alt: 'Professional development',
+        description: 'Курсы для повышения квалификации. Получите навыки, востребованные на рынке.',
     },
 ];
 
 const testimonials: Testimonial[] = [
     {
-        name: "Анна Петрова",
-        role: "Студентка",
-        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
-        quote: "Благодаря платформе я смогла получить новые навыки, не выходя из дома. Очень удобно!",
+        name: 'Анна Петрова',
+        role: 'Студентка',
+        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
+        quote: 'Благодаря платформе я смогла получить новые навыки, не выходя из дома. Очень удобно!',
     },
     {
-        name: "Михаил Иванов",
-        role: "Преподаватель",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-        quote: "Создание курсов здесь — это удовольствие. Я могу сосредоточиться на контенте.",
+        name: 'Михаил Иванов',
+        role: 'Преподаватель',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        quote: 'Создание курсов здесь — это удовольствие. Я могу сосредоточиться на контенте.',
     },
     {
-        name: "Елена Соколова",
-        role: "HR-менеджер",
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80",
-        quote: "Мы используем эту платформу для обучения сотрудников. Эффективность выросла в разы.",
+        name: 'Елена Соколова',
+        role: 'HR-менеджер',
+        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80',
+        quote: 'Мы используем эту платформу для обучения сотрудников. Эффективность выросла в разы.',
     },
 ];
 
 // --- КОМПОНЕНТЫ ---
 
-// 1. HEADER
-// const Header = () => {
-//     const [isOpen, setIsOpen] = useState(false);
-
-//     return (
-//         <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-//             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//                 <div className="flex justify-between h-20 items-center">
-//                     {/* Логотип */}
-//                     <div className="flex items-center gap-2 cursor-pointer group">
-//                         <div className={`w-10 h-10 rounded-xl ${BG_PRIMARY} flex items-center justify-center text-white shadow-lg shadow-[#5F52F8]/20 group-hover:scale-105 transition-transform`}>
-//                             <BookOpen size={20} />
-//                         </div>
-//                         <span className="font-bold text-xl tracking-tight text-gray-900">Uni<span className={PRIMARY_COLOR}>Versity</span></span>
-//                     </div>
-
-//                     {/* Десктоп меню */}
-//                     <div className="hidden md:flex items-center space-x-8">
-//                         {['Курсы', 'Менторы', 'Блог', 'О нас'].map((item) => (
-//                             <a key={item} href="#" className="text-sm font-medium text-gray-600 hover:text-[#5F52F8] transition-colors">
-//                                 {item}
-//                             </a>
-//                         ))}
-//                         <button className={`${BG_PRIMARY} hover:opacity-90 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg hover:shadow-[#5F52F8]/30 active:scale-95`}>
-//                             Войти
-//                         </button>
-//                     </div>
-
-//                     {/* Мобильная кнопка */}
-//                     <div className="md:hidden flex items-center">
-//                         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-gray-900">
-//                             {isOpen ? <X size={24} /> : <Menu size={24} />}
-//                         </button>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             {/* Мобильное меню */}
-//             {isOpen && (
-//                 <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-xl py-4 px-4 flex flex-col gap-4 animate-in slide-in-from-top-5">
-//                     {['Курсы', 'Менторы', 'Блог', 'О нас'].map((item) => (
-//                         <a key={item} href="#" className="text-gray-600 font-medium py-2 hover:text-[#5F52F8]">{item}</a>
-//                     ))}
-//                     <button className={`${BG_PRIMARY} text-white py-3 rounded-xl font-medium w-full`}>
-//                         Войти
-//                     </button>
-//                 </div>
-//             )}
-//         </nav>
-//     );
-// };
-
 // 2. MAIN SECTION (Hero)
 const MainSection = () => {
+    const navigate = useNavigate();
     return (
         <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
             {/* Декоративный фон */}
@@ -165,28 +113,22 @@ const MainSection = () => {
                     </h1>
 
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Получите доступ к лучшим университетским программам.
-                        Учитесь у экспертов мирового уровня в удобном для вас
-                        темпе.
+                        Получите доступ к лучшим университетским программам. Учитесь у экспертов
+                        мирового уровня в удобном для вас темпе.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <button
-                            className={`${BG_PRIMARY} hover:bg-[#4d41d6] text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all shadow-xl shadow-[#5F52F8]/25 flex items-center justify-center gap-2 group`}
+                            onClick={() => {
+                                navigate('/login');
+                            }}
+                            className={`${BG_PRIMARY} hover:bg-[#4d41d6] text-white px-8 cursor-pointer py-4 rounded-2xl font-semibold text-lg transition-all shadow-xl shadow-[#5F52F8]/25 flex items-center justify-center gap-2 group`}
                         >
                             Начать обучение
                             <ArrowRight
                                 size={20}
                                 className="group-hover:translate-x-1 transition-transform"
                             />
-                        </button>
-                        <button className="px-8 py-4 rounded-2xl font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2">
-                            <div
-                                className={`w-6 h-6 rounded-full border flex items-center justify-center ${BORDER_PRIMARY} text-[#5F52F8]`}
-                            >
-                                <span className="text-[10px]">▶</span>
-                            </div>
-                            Как это работает
                         </button>
                     </div>
 
@@ -198,30 +140,26 @@ const MainSection = () => {
                                     className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden"
                                 >
                                     <img
-                                        src={`https://i.pravatar.cc/100?img=${
-                                            i + 10
-                                        }`}
+                                        src={`https://i.pravatar.cc/100?img=${i + 10}`}
                                         alt="avatar"
                                     />
                                 </div>
                             ))}
                         </div>
                         <p>
-                            <span className="font-bold text-gray-900">
-                                1,200+
-                            </span>{" "}
-                            студентов уже с нами
+                            <span className="font-bold text-gray-900">1,200+</span> студентов уже с
+                            нами
                         </p>
                     </div>
                 </div>
 
                 {/* Правая часть: Изображение */}
                 <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
-                    <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl rotate-1 hover:rotate-0 transition-all duration-700 ease-out border-8 border-white">
+                    <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl rotate-2 hover:rotate-0 transition-all duration-700 ease-out border-8 border-white">
                         <img
                             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80"
                             alt="Students"
-                            className="w-full h-auto object-cover scale-105 hover:scale-100 transition-transform duration-700"
+                            className="w-full h-auto object-cover transition-all duration-700"
                         />
                         {/* Плашка поверх фото */}
                         <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm p-4 rounded-2xl shadow-lg border border-gray-100 flex items-center gap-4">
@@ -231,9 +169,7 @@ const MainSection = () => {
                                 <CheckCircle size={24} />
                             </div>
                             <div>
-                                <p className="font-bold text-gray-900">
-                                    Сертифицировано
-                                </p>
+                                <p className="font-bold text-gray-900">Сертифицировано</p>
                                 <p className="text-xs text-gray-500">
                                     Международный стандарт обучения
                                 </p>
@@ -257,8 +193,8 @@ const CasesSection = ({ articles }: { articles: Article[] }) => {
                             Направления обучения
                         </h2>
                         <p className="text-gray-500 text-lg">
-                            Мы предоставляем инструменты и знания, необходимые
-                            для достижения успеха в современном цифровом мире.
+                            Мы предоставляем инструменты и знания, необходимые для достижения успеха
+                            в современном цифровом мире.
                         </p>
                     </div>
                     <a
@@ -322,11 +258,7 @@ const CasesSection = ({ articles }: { articles: Article[] }) => {
 };
 
 // 4. TESTIMONIALS SECTION (Бонус)
-const TestimonialsSection = ({
-    testimonials,
-}: {
-    testimonials: Testimonial[];
-}) => {
+const TestimonialsSection = ({ testimonials }: { testimonials: Testimonial[] }) => {
     return (
         <section className="py-24 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -359,12 +291,8 @@ const TestimonialsSection = ({
                                     className="w-14 h-14 rounded-full object-cover ring-4 ring-gray-50"
                                 />
                                 <div>
-                                    <h4 className="font-bold text-gray-900">
-                                        {item.name}
-                                    </h4>
-                                    <p
-                                        className={`text-sm ${PRIMARY_COLOR} font-medium`}
-                                    >
+                                    <h4 className="font-bold text-gray-900">{item.name}</h4>
+                                    <p className={`text-sm ${PRIMARY_COLOR} font-medium`}>
                                         {item.role}
                                     </p>
                                 </div>
@@ -390,14 +318,12 @@ const Footer = () => {
                             >
                                 <BookOpen size={18} />
                             </div>
-                            <span className="font-bold text-xl tracking-tight">
-                                University
-                            </span>
+
+                            <span className="font-bold text-xl tracking-tight">CourseHUB</span>
                         </div>
                         <p className="text-gray-400 max-w-sm leading-relaxed">
-                            Платформа для тех, кто хочет учиться новому и
-                            развиваться каждый день. Доступное образование для
-                            каждого.
+                            Платформа для тех, кто хочет учиться новому и развиваться каждый день.
+                            Доступное образование для каждого.
                         </p>
                         <div className="flex gap-4">
                             {[Instagram, Twitter, Linkedin].map((Icon, i) => (
@@ -415,53 +341,37 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold mb-6 text-lg">Платформа</h4>
                         <ul className="space-y-4 text-gray-400">
-                            {["Все курсы", "Тарифы", "FAQ", "Для бизнеса"].map(
-                                (item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
-                                            className="hover:text-[#5F52F8] transition-colors"
-                                        >
-                                            {item}
-                                        </a>
-                                    </li>
-                                )
-                            )}
+                            {['Все курсы', 'Тарифы', 'FAQ', 'Для бизнеса'].map((item) => (
+                                <li key={item}>
+                                    <a href="#" className="hover:text-[#5F52F8] transition-colors">
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-bold mb-6 text-lg">Компания</h4>
                         <ul className="space-y-4 text-gray-400">
-                            {["О нас", "Карьера", "Блог", "Контакты"].map(
-                                (item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
-                                            className="hover:text-[#5F52F8] transition-colors"
-                                        >
-                                            {item}
-                                        </a>
-                                    </li>
-                                )
-                            )}
+                            {['О нас', 'Карьера', 'Блог', 'Контакты'].map((item) => (
+                                <li key={item}>
+                                    <a href="#" className="hover:text-[#5F52F8] transition-colors">
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-                    <p>© 2024 University Inc. Все права защищены.</p>
+                    <p>© 2025 Astana International Univercity. Все права защищены.</p>
                     <div className="flex gap-6">
-                        <a
-                            href="#"
-                            className="hover:text-white transition-colors"
-                        >
+                        <a href="#" className="hover:text-white transition-colors">
                             Политика конфиденциальности
                         </a>
-                        <a
-                            href="#"
-                            className="hover:text-white transition-colors"
-                        >
+                        <a href="#" className="hover:text-white transition-colors">
                             Условия использования
                         </a>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserStore } from '../../store/useUserStore';
 import type { Course } from '../../components/ui/Card/CardCourseProfile';
 import CardCourseProfile from '../../components/ui/Card/CardCourseProfile';
@@ -6,6 +6,7 @@ import Avatar from '../../../assets/images/default_avatar.jpg';
 import { useCoursesStore } from '../../store/coursesStore.ts';
 import Loading from '../../components/ui/Loading/Loading.tsx';
 import Header from '../../components/Header/HomeHeader.tsx';
+import EditProfileModal from './EditProfileModal.tsx';
 
 const coursesData: Course[] = [
     {
@@ -39,7 +40,7 @@ export const Profile: React.FC = () => {
         fetchEnrolledCourses();
     }, [fetchUser]);
 
-    console.log(user);
+    const [openEdit, setOpenEdit] = useState(false);
 
     if (loading)
         return (
@@ -97,7 +98,6 @@ export const Profile: React.FC = () => {
                                 </p>
                                 <p className="text-3xl font-extrabold text-gray-900"></p>
                                 <p className="text-lg text-gray-600 mt-1">{user.email}</p>
-                                <p className="text-lg text-gray-600 mt-1">Роль: {user.role}</p>
 
                                 <div className="mt-4 pt-4 border-t border-gray-100">
                                     <p className="text-sm text-gray-500">
@@ -110,7 +110,10 @@ export const Profile: React.FC = () => {
                             </div>
 
                             {/* Кнопка редактирования */}
-                            <button className="py-2 px-4 text-sm font-medium rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition duration-150 border border-indigo-200">
+                            <button
+                                onClick={() => setOpenEdit(true)}
+                                className="py-2 px-4 text-sm font-medium rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition duration-150 border border-indigo-200"
+                            >
                                 Редактировать профиль
                             </button>
                         </div>
@@ -142,16 +145,19 @@ export const Profile: React.FC = () => {
                                 <CardCourseProfile key={course.id} course={course} />
                             ))}
                         </div>
-
-                        {/* Кнопка "Посмотреть все" */}
-                        <div className="mt-10 text-center">
-                            <button className="py-3 px-8 text-lg font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 shadow-xl shadow-indigo-200">
-                                Посмотреть все (3)
-                            </button>
-                        </div>
                     </section>
                 </div>
             </div>
+            <EditProfileModal
+                open={openEdit}
+                onClose={() => setOpenEdit(false)}
+                user={user}
+                onSave={(data) => {
+                    console.log('saved:', data);
+                    setOpenEdit(false);
+                    // тут вызываешь API или store.updateUser(data)
+                }}
+            />
         </>
     );
 };

@@ -39,20 +39,7 @@ const TEACHER_DATA = {
     location: 'Hudson, Wisconsin(WI), 54016',
     email: 'govillage@gmail.com',
 };
-{
-    /* <Button
-    children="Описание"
-    variant="none"
-    className={getTabClass("description")}
-    onClick={() => setActiveTab("description")}
-/> */
-}
 
-const BUTTON_DATA = [
-    { title: 'Описание', for_what: 'description' },
-    { title: 'Практика', for_what: 'practice' },
-    { title: 'Преподаватель', for_what: 'teacher' },
-];
 export default function LessonPage() {
     const { courseId, lessonId } = useParams<{
         courseId: string;
@@ -219,20 +206,43 @@ export default function LessonPage() {
                     <Divider className="w-full" thickness="2px" />
 
                     <div className="flex gap-5">
-                        {BUTTON_DATA.map((btn, idx) => (
+                        <Button
+                            children="Описание"
+                            variant="none"
+                            className={`cursor-pointer text-xl ${
+                                activeTab === 'description'
+                                    ? 'bg-[#5344B6] text-white hover:bg-[#312679]'
+                                    : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+                            }`}
+                            onClick={() => setActiveTab('description')}
+                        />
+                        <Button
+                            children="Преподаватель"
+                            variant="none"
+                            className={`cursor-pointer text-xl ${
+                                activeTab === 'teacher'
+                                    ? 'bg-[#5344B6] text-white hover:bg-[#312679]'
+                                    : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+                            }`}
+                            onClick={() => setActiveTab('teacher')}
+                        />
+                        {currentTest && (
                             <Button
-                                key={idx}
-                                children={btn.title}
+                                children="Тест"
                                 variant="none"
-                                className={getTabClass(btn.for_what)}
-                                onClick={() => setActiveTab(btn.for_what)}
+                                className={`cursor-pointer text-xl ${
+                                    activeTab === 'test'
+                                        ? 'bg-[#5344B6] text-white hover:bg-[#312679]'
+                                        : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+                                }`}
+                                onClick={() => setActiveTab('test')}
                             />
-                        ))}
+                        )}
                     </div>
 
-                    {activeTab === 'description' && <Description />}
-                    {activeTab === 'practice' && <Practice />}
+                    {activeTab === 'description' && <Description content={currentLesson.content} />}
                     {activeTab === 'teacher' && <TeacherProfile {...TEACHER_DATA} />}
+                    {currentTest && activeTab === 'test' && <TestSection />}
 
                     <Button
                         children={
@@ -252,8 +262,6 @@ export default function LessonPage() {
                         loading={lessonLoading}
                         disabled={lessonLoading || isJustCompleted}
                     />
-
-                    {currentTest && <TestSection />}
                 </div>
 
                 <Footer />

@@ -1,24 +1,37 @@
-import type { Course, CourseWithModules } from "./types";
-import api from "./api";
-import { getToken } from "../utils/auth";
+import type { Course, CourseWithModules } from './types';
+import api from './api';
+import { getToken } from '../utils/auth';
 
 export async function getAllCourses(): Promise<Course[]> {
-    const { data } = await api.get("/courses");
+    const token = getToken();
+    console.log(token);
+    const { data } = await api.get(`/courses`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
     return data.data;
 }
 
 export async function getCourseById(id: string): Promise<CourseWithModules> {
-    const { data } = await api.get(`/courses/${id}`);
+    const token = getToken();
+
+    const { data } = await api.get(`/courses/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
     return data.data;
 }
 
 // Заявка на приобретение курса
 export async function registerCourseById(
-    id: string
+    id: string,
 ): Promise<{ success: boolean; message?: string }> {
     try {
         const token = getToken();
-        if (!token) throw new Error("No token found");
+        if (!token) throw new Error('No token found');
 
         const { data } = await api.post(
             `/courses/${id}/register`,
@@ -27,15 +40,15 @@ export async function registerCourseById(
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }
+            },
         );
 
         return { success: true, message: data.message };
     } catch (err: any) {
-        console.error("Failed to register course:", err);
+        console.error('Failed to register course:', err);
         return {
             success: false,
-            message: err.response?.data?.message || "Ошибка регистрации",
+            message: err.response?.data?.message || 'Ошибка регистрации',
         };
     }
 }
@@ -44,12 +57,12 @@ export const getEnrolledCourses = async () => {
     const token = getToken();
 
     if (!token) {
-        console.error("No token found in getEnrolledCourses");
-        throw new Error("Необходима авторизация");
+        console.error('No token found in getEnrolledCourses');
+        throw new Error('Необходима авторизация');
     }
 
     try {
-        const response = await api.get("/courses/enrolled", {
+        const response = await api.get('/courses/enrolled', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -58,9 +71,9 @@ export const getEnrolledCourses = async () => {
         return response.data.data; // массив EnrolledCourse[]
     } catch (error: any) {
         console.error(
-            "Error fetching enrolled courses:",
+            'Error fetching enrolled courses:',
             error.response?.status,
-            error.response?.data
+            error.response?.data,
         );
         throw error;
     }
@@ -76,16 +89,14 @@ export const checkEnrollmentStatus = async (courseId: string) => {
 
     try {
         const enrolledCourses = await getEnrolledCourses();
-        const enrollment = enrolledCourses.find(
-            (course: any) => course.course_id === courseId
-        );
+        const enrollment = enrolledCourses.find((course: any) => course.course_id === courseId);
 
         return {
             enrolled: !!enrollment,
             enrollmentId: enrollment?.id,
         };
     } catch (error) {
-        console.error("Error checking enrollment status:", error);
+        console.error('Error checking enrollment status:', error);
         return { enrolled: false };
     }
 };
@@ -102,7 +113,7 @@ export const checkRegistration = async (id: string) => {
 
         return res.data;
     } catch (error) {
-        console.error("Error checking enrollment status:", error);
+        console.error('Error checking enrollment status:', error);
         return { enrolled: false };
     }
 };
