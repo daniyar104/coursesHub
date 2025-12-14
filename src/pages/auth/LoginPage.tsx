@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async () => {
         try {
             // вызываем zustand метод loginUser
             await loginUser(form);
@@ -68,7 +68,7 @@ const LoginPage: React.FC = () => {
                         />
                         <Button
                             className="w-full"
-                            onClick={handleSubmit}
+                            onClick={() => handleSubmit()}
                             variant="primary"
                             loading={loading}
                             size="medium"

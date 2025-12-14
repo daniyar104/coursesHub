@@ -1,35 +1,10 @@
 import React, { useEffect } from "react";
 import { useUserStore } from "../../store/useUserStore";
-import type { Course } from "../../components/ui/Card/CardCourseProfile";
-import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
-import Avatar from "../../../assets/images/default_avatar.jpg";
-import { useCoursesStore } from "../../store/coursesStore.ts";
 import Loading from "../../components/ui/Loading/Loading.tsx";
 import Header from "../../components/Header/HomeHeader.tsx";
-
-const coursesData: Course[] = [
-    {
-        id: 1,
-        title: "Полный курс по React и Next.js",
-        progress: 75,
-        status: "В процессе",
-        color: "bg-indigo-500",
-    },
-    {
-        id: 2,
-        title: "Основы дизайна с Figma",
-        progress: 100,
-        status: "Завершен",
-        color: "bg-green-500",
-    },
-    {
-        id: 3,
-        title: "Введение в Python для анализа данных",
-        progress: 20,
-        status: "В процессе",
-        color: "bg-yellow-500",
-    },
-];
+import Avatar from "../../../assets/images/default_avatar.jpg";
+import { useCoursesStore } from "../../store/coursesStore.ts";
+import CardCourseProfile from "../../components/ui/Card/CardCourseProfile";
 
 export const Profile: React.FC = () => {
     const { user, loading, error, fetchUser } = useUserStore();
@@ -88,13 +63,13 @@ export const Profile: React.FC = () => {
                             <img
                                 className="h-24 w-24 rounded-full object-cover ring-4 ring-indigo-500 ring-offset-2"
                                 src={Avatar}
-                                alt={user.first_name}
+                                alt={user.firstName}
                             />
 
                             {/* Информация */}
                             <div className="grow text-center md:text-left">
                                 <p className="text-3xl font-extrabold text-gray-900">
-                                    {`${user.first_name} ${user.sur_name}`}
+                                    {`${user.firstName} ${user.surname}`}
                                 </p>
                                 <p className="text-3xl font-extrabold text-gray-900"></p>
                                 <p className="text-lg text-gray-600 mt-1">

@@ -1,30 +1,30 @@
-import type {Category, Course, PresentList} from "../service/types.ts";
-import {ChartLine, CodeIcon, PenIcon, ServerIcon} from "lucide-react";
+import type { Category, Course, PresentList } from "../src/service/types.ts";
+import { ChartLine, CodeIcon, PenIcon, ServerIcon } from "lucide-react";
 
 export const categories: Category[] = [
     {
-        id: 1,
+        id: "1",
         name: "Frontend",
         slug: "frontend",
         icon: <CodeIcon size={15} />,
         description: "Frontend-разработка включает создание интерактивных и красивых пользовательских интерфейсов веб-приложений. В этом направлении изучаются HTML, CSS, JavaScript, а также современные фреймворки, такие как React, Vue или Angular. Студенты учатся проектировать адаптивные сайты, улучшать пользовательский опыт и создавать высокоэффективные интерфейсы, которые работают на разных устройствах и браузерах."
     },
     {
-        id: 2,
+        id: "2",
         name: "Backend",
         slug: "backend",
         icon: <ServerIcon size={15} />,
         description: "Backend-разработка фокусируется на серверной части приложений, базах данных и API. Студенты изучают языки программирования, такие как Python, Node.js или Java, а также взаимодействие с базами данных, построение RESTful и GraphQL API. Основная цель — обеспечить надежную, безопасную и масштабируемую работу приложения, обрабатывать запросы пользователей и управлять данными."
     },
     {
-        id: 3,
+        id: "3",
         name: "Data Science",
         slug: "data-science",
         icon: <ChartLine size={15} />,
         description: "Data Science занимается анализом больших массивов данных, статистикой и машинным обучением. Студенты учатся извлекать полезную информацию из данных, создавать прогнозные модели, работать с библиотеками Python, такими как Pandas, NumPy и Scikit-learn. Также изучается визуализация данных и методы интерпретации результатов для принятия бизнес-решений на основе данных."
     },
     {
-        id: 4,
+        id: "4",
         name: "Design",
         slug: "design",
         icon: <PenIcon size={15} />,
@@ -33,7 +33,7 @@ export const categories: Category[] = [
 ];
 export const mockCourses: Course[] = [
     {
-        id: 1,
+        id: "1",
         title: "Frontend-разработка с нуля",
         description: "Научись создавать современные сайты с помощью HTML, CSS, JS и React.",
         author: "Иван Петров",
@@ -47,7 +47,7 @@ export const mockCourses: Course[] = [
         price: 0,
     },
     {
-        id: 2,
+        id: "2",
         title: "Основы Python и анализ данных",
         description: "Изучи Python, обработку данных и библиотеки NumPy, Pandas, Matplotlib.",
         author: "Анна Смирнова",
@@ -61,7 +61,7 @@ export const mockCourses: Course[] = [
         price: 0,
     },
     {
-        id: 3,
+        id: "3",
         title: "React + TypeScript: Полный курс",
         description: "Создавай веб-приложения с помощью React и TypeScript.",
         author: "Дмитрий Иванов",
@@ -75,7 +75,7 @@ export const mockCourses: Course[] = [
         price: 0,
     },
     {
-        id: 4,
+        id: "4",
         title: "UX/UI дизайн для начинающих",
         description: "Погрузись в мир UX/UI, прототипирование и Figma.",
         author: "Екатерина Соколова",
@@ -89,7 +89,7 @@ export const mockCourses: Course[] = [
         price: 0,
     },
     {
-        id: 5,
+        id: "5",
         title: "Backend на Node.js и Express",
         description: "Создавай REST API, работай с базами данных и деплой серверы.",
         author: "Сергей Коваленко",

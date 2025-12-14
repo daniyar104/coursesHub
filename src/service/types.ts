@@ -46,20 +46,39 @@ export interface PresentList {
 export interface Course {
     id: string;
     title: string;
-    short_description: string;
+    short_description?: string;
     full_description?: string;
-    review_count: number;
-    avg_rating: string | number;
-    difficulty_level: string;
-    category_id: string;
+    review_count?: number;
+    avg_rating?: string | number;
+    difficulty_level?: string;
+    category_id?: string;
     price?: number;
     image?: string;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
     _count?: {
         modules: number;
         lessons: number;
     };
+    lastLesson?: {
+        title: string;
+        module: {
+            title: string;
+        };
+    };
+    enrollment?: {
+        progress: number | string;
+        status?: string;
+    };
+    // Mock data fields
+    author?: string;
+    authorImage?: string;
+    duration?: string;
+    rating?: number;
+    students?: number;
+    category?: string;
+    description?: string;
+    lessons?: number;
 }
 export interface EnrolledCourse {
     id: string;
@@ -84,8 +103,10 @@ export interface EnrolledCourse {
 export interface Category {
     id: string;
     name: string;
-    description: string;
-    created_at: string;
+    description?: string;
+    created_at?: string;
+    slug?: string;
+    icon?: any;
 }
 
 export interface LessonTest {

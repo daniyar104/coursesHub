@@ -1,5 +1,5 @@
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker?url";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker?url";
 
 // Указываем воркер
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
@@ -25,7 +25,7 @@ export async function pdfToImages(url: string) {
         await page.render({
             canvasContext: ctx,
             viewport,
-        }).promise;
+        } as any).promise;
 
         // ОПТИМИЗАЦИЯ: Используем JPEG и качество 0.75 (75%)
         images.push(canvas.toDataURL("image/jpeg", 0.75));

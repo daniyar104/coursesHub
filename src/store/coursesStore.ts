@@ -28,7 +28,7 @@ interface CourseState {
         id: string
     ) => Promise<{ success: boolean; message?: string }>;
 
-    checkRegisterCourse: (id: string) => Promise<void>;
+    checkRegisterCourse: (id: string) => Promise<{ isRegistered: boolean; enrollment: any } | any>;
 }
 
 export const useCoursesStore = create<CourseState>((set) => ({
