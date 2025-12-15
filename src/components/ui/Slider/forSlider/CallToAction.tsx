@@ -51,7 +51,7 @@ export default function CallToActionSection() {
                 </div>
 
                 {/* Правый блок с изображением и иконками */}
-                <div className="flex-1 flex justify-end self-end items-center pl-3 relative max-w-[400px] h-full">
+                <div className="flex-1 hidden md:flex justify-end self-end items-center pl-3 relative max-w-[400px] h-full">
                     <img
                         src="https://postupi.kg/uploads/images/cr74q12kLJypx82gd9JRLSiF-1080.png"
                         alt="Эксперт по обучению"

@@ -6,6 +6,7 @@ import CoursesList from '../coursesList/CoursesList.tsx';
 import ModalInfo from '../../../components/Footer/ModalInfo.tsx';
 import { useLessonStore } from '../../../store/lessonStore.ts';
 import { useEffect } from 'react';
+import CareerGrowthSection from '../../../components/ui/Slider/forSlider/CareerGrowth.tsx';
 
 function HomePage() {
     const lastCourse = useLessonStore((state) => state.lastCourse);
@@ -21,7 +22,7 @@ function HomePage() {
         <>
             <Header />
             <div className=" max-w-[1320px] w-9/10 max-h-100 mx-auto">
-                <Slider elements={[<CallToActionSection />, <CallToActionSection />]} />
+                <Slider elements={[<CallToActionSection />, <CareerGrowthSection />]} />
             </div>
 
             {/* About Platform Section */}
